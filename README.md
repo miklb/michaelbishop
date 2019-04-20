@@ -66,6 +66,6 @@ DEBUG=* npx eleventy
 * The blog post feed template is in `feed/feed.njk`. This is also a good example of using a global data files in that it uses `_data/metadata.json`.
 * This example uses three layouts:
   * `_includes/layouts/base.njk`: the top level HTML structure
-  * `_includes/layouts/home.njk`: the home page template (wrapped into `base.njk`)
-  * `_includes/layouts/post.njk`: the blog post template (wrapped into `base.njk`)
+  * `_includes/home.njk`: the home page template (wrapped into `base.njk`)
+  * `_includes/post.njk`: the blog post template (wrapped into `base.njk`)
 * `_includes/postlist.njk` is a Nunjucks include and is a reusable component used to display a list of all the posts. `index.njk` has an example of how to use it.

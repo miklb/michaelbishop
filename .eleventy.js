@@ -1,14 +1,14 @@
 const { DateTime } = require("luxon");
 const fs = require("fs");
-const pluginRss = require("@11ty/eleventy-plugin-rss");
+//const pluginRss = require("@11ty/eleventy-plugin-rss");
 const pluginSyntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 
 module.exports = function(eleventyConfig) {
-  eleventyConfig.addPlugin(pluginRss);
+  //eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.setDataDeepMerge(true);
 
-  eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
+  eleventyConfig.addLayoutAlias("post", "./src/_layouts/post.njk");
 
   eleventyConfig.addFilter("readableDate", dateObj => {
     return DateTime.fromJSDate(dateObj, {zone: 'utc'}).toFormat("dd LLL yyyy");
@@ -30,8 +30,14 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
 
-  eleventyConfig.addPassthroughCopy("img");
-  eleventyConfig.addPassthroughCopy("css");
+  eleventyConfig.addCollection('post', collection => {
+    return collection.getFilteredByGlob('**/+(articles|notes|photos)/**/*.md').reverse();
+  });
+
+   // Passthrough
+   eleventyConfig.addPassthroughCopy('./src/images');
+   eleventyConfig.addPassthroughCopy('./src/assets/fonts');
+   eleventyConfig.addPassthroughCopy('./src/assets/vectors');
 
   /* Markdown Plugins */
   let markdownIt = require("markdown-it");
@@ -84,9 +90,9 @@ module.exports = function(eleventyConfig) {
     dataTemplateEngine: "njk",
     passthroughFileCopy: true,
     dir: {
-      input: ".",
-      includes: "_includes",
+      input: "src",
       data: "_data",
+      layouts: "_layouts",
       output: "_site"
     }
   };
