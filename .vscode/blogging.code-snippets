@@ -1,6 +1,6 @@
 {
   "Front_Matter": {
-    "prefix": "frontmatter",
+    "prefix": "fm",
     "scope": "markdown",
     "body": [
       "---",
@@ -10,7 +10,7 @@
       "date: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND",
       "tags:",
       "  - ${4:blogging}",
-      "layout: post.njk",
+      "layout: post",
       "---"
     ],
     "description": "Front Matter"
