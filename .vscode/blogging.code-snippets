@@ -5,11 +5,11 @@
     "body": [
       "---",
       "title: ${1:My Post Title}",
-      "description: ${2:short tweetable description.}",
-      "kind: ${3:note}",
-      "date: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND",
+      "excerpt: ${2:short tweetable description.}",
+      "category: ${3: what kind of content}",
       "tags:",
       "  - ${4:blogging}",
+      "date: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND",
       "layout: post",
       "---"
     ],
