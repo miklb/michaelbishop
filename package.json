@@ -1,0 +1,23 @@
+{
+  "name": "michaelbishop",
+  "version": "1.0.0",
+  "description": "This will be my new blog & Internet home. I will be using v2 of [jekyll-indieweb](https://github.com/miklb/jekyll-indieweb)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miklb/michaelbishop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miklb/michaelbishop/issues"
+  },
+  "homepage": "https://github.com/miklb/michaelbishop#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2"
+  }
+}
