@@ -1,0 +1,21 @@
+{
+    "title": "Bytes of Michael Bishop",
+    "url": "https://www.michaelbishop.me",
+    "language": "en",
+    "description": "My home on the world wide web.",
+    "feed": {
+        "subtitle": "Full Feed",
+        "filename": "feed.xml",
+        "path": "/feed/feed.xml",
+        "id": "https://www.michaelbishop.me"
+    },
+    "jsonfeed": {
+        "path": "/feed/feed.json",
+        "url": "https://www.michaelbishop.me/feed/feed.json"
+    },
+    "author": {
+        "name": "Michael Bishop",
+        "email": "howdy@michaelbishop.me",
+        "url": "https://www.michaelbishop.me/about-me/"
+    }
+}
