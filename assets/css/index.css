@@ -1,0 +1,35 @@
+
+@import "remedy";
+
+
+html, body {
+    max-width: 100% !important;
+    overflow: auto;
+ }
+ 
+ body {
+    min-height: calc((1vw + 1vh) * 75);
+    padding: 2em;
+    font-family: garamond-atf-micro, serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+ }
+ 
+ 
+ .site-branding h1 {
+    font-family: bd-geminis,sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: .1rem;
+    font-size: 4rem;
+ }
+ 
+ .content {
+    padding: 0.5rem 0.5rem;
+     margin: .5rem .25rem .25rem;
+    width:fit-content;
+    max-width: 99%;
+    overflow: hidden;
+ }
+ 
