@@ -4,6 +4,7 @@ module.exports = (ctx) => ({
         'postcss-import': { path: 'assets/css' },
         'postcss-nested': {},
         'postcss-preset-env': {},
+        'postcss-custom-properties': {},
         cssnano: { preset: 'default' },
     }
 })
