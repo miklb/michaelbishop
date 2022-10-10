@@ -6,7 +6,7 @@
     "scripts": {
         "dev:clean": "rm -rf _site && mkdir -p _site/assets",
         "dev:11ty": "eleventy --port 8080 --serve --incremental",
-        "dev:css": "postcss assets/css/index.css -m -o _site/assets/css/main.css --watch",
+        "dev:css": "postcss assets/css/index.css -m -o _site/assets/css/main.css -w",
         "dev:watchers": "run-p dev:css dev:11ty",
         "dev": "run-s dev:clean dev:watchers",
         "prod": "run-s  prod:css prod:11ty",
