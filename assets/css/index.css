@@ -1,5 +1,15 @@
 
 @import "remedy";
+@import "grid";
+@import "header";
+
+:root {
+   --very-dark-gray: #101b39;
+    --dark-gray: #333136;
+    --gray: #6f6d72;
+    --light-gray: #b4b1b8;
+    --very-light-gray: #e9e8ee;
+}
 
 
 html, body {
@@ -8,6 +18,8 @@ html, body {
  }
  
  body {
+    background-color: var(--very-dark-gray);
+    color: var(--very-light-gray);
     min-height: calc((1vw + 1vh) * 75);
     padding: 2em;
     font-family: garamond-atf-micro, serif;
