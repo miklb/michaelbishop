@@ -1,10 +1,24 @@
 ---
 layout: layouts/home.html
+title: Listening
+permalink: "listening.html"
 pagination:
-  data: lastfm.recenttracks
-  size: 25
+  data: lastfm.recenttracks.track
+  size: 10
 eleventyNavigation:
   key: Listening
   order: 3
 ---
-{{lastfm.recenttracks}}
+<ul class="recently-played"> 
+  {% for item in pagination.items %} 
+  <li class="recently-played__track">
+   <a href="{{ item.url }}" class="track__url"> 
+      <div class="track__media"> 
+        <img src="{{ item.image[3]['#text'] }}" alt="Album artwork for {{ item.name }} by {{ item.artist['#text'] }}" loading="lazy" />
+      </div> 
+      <span class="track__name">{{ item.name }}</span> 
+      <span class="track__artist">{{ item.artist['#text'] }}</span> 
+    </a> 
+  </li> 
+  {% endfor %}
+  </ul>
