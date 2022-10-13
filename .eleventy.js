@@ -1,8 +1,10 @@
 const fs = require("fs");
 const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
+const { EleventyRenderPlugin } = require("@11ty/eleventy");
 
 module.exports = function(eleventyConfig) {
     eleventyConfig.addPlugin(eleventyNavigationPlugin);
+    eleventyConfig.addPlugin(EleventyRenderPlugin);
 
     eleventyConfig.setBrowserSyncConfig({
         middleware: [
