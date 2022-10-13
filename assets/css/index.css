@@ -5,10 +5,12 @@
 
 :root {
    --very-dark-gray: #101b39;
-    --dark-gray: #333136;
-    --gray: #6f6d72;
-    --light-gray: #b4b1b8;
-    --very-light-gray: #e9e8ee;
+   --dark-gray: #333136;
+   --gray: #6f6d72;
+   --light-gray: #b4b1b8;
+   --very-light-gray: #e9e8ee;
+   --yellow: #fecf48;
+   --light-yellow: #FEEDB9;
 }
 
 
@@ -20,13 +22,21 @@ html, body {
  body {
     background-color: var(--very-dark-gray);
     color: var(--very-light-gray);
-    min-height: calc((1vw + 1vh) * 75);
-    padding: 2em;
     font-family: garamond-atf-micro, serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.1rem;
  }
+
+ a:link {
+   color: var(--yellow);
+ }
+
+ a:visited {
+   color: var(--light-yellow);
+ }
+
+
 
  .site-branding {
    text-align: center;
@@ -48,6 +58,7 @@ html, body {
     letter-spacing: .1rem;
     font-size: 2rem;
  }
+ 
  
  .content {
     padding: 0.5rem 0.5rem;
