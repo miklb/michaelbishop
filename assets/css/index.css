@@ -36,12 +36,12 @@ html, body {
    color: var(--light-yellow);
  }
 
-
-
+.wrapper {
+   margin: 0 4rem;
+}
  .site-branding {
    text-align: center;
  }
- 
  
  .site-branding h1 {
     font-family: bd-geminis,sans-serif;
@@ -61,8 +61,6 @@ html, body {
  
  
  .content {
-    padding: 0.5rem 0.5rem;
-     margin: .5rem .25rem .25rem;
     width:fit-content;
     max-width: 99%;
     overflow: hidden;
