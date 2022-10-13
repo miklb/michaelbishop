@@ -1,0 +1,12 @@
+{
+    "title": "Bytes of Michael Bishop",
+    "desc": "A personal web log",
+    "url": "https://www.michaelbishop.me",
+    "img": "https://www.michaelbishop.me/assets/img/favicon.png",
+    "img_alt": "Black and white profile image of Michael Bishop.",
+    "twitter_card_type": "summmary",
+    "twitter_handle": "miklb",
+    "name": "Michael Bishop",
+    "generator": "Eleventy"
+
+}
