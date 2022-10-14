@@ -65,4 +65,18 @@ html, body {
     max-width: 99%;
     overflow: hidden;
  }
+
+ .recently-played {
+   width: auto;
+   display: flex;
+   flex-flow: row wrap;
+   justify-content: space-around;
+ }
+
+ .recently-played__track {
+   list-style-type: none;
+   padding-bottom: 3em;
+   width: 100px;  /* Or whatever */
+   margin: auto;  /* Magic! */
+ }
  

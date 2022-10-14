@@ -74,6 +74,6 @@
     
     .tagline {
         grid-area: 2 / 3 / 3 / 9;
-        align-self: start;
+        align-self: flex-start;
     }
 }

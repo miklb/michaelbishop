@@ -14,9 +14,10 @@
     width: auto;
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: flex-start;
     font-size: 1.6rem;
     line-height: 1.6rem;
+    justify-content: space-around;
 }
 
 .mainnav ul li {
@@ -33,6 +34,6 @@
     }
 
     .mainnav a {
-        padding: .5em .8em;
+        
     }
 }
