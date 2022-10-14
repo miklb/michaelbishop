@@ -8,22 +8,28 @@
     align-items: center;
 }
 
-.mainnav {
+
+
+.mainnav ul {
     width: auto;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    font-size: 24px;
+    align-items: start;
+    font-size: 1.6rem;
+    line-height: 1.6rem;
+}
+
+.mainnav ul li {
+    list-style-type: none;
 }
 
 .mainnav a {
-    padding: .5em;
+    margin-right: .5em;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 550px) {
     .mainheader {
-        flex-direction: row;
-        justify-content: space-around;
+        
     }
 
     .mainnav a {

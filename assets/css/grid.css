@@ -1,5 +1,5 @@
 
-.wrapper {
+.site {
     margin: 0 auto;
     grid-row-gap: 10px;
     grid-template-areas:
@@ -49,7 +49,6 @@
 
     .site {
       grid-column-gap: 2rem;
-      grid-row-gap: 2rem;
       grid-template-columns: 2fr 4fr;
       grid-template-areas:
         "header  header"
@@ -59,11 +58,10 @@
 
     .site-branding {
         display: grid; 
-        grid-template-columns: repeat(2, 100px) repeat(6, 1fr);  
-        grid-template-rows: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 100px) repeat(6, 1fr);
+        grid-template-rows: repeat(2, 100px);
         grid-column-gap: 0px;
         grid-row-gap: 0px;
-        align-items: center;
     }
     
     .logo {

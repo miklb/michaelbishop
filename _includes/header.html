@@ -7,6 +7,6 @@
 					<p class="tagline">{{ site.tagline }}</p>
 				</div>	
 				<nav class="mainnav" role="navigation">					
-						
+						{{ collections.all | eleventyNavigation | eleventyNavigationToHtml }}
             	</nav>
 			</header>
