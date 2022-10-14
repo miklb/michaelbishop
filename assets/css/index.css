@@ -76,7 +76,7 @@ html, body {
  .recently-played__track {
    list-style-type: none;
    padding-bottom: 3em;
-   width: 100px;  /* Or whatever */
+   width: 180px;  /* Or whatever */
    margin: auto;  /* Magic! */
  }
  
