@@ -1,16 +1,23 @@
 <!doctype html>
 <html lang="{{ lang | default: site.lang | default: "en" }}">
 
-{% include "head.html" %}
+  {% include "head.html" %}
 
-	<body>
-		<div class="site">
-			{% include "header.html" %}
-			<main class="content">
-					{{ content }}
-			</main>
-			
-			{% include "footer.html" %}
-		</div>
-	</body>
+  <body>
+    <div class="site">
+      {% include "header.html" %}
+      <main class="content">
+        <header>
+          <h1>{{ title }}</h1>
+          <p>{{ meta.desc }}</p>
+          <p>Published on {{ pubdate | date: "%a, %b %d, %y"  }} - Last Modified {{ page.date | date: "%a, %b %d, %y" }}</p>
+ </header>
+ {{ content }}
+          </main>
+
+          {% include "footer.html" %}
+        </div>
+      </body>
+    </html>
+  </body>
 </html>
