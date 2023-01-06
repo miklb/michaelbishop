@@ -1,5 +1,8 @@
 {
+    "editor.tabCompletion": "on",
+    "files.defaultLanguage": "markdown",
     "files.associations": {
         "*.html": "liquid"
     }
 }
+

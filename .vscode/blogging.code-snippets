@@ -1,18 +1,21 @@
 {
   "Front_Matter": {
-    "prefix": "fm",
+    "prefix": "fma",
     "scope": "markdown",
     "body": [
       "---",
       "title: ${1:My Post Title}",
-      "description: ${2:short tweetable description.}",
-      "kind: ${3:note}",
+      "layout: \"layouts/article.html\"",
+      "permalink: ${2:/article/my-post-title}",
       "date: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND",
+      "modDate: git Last Modified",
       "tags:",
       "  - ${4:blogging}",
-      "layout: post",
+      "meta:",
+      "  title: ${1}",
+      "  desc: ${5:My Post Description}", 
       "---"
     ],
-    "description": "Front Matter"
+    "description": "Front Matter for articles"
   }
 }
