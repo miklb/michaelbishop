@@ -6,6 +6,8 @@ const pluginRss = require("@11ty/eleventy-plugin-rss");
 const Image = require('@11ty/eleventy-img');
 const outdent = require('outdent');
 const xmlFiltersPlugin = require('eleventy-xml-plugin');
+const markdownItFootnote = require("markdown-it-footnote");
+const markdownIt = require("markdown-it");
 
 /** Maps a config of attribute-value pairs to an HTML string representing those same attribute-value pairs.
  * There's also this, but it's ESM only: https://github.com/sindresorhus/stringify-attributes
@@ -19,9 +21,18 @@ const stringifyAttributes = (attributeMap) => {
         .join(' ');
 };
 
+let markdownLibrary = markdownIt({
+        html: true,
+        breaks: true,
+        linkify: true,
+        typographer: true,
+    })
+    .use(markdownItFootnote);
+
 
 module.exports = function(eleventyConfig) {
 
+    eleventyConfig.setLibrary("md", markdownLibrary);
     eleventyConfig.addPlugin(eleventyNavigationPlugin);
     eleventyConfig.addPlugin(EleventyRenderPlugin);
     eleventyConfig.addPlugin(metagen);
