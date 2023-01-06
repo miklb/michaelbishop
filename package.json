@@ -41,5 +41,8 @@
         "postcss-import": "^15.0.0",
         "postcss-nested": "^6.0.0",
         "postcss-preset-env": "^7.8.2"
+    },
+    "dependencies": {
+        "eleventy-xml-plugin": "^0.1.0"
     }
 }

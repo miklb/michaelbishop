@@ -5,6 +5,7 @@ const metagen = require('eleventy-plugin-metagen');
 const pluginRss = require("@11ty/eleventy-plugin-rss");
 const Image = require('@11ty/eleventy-img');
 const outdent = require('outdent');
+const xmlFiltersPlugin = require('eleventy-xml-plugin');
 
 /** Maps a config of attribute-value pairs to an HTML string representing those same attribute-value pairs.
  * There's also this, but it's ESM only: https://github.com/sindresorhus/stringify-attributes
@@ -27,6 +28,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPlugin(pluginRss);
     eleventyConfig.addShortcode('image', imageShortcode);
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
+    eleventyConfig.addPlugin(xmlFiltersPlugin);
 
     eleventyConfig.setBrowserSyncConfig({
         middleware: [
