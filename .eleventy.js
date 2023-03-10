@@ -40,17 +40,6 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addShortcode('image', imageShortcode);
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
     eleventyConfig.addPlugin(xmlFiltersPlugin);
-
-    eleventyConfig.setBrowserSyncConfig({
-        middleware: [
-            function(req, res, next) {
-                if (/^[^.]+$/.test(req.url)) {
-                    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-                }
-                next();
-            }
-        ]
-    });
 };
 // From https://www.aleksandrhovhannisyan.com/blog/eleventy-image-plugin/
 
