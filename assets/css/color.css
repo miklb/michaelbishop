@@ -1,0 +1,11 @@
+body {
+  background-color: var(--very-dark-gray);
+  color: var(--very-light-gray);
+}
+
+a {
+    color: currentColor;
+    text-decoration-color: var(--yellow);
+    text-decoration-thickness: 0.3ex;
+    text-underline-offset: 0.3ex;
+  }
