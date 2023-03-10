@@ -39,6 +39,7 @@
         "outdent": "^0.8.0",
         "postcss": "^8.4.16",
         "postcss-cli": "^10.0.0",
+        "postcss-combine-duplicated-selectors": "^10.0.3",
         "postcss-custom-properties": "^12.1.9",
         "postcss-import": "^15.0.0",
         "postcss-nested": "^6.0.0",

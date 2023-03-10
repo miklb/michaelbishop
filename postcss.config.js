@@ -5,6 +5,7 @@ module.exports = (ctx) => ({
         'postcss-nested': {},
         'postcss-preset-env': {},
         'postcss-custom-properties': {},
+        'postcss-combine-duplicated-selectors': { removeDuplicatedProperties: true },
         cssnano: { preset: 'default' },
     }
 })
