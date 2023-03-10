@@ -1,5 +1,5 @@
 {
-  "Front_Matter": {
+  "Front_Matter_Article": {
     "prefix": "fma",
     "scope": "markdown",
     "body": [
@@ -14,8 +14,29 @@
       "meta:",
       "  title: ${1}",
       "  desc: ${5:My Post Description}", 
+      "  url: https://www.michaelbishop.me/${2}",
+      "  image: ${6:https://www.michaelbishop.me/assets/img/image.jpg}",
+      "  img_alt: ${7:My Post Image Alt}",
       "---"
     ],
     "description": "Front Matter for articles"
+  },
+  "Image_Hero": {
+    "prefix": "imghero",
+    "scope": "markdown",
+    "body": [
+      "<figure>",
+      "   <picture>",
+      "       <source type=\"image/webp\" srcset=\" 400w, /assets/img/${1:file-name}-small.webp 800w, /assets/img/${1}-med.webp 1280w, /assets/img/${1}-large.webp 4032w\" sizes=\"100vw\">",
+      "       <source srcset=\"/assets/img/${1}-big.png\" type=\"image/png\" media=\"(min-width:1920px)\"> ",
+      "       <source srcset=\"/assets/img/${1}-medium.png\" type=\"image/png\" media=\"(min-width:1280px)\"> ",
+      "       <source srcset=\"/assets/img/${1}-small.png\" type=\"image/png\" media=\"(min-width:800px)\"> ",
+      "       <img src=\"/assets/img/${1}.png\" alt=\"${2:Alt Text}\" class=\"u-photo\">",
+      "   </picture>",
+      "   <figcaption>${3:My Post Image Caption}</figcaption>",
+      "</figure>"
+    ],
+    "description": "Full width image"
+  },
   }
 }
