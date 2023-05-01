@@ -12,18 +12,18 @@
             <h1 class="p-name">{{ title }}</h1>
             <p class="p-summary">{{ meta.desc }}</p>
             <p>
-              <time datetime="{{ page.date | 'date_to_xmlschema' }}" class="dt-time post-date">Posted on {{ page.date | date: "%a, %b %d, %Y" }} | Last Modified <span class="dt-updated">{{ page.modDate | date: "%a, %b %d, %Y" }}</span></time>
+              <time datetime="{{ page.date | 'date_to_xmlschema' }}" class="dt-time post-date">Posted on {{ page.date | date: "%a, %b %d, %Y" }} | Last Modified
+                <span class="dt-updated">{{ modDate | date: "%a, %b %d, %Y" }}</span>
+              </time>
             </p>
           </header>
-            <div class="e-content">
-              {{ content }}
-            </div>
-        </article> 
+          <div class="e-content">
+            {{ content }}
+          </div>
+        </article>
       </main>
 
-          {% include "footer.html" %}
-        </div>
-      </body>
-    </html>
+      {% include "footer.html" %}
+    </div>
   </body>
 </html>

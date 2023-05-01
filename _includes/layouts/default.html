@@ -10,14 +10,12 @@
         <header>
           <h1>{{ title }}</h1>
           <p>{{ meta.desc }}</p>
-          <p>Published on {{ pubdate | date: "%a, %b %d, %y"  }} - Last Modified {{ page.date | date: "%a, %b %d, %y" }}</p>
- </header>
- {{ content }}
-          </main>
+          <p>Published on {{ pubdate | date: "%a, %b %d, %y" }} - Last Modified {{ page.date | date: "%a, %b %d, %y" }}</p>
+        </header>
+        {{ content }}
+      </main>
 
-          {% include "footer.html" %}
-        </div>
-      </body>
-    </html>
+      {% include "footer.html" %}
+    </div>
   </body>
 </html>
