@@ -40,6 +40,8 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addShortcode('image', imageShortcode);
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
     eleventyConfig.addPlugin(xmlFiltersPlugin);
+    eleventyConfig.addPassthroughCopy("assets/img");
+    eleventyConfig.addPassthroughCopy(".well-known");
 };
 // From https://www.aleksandrhovhannisyan.com/blog/eleventy-image-plugin/
 
@@ -57,7 +59,7 @@ const imageShortcode = async(
     src,
     alt,
     className = undefined,
-    widths = [400, 800, 1280],
+    widths = [300, , 600, 1200, 1280],
     formats = ['webp', 'jpeg'],
     sizes = '100vw'
 ) => {
