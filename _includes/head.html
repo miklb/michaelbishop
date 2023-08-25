@@ -15,5 +15,16 @@
     type="application/rss+xml"
     title="{{ site.title }}"
     href="{{ "/feed.xml" | prepend: site.github.url | prepend: site.url }}">
+  {% if page.url == "/" %}
+    <link
+      rel="self"
+      href="{{ site.url }}"
+      type="text/html" />
+    <link rel="micropub" href="{{ site.micropubendpoint }}" />
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+  {% endif %}
+
   <meta name="theme-color" content="#fdfdfd">
+
 </head>

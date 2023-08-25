@@ -2,6 +2,7 @@
     "title": "Bytes of Michael Bishop",
     "tagline": "A personal web log",
     "url": "https://www.michaelbishop.me",
+    "micropubendpoint": "bishop-micropub.netlify.app/micropub/main",
     "language": "en",
     "description": "My home on the world wide web.",
     "feed": {
