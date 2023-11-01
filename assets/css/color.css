@@ -1,11 +1,25 @@
 body {
-  background-color: var(--very-dark-gray);
-  color: var(--very-light-gray);
+  background-color: var(--site-color-background);
+  color: var(--site-color-textPrimary);
+}
+
+.mainheader {
+  background-color: var(--yellow);
+}
+
+.mainnav {
+  background-color: var(--site-color-background);
+  border-bottom: 1px solid var(--yellow);
+}
+
+.colophon {
+  background-color: var(--site-color-textPrimary);
+  color: var(--site-color-background);
 }
 
 a {
     color: currentColor;
-    text-decoration-color: var(--yellow);
+    text-decoration-color: var(--site-color-textDecoration);
     text-decoration-thickness: 0.3ex;
     text-underline-offset: 0.3ex;
   }

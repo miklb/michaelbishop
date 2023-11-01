@@ -1,6 +1,7 @@
 @import "variables";
 @import "remedy";
-@import "grid";
+@import "layout";
+@import "utilities";
 @import "typography";
 @import "color";
  

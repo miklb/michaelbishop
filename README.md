@@ -2,7 +2,9 @@
 
 I've thought long and hard on how **I** want to make websites for **me**. This is where I've landed. Eleventy as a static site generator and PostCSS for styling development. I am borrowing heavily from work I've previously done with Jekyll-IndieWeb.
 
-This will not be a framework or a project I maintain for general use. I do encourage you to dig through the code and take any bits that might be useful. If you find a bug or have a question about a piece of code, feel free to [open an issue](https://github.com/miklb/michaelbishop/issues).
+This project will be the building blocks for the next iteration of that project. The primary difference will be that this project will be built to used with CloudCannon instead of Micropub. That's not to say micropub can't also be used, but for broader appeal a web interface to post from without configuring a micropub server is in my opinion a more viable option for the broader community.
+
+See a bug? Please [open an issue](https://github.com/miklb/michaelbishop/issues).
 
 Reference:
 

@@ -1,0 +1,32 @@
+.recently-played {
+  width: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.recently-played__track {
+  list-style-type: none;
+  padding-bottom: 3em;
+  width: 180px; /* Or whatever */
+  margin: auto; /* Magic! */
+}
+
+iframe[src*="youtube"],
+iframe[src*="vimeo"] {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+a {
+    color: var(--site-color-link);
+    text-decoration-color: var(--yellow);
+    text-decoration-thickness: 0.3ex;
+    text-underline-offset: 0.3ex;
+  }
+
+  .mainnav ul li {
+    list-style: none;
+  }

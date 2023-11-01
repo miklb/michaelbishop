@@ -6,9 +6,15 @@
   <body>
     <div class="site">
       {% include "header.html" %}
-      <main class="content flow">
-        {{ content }}
+      <main class="content">
+        <div class="home-content">
+          <p class="fluid-type">
+          {{ content }}
+        </p>
+        </div>
+        
       </main>
+      
 
       {% include "footer.html" %}
     </div>
