@@ -35,7 +35,6 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.setLibrary("md", markdownLibrary);
     eleventyConfig.addPlugin(eleventyNavigationPlugin);
     eleventyConfig.addPlugin(EleventyRenderPlugin);
-    eleventyConfig.addPlugin(xmlFiltersPlugin);
     eleventyConfig.addPlugin(metagen);
     eleventyConfig.addPlugin(pluginRss);
     eleventyConfig.addShortcode('image', imageShortcode);
