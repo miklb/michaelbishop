@@ -5,7 +5,6 @@ const metagen = require('eleventy-plugin-metagen');
 const pluginRss = require("@11ty/eleventy-plugin-rss");
 const Image = require('@11ty/eleventy-img');
 const outdent = require('outdent');
-const xmlFiltersPlugin = require('eleventy-xml-plugin');
 const markdownItFootnote = require("markdown-it-footnote");
 const markdownIt = require("markdown-it");
 
