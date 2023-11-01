@@ -38,7 +38,6 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPlugin(pluginRss);
     eleventyConfig.addShortcode('image', imageShortcode);
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
-    eleventyConfig.addPlugin(xmlFiltersPlugin);
     eleventyConfig.addPassthroughCopy("assets/img");
     eleventyConfig.addPassthroughCopy(".well-known");
 };
