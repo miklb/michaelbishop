@@ -30,3 +30,18 @@ a {
   .mainnav ul li {
     list-style: none;
   }
+
+  .home-primary img {
+    width: 50vw;
+    height: auto;
+  }
+
+  .profiles ul {
+    list-style: none;
+  }
+
+
+  .profile svg {
+    height: 24px;
+    width: 24px;
+  }

@@ -4,6 +4,8 @@
     "url": "https://www.michaelbishop.me",
     "micropubendpoint": "bishop-micropub.netlify.app/micropub/main",
     "language": "en",
+    "twitter_username": "miklb",
+    "github_username": "miklb",
     "description": "My home on the world wide web.",
     "feed": {
         "subtitle": "Full Feed",
@@ -18,6 +20,7 @@
     "author": {
         "name": "Michael Bishop",
         "email": "howdy@michaelbishop.me",
+        "image": "/assets/img/favicon.png",
         "url": "https://www.michaelbishop.me/about-me/"
     }
 }
