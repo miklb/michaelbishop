@@ -7,7 +7,7 @@ pagination:
   size: 10
 eleventyNavigation:
   key: Listening
-  order: 3
+  order: 4
 meta:
   title: Listening
   desc: What I'm listening to and tales of shows of the past.

@@ -7,6 +7,7 @@ const Image = require('@11ty/eleventy-img');
 const outdent = require('outdent');
 const markdownItFootnote = require("markdown-it-footnote");
 const markdownIt = require("markdown-it");
+const { DateTime } = require("luxon");
 
 /** Maps a config of attribute-value pairs to an HTML string representing those same attribute-value pairs.
  * There's also this, but it's ESM only: https://github.com/sindresorhus/stringify-attributes
@@ -40,6 +41,14 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
     eleventyConfig.addPassthroughCopy("assets/img");
     eleventyConfig.addPassthroughCopy(".well-known");
+
+    eleventyConfig.addFilter("ISODate", dateObj => {
+        return DateTime.fromJSDate(dateObj).toISO();
+    });
+
+    eleventyConfig.addFilter("unixTimestamp", dateObj => {
+        return DateTime.fromJSDate(dateObj).toUnixInteger();
+    });
 };
 // From https://www.aleksandrhovhannisyan.com/blog/eleventy-image-plugin/
 

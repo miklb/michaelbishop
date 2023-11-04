@@ -65,9 +65,18 @@
     }
 }
 
-.home-primary{
-    grid-column: col-start 1 / span 12;
+.inner-grid {
+    grid-column: col-start 1 / span -1;
     margin-inline: var(--single-col);
+}
+
+.archives article {
+    margin-inline: 0;
+}
+
+.archives h1 {
+   width: 100%; 
+   grid-column: col-start 2 /  -1;
 }
 
 .container {
@@ -97,41 +106,50 @@
         margin-inline: var(--single-col);    
     }
 
+    .post-date > * {
+        display: inline-block;
+    }
+
+   
+
     @supports (grid-template-columns: subgrid) {
         .content {
             margin-inline: 0;
             display: grid;
         grid-template-columns: subgrid;
+
+        article {
+            margin-inline: 0;
+        }
         }
 
-        .home-primary {
+        .inner-grid {
             grid-column: col-start 1 / -1;
             display: grid;
             grid-template-columns: subgrid;
+        }
 
+        .home-primary {
             .card-intro {
-                grid-column: col-start 4 / span 6;
+                grid-column: col-start 2 / span 5;
                 grid-row: 1 / 2;
             }
 
             img {
-                grid-column: col-start 2 / span 2;
+                grid-column: col-start 7 / span 2;
             }
 
             .profiles {
                 grid-column: col-start 10 / span 2;
             }
         }
-
         article {
-            grid-column: col-start 1 / -1;
-            display: grid;
-            grid-template-columns: subgrid;
+
             header {
                 grid-column: col-start 2 / -1;
             }
             .meta {
-                grid-column: col-start 10 / span 2;
+                grid-column: col-start 10 / span 3;
                 grid-row: 2 / 3;
             }
     
@@ -140,6 +158,28 @@
                 grid-row: 2 / 3;
             }
         }
+
+        .archives article {
+            header {
+                grid-column: col-start 4 / -1;
+                grid-row: 1 / 1;
+
+                h1 {
+                    margin-block: 0;
+                }
+            }
+
+            .meta {
+                grid-column: col-start 2 / span 2;
+                grid-row: 1 / span 2;
+            }
+
+            .content-wrap {
+                grid-column: col-start 4 / -1;
+                grid-row: 2 / 2;
+            }
+        }
+        
     }
   }
   

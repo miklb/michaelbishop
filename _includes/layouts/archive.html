@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{ lang | default: site.lang | default: "en" }}">
+
+  {% include "head.html" %}
+
+  <body>
+    <div class="site">
+      {% include "header.html" %}
+      <main class="content">
+        <div class="archives inner-grid">
+          <h1>Archives</h1>
+            {%- for post in collections.all reversed -%}
+              <article class=" inner-grid h-entry">
+                <header>
+                  
+                  <h1 class="p-name">
+                    <a class="u-url" href="{{ post.url }}">
+                      {% if post.data.title %}
+                      {{ post.data.title }}
+                      {% else %}
+                      #
+                      {% endif %}
+                    </a>
+                  </h1>
+                </header>
+                <div class="meta">
+                  <time datetime="{{ post.page.date | ISODate }}" class="dt-time post-date">
+                    {{ post.page.date | date: "%b %d, %Y" }}
+                  </time>
+                </div>
+          
+          <div class="content-wrap e-content fluid-type">
+            
+              {% if post.data.meta.desc %}
+                <p class="h4 lede p-summary">
+              {{ post.data.meta.desc }}
+              </p>
+              {%  else %}
+              {{ post.content }}
+              {% endif %}
+              
+          </div>
+        </article>
+            {%- endfor -%}
+
+        </div>
+      </main>
+      {% include "footer.html" %}
+    </div>
+  </body>
+</html>

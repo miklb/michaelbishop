@@ -4,7 +4,7 @@ title: Bio
 permalink: "bio.html"
 eleventyNavigation:
   key: Bio
-  order: 2
+  order: 3
 meta:
   title: Bio
   desc: Short version. You'll have to read the entire site to get the long version. Mostly.
