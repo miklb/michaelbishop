@@ -2,6 +2,7 @@
 layout: layouts/default.html
 title: Listening
 permalink: "listening.html"
+date: git Created
 pagination:
   data: lastfm.recenttracks.track
   size: 10
@@ -12,7 +13,7 @@ meta:
   title: Listening
   desc: What I'm listening to and tales of shows of the past.
 ---
-<h2>{{ title }}</h2>
+
 <p>Music, particularly live music, has been central in my life since my teens. Punk shows 
 at the Cuban Club and hair bands at Lakeland Civic Center. In the nearly 40 years since, I'd guess I've seen 500 live shows give or take a dozen.</p>
 <p>This section will focus on what I'm listening to now as well as tales of shows from the past.</p>

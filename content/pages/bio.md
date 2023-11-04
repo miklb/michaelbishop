@@ -2,6 +2,7 @@
 layout: layouts/default.html
 title: Bio
 permalink: "bio.html"
+date: git Created
 eleventyNavigation:
   key: Bio
   order: 3

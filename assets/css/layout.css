@@ -143,7 +143,7 @@
                 grid-column: col-start 10 / span 2;
             }
         }
-        article {
+        .single-post {
 
             header {
                 grid-column: col-start 2 / -1;
