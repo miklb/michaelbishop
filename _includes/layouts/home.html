@@ -11,8 +11,11 @@
           <img src="{{ site.author.image }}" alt="{{ site.author.name }}" class="u-photo">
 
           <div class="card-intro">
-            <h2>Welcome to the website of <span class="p-name">{{ site.author.name }}</span></h2>
-            {{ content }} 
+            <h2>Welcome to the <a rel="me" href="/">website</a> of <span class="p-name">{{ site.author.name }}</span></h2>
+			<div class="p-note">
+				{{ content }} 
+			</div>
+            
           </div>
             
           <div class="profiles">
