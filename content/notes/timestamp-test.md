@@ -2,11 +2,11 @@
 title: 
 layout: "layouts/article.html"
 permalink: "/note/{{ page.date | unixTimestamp}}.html"
-date: git Created
+date: Created
 modDate: 
 tags:
   - note
-  - test
+  - testing
 meta:
   title: 
   desc: 
