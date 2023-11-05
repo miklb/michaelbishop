@@ -2,8 +2,7 @@
 title: Hand Rolled
 layout: "layouts/article.html"
 permalink: "/article/hand-rolled.html"
-date: Created
-modDate: git Last Modified
+date: git Created
 tags:
   - blogging
 meta:

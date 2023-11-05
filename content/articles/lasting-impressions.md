@@ -2,8 +2,7 @@
 layout: "layouts/article.html"
 title: Lasting Impressions
 permalink: "/articles/lasting-impressions.html"
-date: Created
-modDate: git Last Modified
+date: git Created
 tags:
   - gyotaku
 meta:
