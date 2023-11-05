@@ -1,8 +1,8 @@
 ---
 title: Hand Rolled
 layout: "layouts/article.html"
-permalink: /article/hand-rolled
-date: 2023-01-06 22:17:22
+permalink: "/article/hand-rolled.html"
+date: Created
 modDate: git Last Modified
 tags:
   - blogging

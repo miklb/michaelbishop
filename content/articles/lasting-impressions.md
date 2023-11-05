@@ -2,7 +2,7 @@
 layout: "layouts/article.html"
 title: Lasting Impressions
 permalink: "/articles/lasting-impressions.html"
-date: 2023-01-06
+date: Created
 modDate: git Last Modified
 tags:
   - gyotaku
