@@ -26,23 +26,27 @@
     "homepage": "https://github.com/miklb/michaelbishop#readme",
     "devDependencies": {
         "@11ty/eleventy": "^2.0.0",
-        "@11ty/eleventy-fetch": "^3.0.0",
-        "@11ty/eleventy-img": "^2.0.1",
+        "@11ty/eleventy-fetch": "^4.0.0",
+        "@11ty/eleventy-img": "^3.1.8",
         "@11ty/eleventy-navigation": "^0.3.5",
         "@11ty/eleventy-plugin-rss": "^1.2.0",
-        "cssnano": "^5.1.13",
-        "dotenv": "^16.0.3",
+        "cssnano": "^6.0.1",
+        "dotenv": "^16.3.1",
         "eleventy-plugin-metagen": "^1.7.11",
-        "markdown-it": "^13.0.1",
+        "markdown-it": "^13.0.2",
         "markdown-it-footnote": "^3.0.3",
         "npm-run-all": "^4.1.5",
         "outdent": "^0.8.0",
         "postcss": "^8.4.16",
-        "postcss-cli": "^10.0.0",
+        "postcss-cli": "^10.1.0",
         "postcss-combine-duplicated-selectors": "^10.0.3",
-        "postcss-custom-properties": "^12.1.9",
-        "postcss-import": "^15.0.0",
-        "postcss-nested": "^6.0.0",
-        "postcss-preset-env": "^7.8.2"
+        "postcss-custom-properties": "^13.3.2",
+        "postcss-import": "^15.1.0",
+        "postcss-nested": "^6.0.1",
+        "postcss-preset-env": "^9.3.0"
+    },
+    "dependencies": {
+        "i": "^0.3.7",
+        "npm": "^10.2.3"
     }
 }
