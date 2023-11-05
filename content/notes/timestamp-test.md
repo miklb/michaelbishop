@@ -2,7 +2,7 @@
 title: 
 layout: "layouts/article.html"
 permalink: "/note/{{ page.date | unixTimestamp}}.html"
-date: Created
+date: 2023-11-04 21:19:54
 modDate: 
 tags:
   - note
