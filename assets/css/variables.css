@@ -28,7 +28,8 @@
   --site-line-height: 1.75;
 
 /* utilities */
-
---single-col: calc(100vw / 12);
+--site-grid-gap: 20px;
+--single-col: calc((100vw / 12) + var(--site-grid-gap));
+--three-col: calc(var(--single-col) * 3);
 }
 

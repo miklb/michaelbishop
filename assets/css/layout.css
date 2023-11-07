@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: repeat(12, [col-start] 1fr);
     grid-template-rows: 15em 2fr 1fr;
-    gap: 20px;
+    gap: var(--site-grid-gap);
     min-height: 100vh;
 }
 
@@ -39,7 +39,6 @@
 
 .content {  
     grid-row: 2 / 4;
-    grid-column: col-start 2 / span 10;
     padding-block-start: 1em;
 }
 
@@ -58,6 +57,17 @@
 
 .profiles li {
     padding-block: .5em;
+}
+
+.pinned {
+    grid-column: col-start 1 / -1;
+    margin-inline: var(--single-col);
+    display: flex;
+    flex-wrap: wrap;
+
+    article {
+        width: var(--three-col);
+    }
 }
 
 .colophon {

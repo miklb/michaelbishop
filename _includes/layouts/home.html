@@ -94,6 +94,41 @@
             </ul>
           </div>
         </section>
+		<section class="pinned">
+			{% for post in collections.pinned %}
+				<article class=" inner-grid h-entry">
+                <header>
+                  
+                  <h2 class="h3 p-name">
+                    <a class="u-url" href="{{ post.url }}">
+                      {% if post.data.title %}
+                      {{ post.data.title }}
+                      {% else %}
+                      #
+                      {% endif %}
+                    </a>
+                  </h2>
+                </header>
+                <div class="meta">
+                  <time datetime="{{ post.page.date | ISODate }}" class="dt-time post-date">
+                    {{ post.page.date | date: "%b %d, %Y" }}
+                  </time>
+                </div>
+          
+          <div class="content-wrap e-content fluid-type">
+            
+              {% if post.data.meta.desc %}
+                <p class="h4 lede p-summary">
+              {{ post.data.meta.desc }}
+              </p>
+              {%  else %}
+              {{ post.content }}
+              {% endif %}
+              
+          </div>
+        </article>
+            {%- endfor -%}
+		</section>
         
       </main>
       

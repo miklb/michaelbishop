@@ -23,3 +23,9 @@ a {
     text-decoration-thickness: 0.3ex;
     text-underline-offset: 0.3ex;
   }
+
+  .pinned article {
+    padding: .5em;
+    border: 1px solid var(--light-gray);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  }
