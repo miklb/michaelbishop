@@ -95,9 +95,6 @@
     container-type: inline-size;
   }
 
-  @supports (grid-template-columns: subgrid) {
-    
-  }
 
   @media (min-width: 700px) {
 
