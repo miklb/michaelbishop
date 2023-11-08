@@ -61,13 +61,9 @@
 
 .pinned {
     grid-column: col-start 1 / -1;
-    margin-inline: var(--single-col);
+    
     display: flex;
     flex-wrap: wrap;
-
-    article {
-        width: var(--three-col);
-    }
 }
 
 .colophon {
@@ -113,6 +109,17 @@
 
     .post-date > * {
         display: inline-block;
+    }
+
+    .pinned {
+        grid-column: col-start 1 / -1;
+        margin-inline: var(--single-col);
+        display: flex;
+        flex-wrap: wrap;
+    
+        article {
+            width: var(--three-col);
+        }
     }
 
    
