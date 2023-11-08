@@ -15,7 +15,7 @@ meta:
   url: "{{ page.url }}"
 ---
 
-My RSS consumption these days is using NetNewsWire synced through iCloud. I've always prefered reading my feeds on my laptop, probably because I've never picked up an iPad after having a 1st gen. But I also started reading RSS years before reading them anywhere but the desktop was an option.
+My RSS consumption these days is using [NetNewsWire](https://netnewswire.com) synced through iCloud. I've always prefered reading my feeds on my laptop, probably because I've never picked up an iPad after having a 1st gen. But I also started reading RSS years before reading them anywhere but the desktop was an option.
 
 I sort them oldest to newest and use the keyboard—I use arrow keys—to navigate through the list. I used to read everything in the app, but more recently as more folks are posting from their personal sites, I like to click over and read the longer posts in its native format. Especially web folks. It's a great way to see what everyone is doing with their sites. View a little source.
 
