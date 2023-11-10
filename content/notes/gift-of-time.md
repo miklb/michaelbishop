@@ -20,3 +20,5 @@ What a beautiful thing to say.
 </blockquote>
 
 Read the full article at [Ploum.net](https://ploum.net/2023-11-10-the-gift-of-time.html).
+
+<a class="u-bridgy-fed" href="https://fed.brid.gy/" hidden="from-humans"></a>
