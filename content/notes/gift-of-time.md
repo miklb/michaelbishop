@@ -19,6 +19,7 @@ What a beautiful thing to say.
     <footer>— <cite>Ploum</cite></footer>
 </blockquote>
 
-Read the full article at [Ploum.net](https://ploum.net/2023-11-10-the-gift-of-time.html).
+Read the full post <a href="https://ploum.net/2023-11-10-the-gift-of-time.html" class="u-in-reply-to" rel="in-reply-to">The Gift of Time</a>
+
 
 <a class="u-bridgy-fed" href="https://fed.brid.gy/" hidden="from-humans"></a>
