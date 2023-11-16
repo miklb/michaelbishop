@@ -21,6 +21,16 @@
     ],
     "description": "Front Matter for articles"
   },
+  "Front_Matter_Note": {
+    "prefix": "fmn",
+    "scope": "markdown",
+    "body": [
+      "---",
+      "tags:",
+      "  - ${4:blogging}",
+      "---"
+    ]
+  },
   "Image_Hero": {
     "prefix": "imghero",
     "scope": "markdown",
