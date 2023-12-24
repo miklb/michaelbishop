@@ -66,7 +66,7 @@ const imageShortcode = async(
     src,
     alt,
     className = undefined,
-    widths = [300, , 600, 1200, 1280],
+    widths = [300, 600, 1200, 1280],
     formats = ['webp', 'jpeg'],
     sizes = '100vw'
 ) => {
@@ -108,6 +108,7 @@ const imageShortcode = async(
         width: largestUnoptimizedImg.width,
         height: largestUnoptimizedImg.height,
         alt,
+        class: 'u-photo',
         loading: 'lazy',
         decoding: 'async',
     });
