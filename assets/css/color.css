@@ -34,3 +34,7 @@ a {
     border: 1em solid #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   }
+
+  .track__media img {
+    border: 3px;
+  }

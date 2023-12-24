@@ -2,14 +2,12 @@
   width: auto;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
 }
 
-.recently-played__track {
-  list-style-type: none;
-  padding-bottom: 3em;
-  width: 180px; /* Or whatever */
-  margin: auto; /* Magic! */
+.recently-played li {
+  list-style: none;
+  flex: 1 1 33%;
+  padding-block-end: 2em;
 }
 
 iframe[src*="youtube"],
