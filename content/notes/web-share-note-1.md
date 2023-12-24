@@ -9,3 +9,5 @@ Inspired by @zachleat.com's evangelism of HTML Web Components I played around wi
 If you see Aaron, tell him I said thanks and if he's cool with it I'll clean it up and release it. [Repo link](https://github.com/miklb/web-share-button).
 
 <a class="u-bridgy-fed" href="https://fed.brid.gy/" hidden="from-humans"></a>
+
+Syndicated on: <a href="https://bsky.app/profile/michaelbishop.me/post/3kgulabu2yz24" class="u-syndication">Bluesky</a>
