@@ -1,7 +1,7 @@
 ---
 layout: layouts/default.html
 title: Listening
-permalink: "listening.html"
+permalink: "listening"
 date: git Created
 pagination:
   data: lastfm.recenttracks.track
