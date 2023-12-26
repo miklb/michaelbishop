@@ -8,6 +8,8 @@ const outdent = require('outdent');
 const markdownItFootnote = require("markdown-it-footnote");
 const markdownIt = require("markdown-it");
 const { DateTime } = require("luxon");
+const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
+
 
 /** Maps a config of attribute-value pairs to an HTML string representing those same attribute-value pairs.
  * There's also this, but it's ESM only: https://github.com/sindresorhus/stringify-attributes
@@ -37,6 +39,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPlugin(EleventyRenderPlugin);
     eleventyConfig.addPlugin(metagen);
     eleventyConfig.addPlugin(pluginRss);
+    eleventyConfig.addPlugin(syntaxHighlight);
     eleventyConfig.addShortcode('image', imageShortcode);
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
     eleventyConfig.addPassthroughCopy("assets/img");
