@@ -1,7 +1,7 @@
 ---
 layout: layouts/default.html
 title: Listening
-permalink: "listening"
+permalink: "listening.html"
 date: git Created
 eleventyNavigation:
   key: Listening
