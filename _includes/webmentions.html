@@ -1,0 +1,86 @@
+<section class="webmentions">
+        {% assign webmentionUrl = site.url | append: page.url | remove: '.html' %}
+        {% assign filteredWebmentions = webmentions.children | where: "wm-target", webmentionUrl %}
+        {% assign likes = filteredWebmentions | where: "wm-property", "like-of" %}
+        {% assign likeSize = likes | size %}
+        {% if likeSize > 0 %}
+          <div class="webmentions__facepile">
+  <h3>{{ likeSize }} Like{% if likesSize != 1 %}s{% endif %}</h3>
+
+    {% for webmention in likes %}
+
+      {% if webmention.url != "" %}
+        <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+      {% endif %}
+
+      {% if webmention.author.photo %}
+      <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+      {% else %}
+      <img class="webmention__author__photo" src="{{ '/img/avatar.svg' | url }}" alt="" width="48" height="48">
+      {% endif %}
+
+      {% if webmention.url != "" %}
+        </a>
+      {% endif %}
+    {% endfor %}
+</div>
+        {% endif  %}
+        {% assign reposts = filteredWebmentions |  where: "wm-property", "repost-of"  %}
+        {% assign repostSize = reposts | size %}
+        {% if repostSize > 0 %}
+          <div class="webmentions__facepile">
+            <h3>{{ repostSize }} Repost{% if repostSize != 1 %}s{% endif %}</h3>
+              {% for webmention in reposts %}
+
+                {% if webmention.url != "" %}
+                  <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                {% endif %}
+          
+                {% if webmention.author.photo %}
+                <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+                {% else %}
+                <img class="webmention__author__photo" src="{{ '/img/avatar.svg' | url }}" alt="" width="48" height="48">
+                {% endif %}
+          
+                {% if webmention.url != "" %}
+                  </a>
+                {% endif %}
+              {% endfor %}
+          </div>
+        {% endif  %}
+
+        {% assign replies = filteredWebmentions | where: "wm-property", "in-reply-to" %}
+
+       {% assign replySize = replies | size %}
+        {% if replySize > 0 %}
+        {% for webmention in replies %}
+          <article class="webmention" id="webmention-{{ webmention['wm-id'] }}">
+  <div class="webmention__meta">
+    {% if webmention.author %}
+      {% if webmention.author.photo %}
+      <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+      {% else %}
+      <img src="{{ '/img/avatar.svg' | url }}" alt="" width="48" height="48">
+      {% endif %}
+      <span>
+        <a class="h-card u-url" {% if webmention.url %}href="{{ webmention.url }}" {% endif %} target="_blank" rel="noopener noreferrer"><strong class="p-name">{{ webmention.author.name }}</strong></a>
+      </span>
+    {% else %}
+      <span>
+        <strong>Anonymous</strong>
+      </span>
+    {% endif %}
+    {% if webmention.published %}
+        <time class="postlist-date" datetime="{{ webmention.published }}">
+            {{ webmention.published | date: "%a, %b %d, %Y" }}
+        </time>
+    {% endif %}
+  </div>
+  <div>
+      {{ webmention.content.text }}
+  </div>
+</article>
+{% endfor %}
+{% endif %}
+       
+      </section>

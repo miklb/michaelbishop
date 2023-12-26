@@ -168,7 +168,7 @@
                 grid-column: col-start 2 / -1;
             }
             .meta {
-                grid-column: col-start 10 / span 3;
+                grid-column: col-start 10 / span 2;
                 grid-row: 2 / 3;
             }
     
@@ -201,4 +201,31 @@
         
     }
   }
+
+  .webmentions {
+    grid-column: col-start 2 /  span 7;
+  }
   
+  .webmentions__facepile {
+    display: flex;
+    flex-wrap: wrap;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+
+    h3 {
+        margin-block: 0;
+        padding-inline-end: 1em;
+        float: left;
+    }
+  
+    a {
+        margin-left: -12px;
+width: 3rem;
+height: 3rem;
+border-radius: 50%;
+border: 2px solid #fff;
+line-height: 1;
+overflow: hidden;
+box-sizing: content-box;
+    }
+    }
