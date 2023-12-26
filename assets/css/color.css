@@ -33,8 +33,18 @@ a {
   article img {
     border: 1em solid #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    height: auto;
   }
 
   .track__media img {
     border: 3px;
+  }
+
+  .webmention__meta img {
+    float: left;
+    border: 2px solid #fff;
+    width: 96px;
+    height: 96px;
+    margin-inline-end: 1em;
   }
