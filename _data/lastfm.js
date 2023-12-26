@@ -4,7 +4,7 @@ require('dotenv').config();
 const API_KEY = process.env.LFM_API_KEY;
 
 module.exports = async function() {
-    const url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=miklb&api_key=${API_KEY}&limit=10&format=json`;
+    const url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=miklb&api_key=${API_KEY}&limit=20&format=json`;
 
     /* This returns a promise */
     return EleventyFetch(url, {
