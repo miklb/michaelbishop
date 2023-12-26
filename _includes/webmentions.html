@@ -1,4 +1,5 @@
 <section class="webmentions">
+    <h2>Reactions</h2>
         {% assign webmentionUrl = site.url | append: page.url | remove: '.html' %}
         {% assign filteredWebmentions = webmentions.children | where: "wm-target", webmentionUrl %}
         {% assign likes = filteredWebmentions | where: "wm-property", "like-of" %}
