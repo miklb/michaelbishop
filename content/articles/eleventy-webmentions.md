@@ -8,6 +8,7 @@ tags:
   - article
   - Eleventy
   - webmentions
+  - pinned
 
 meta:
   title: Another Approach to Webmentions in Eleventy
