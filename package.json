@@ -1,6 +1,6 @@
 {
     "name": "michaelbishop",
-    "version": "1.0.0-beta.2",
+    "version": "0.1.0",
     "description": "This will be my new blog & Internet home.",
     "main": "index.js",
     "scripts": {
