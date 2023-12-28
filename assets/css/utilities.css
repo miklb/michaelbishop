@@ -43,3 +43,15 @@ a {
     height: 24px;
     width: 24px;
   }
+
+  blockquote {
+    border-left: 4px solid var(--yellow);
+    padding-inline-start: 1em;
+    margin-block-start: 0;
+    margin-block-end: 0;  
+  }
+
+  blockquote p {
+    margin-block-start: 0;
+    margin-block-end: 0;  
+  }
