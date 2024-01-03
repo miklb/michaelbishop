@@ -37,7 +37,7 @@ So now we can add put this in a script we can run. `-w` is for `watch`, it will 
 
 Now we can add it to our `package.json` file.
 
-```
+```js
 “scripts”: {
 “css”: “postcss css/index.css -w -m -o style.css”
 }
