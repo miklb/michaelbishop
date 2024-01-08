@@ -1,0 +1,8 @@
+{
+    "layout": "layouts/article.html",
+    "date": "git Created",
+    "tags": "article",
+    "meta": {
+        "url": "{{ page.url }}"
+    }
+}
