@@ -1,11 +1,17 @@
 ---
 title: In Defense of PostCSS as a Super Basic CSS Processing SetUp
+excerpt: Outlining how I use PostCSS for CSS processing.
 layout: "layouts/article.html"
 permalink: "/article/postcss-superbasic-css-processing.html"
 date: git Created
 tags:
   - PostCSS
   - CSS
+  - pinned  
+meta:
+  title: In Defense of PostCSS as a Super Basic CSS Processing Setup
+  desc: Outlining how I use PostCSS for CSS processing.
+  url: "{{ page.url }}"
 ---
 
 Over on Frontend Masters, Chris Coyier wrote up his [super basic CSS processing Setup](https://frontendmasters.com/blog/fine-ill-use-a-super-basic-css-processing-setup/) and I found myself nodding at most of his points. Not to take anything away from his suggested setup, but I use [PostCSS](https://postcss.org)in a very similar fashion. 

@@ -1,5 +1,6 @@
 ---
 title: LastFM Recently Played with Eleventy
+excerpt: How I'm using Eleventy Fetch to display my recently played tracks from LastFM.
 layout: "layouts/article.html"
 permalink: "/article/lastfm-eleventy.html"
 tags:
