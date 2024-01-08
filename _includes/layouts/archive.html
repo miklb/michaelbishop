@@ -13,15 +13,18 @@
               <article class=" inner-grid h-entry">
                 <header>
                   
-                  <h1 class="p-name">
-                    <a class="u-url" href="{{ post.url }}">
+                  
                       {% if post.data.title %}
+                        <h2 class="p-name">
+                        <a class="u-url" href="{{ post.url }}">
                       {{ post.data.title }}
+                      </a>
+                      </h2>
                       {% else %}
+                      <a class="u-url" href="{{ post.url }}">
                       #
+                      </a>
                       {% endif %}
-                    </a>
-                  </h1>
                 </header>
                 <div class="meta">
                   <time datetime="{{ post.page.date | ISODate }}" class="dt-time post-date">
@@ -31,13 +34,13 @@
           
           <div class="content-wrap e-content fluid-type">
             
-              {% if post.data.lede %}
-                <p class="h4 lede p-summary">
-              {{ post.data.meta.desc }}
-              </p>
-              {%  else %}
-              {{ post.content }}
-              {% endif %}
+          {% if post.data.excerpt %}
+            <p class="p-summary">
+          {{ post.data.excerpt }}
+          </p>
+          {%  else %}
+          {{ post.content }}
+          {% endif %}
               
           </div>
         </article>
