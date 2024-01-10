@@ -26,7 +26,7 @@ jobs:
           node-version: 16.x
 
       - name: run eleventy
-        run: |
+        run:
           npm ci
           npm run prod
 
