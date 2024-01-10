@@ -24,12 +24,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-
+      - name: Install deps
+        run: npm ci
       - name: run eleventy
-        run:
-          npm ci
-          npm run prod
-
+        run: npm run prod
       - name: upload static site content
         uses: actions/upload-pages-artifact@v2
         with:
