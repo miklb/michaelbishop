@@ -4,6 +4,15 @@
     <p class="tagline">{{ site.tagline }}</p>
   </div>
   <nav class="mainnav fluid-type" role="navigation">
-    {{ collections.all | eleventyNavigation | eleventyNavigationToHtml }}
+    
+
+    {% assign navPages = collections.all | eleventyNavigation %}
+<ul>
+{%- for entry in navPages %}
+  <li{% if entry.url == page.url %} class="active"{% endif %}>
+    <a href="{{ entry.url }}">{{ entry.title }}</a>
+  </li>
+{%- endfor %}
+</ul>
   </nav>
 </header>
