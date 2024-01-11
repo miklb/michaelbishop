@@ -9,7 +9,6 @@ body {
 
 .mainnav {
   background-color: var(--site-color-background);
-  border-bottom: 1px solid var(--yellow);
 }
 
 .colophon {
