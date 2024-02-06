@@ -1,5 +1,4 @@
 ---
-permalink: /note/bluesky-official.html
 tags:
   - Netlify
   - IndieWeb
