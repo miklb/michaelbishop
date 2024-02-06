@@ -1,4 +1,5 @@
 ---
+permalink: /note/open-bluesky.html
 tags:
   - Bluesky
 ---
