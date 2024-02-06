@@ -1,4 +1,5 @@
 ---
+permalink: /notes/bluesky-bridgy-4
 tags:
   - Bluesky
   - IndieWeb
