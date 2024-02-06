@@ -9,3 +9,4 @@ One last test post. If you see this on Bluesky, reply and say hi. I'll show you 
 <a class="u-bridgy-fed" href="https://fed.brid.gy/" hidden="from-humans"></a>
 <a class="u-bridgy" href="https://brid.gy/publish/bluesky" hidden="from-humans"></a>
 <data class="p-bridgy-omit-link" value="maybe" />
+Syndicated on: <a href="https://bsky.app/profile/michaelbishop.me/post/3kkrfq4z3t62c" class="u-syndication">Bluesky</a>
