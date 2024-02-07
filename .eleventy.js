@@ -44,6 +44,13 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addShortcode('hwimage', hwimageShortcode);
     eleventyConfig.addPassthroughCopy("assets/img");
     eleventyConfig.addPassthroughCopy(".well-known");
+    eleventyConfig.addPassthroughCopy("favicon.ico");
+    eleventyConfig.addPassthroughCopy("icon.svg");
+    eleventyConfig.addPassthroughCopy("icon-192.png");
+    eleventyConfig.addPassthroughCopy("icon-512.png");
+    eleventyConfig.addPassthroughCopy("manifest.webmanifest");
+    eleventyConfig.addPassthroughCopy("apple-touch-icon.png");
+    eleventyConfig.addPassthroughCopy("robots.txt");
 
     eleventyConfig.addFilter("ISODate", dateObj => {
         return DateTime.fromJSDate(dateObj).toISO();
