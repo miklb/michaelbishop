@@ -51,6 +51,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("manifest.webmanifest");
     eleventyConfig.addPassthroughCopy("apple-touch-icon.png");
     eleventyConfig.addPassthroughCopy("robots.txt");
+    eleventyConfig.addPassthroughCopy("files");
 
     eleventyConfig.addFilter("ISODate", dateObj => {
         return DateTime.fromJSDate(dateObj).toISO();
