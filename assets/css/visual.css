@@ -1,0 +1,65 @@
+body {
+  background-color: var(--surface2);
+  color: var(--text1);
+}
+
+.main-nav ul li {
+  list-style: none;
+}
+
+.main-nav a {
+  text-decoration: none;
+}
+
+a {
+  color: var(--links);
+  text-decoration-color: var(--links);
+  text-decoration-thickness: 0.2ex;
+  text-underline-offset: 0.4ex;
+  transition: text-decoration-color 0.3s ease, text-decoration-thickness 0.3s ease, text-underline-offset 0.3s ease;
+}
+.main-nav a:hover {
+  background-color: var(--surface3);
+}
+
+ a:hover {
+  text-decoration-color: var(--links); /* Change to the color you want on hover */
+  text-decoration-thickness: 0.3ex; /* Change to the thickness you want on hover */
+  text-underline-offset: 0.6ex; /* Change to the offset you want on hover */
+}
+  .tagline {
+    color: var(--text2);
+    border-top: 2px solid var(--surface3);
+    border-bottom: 2px solid var(--surface3);
+  } 
+
+  .home-primary {
+    
+  }
+
+.home article {
+  border-radius: var(--space-2xs);
+  background-color: var(--surface1);
+}
+   article h2 {
+    color: var(--text2);
+   }
+
+   .profiles ul {
+    list-style: none;
+  }
+
+  .track__media img {
+    border: 3px;
+  }
+
+  .rad-shadow {
+    box-shadow:
+      0 2.8px 2.2px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .03)),
+      0 6.7px 5.3px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .01)),
+      0 12.5px 10px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .02)),
+      0 22.3px 17.9px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .02)),
+      0 41.8px 33.4px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .03)),
+      0 100px 80px hsl(var(--surface-shadow) / var(--shadow-strength))
+    ;
+  }

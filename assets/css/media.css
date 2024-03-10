@@ -1,0 +1,38 @@
+.recently-played li {
+    list-style: none;
+    flex: 1 1 33%;
+    padding-block-end: 2em;
+  }
+  
+  iframe[src*="youtube"],
+  iframe[src*="vimeo"] {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+img {
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spacing-s);
+}
+
+.webmention__meta img {
+    float: left;
+    border: 2px solid #fff;
+    width: 96px;
+    height: 96px;
+    margin-inline-end: 1em;
+  }
+
+  .home-primary img {
+    width: 240px;
+    border-radius: 33%;
+  }
+
+
+  .profile svg {
+    height: 24px;
+    width: 24px;
+  }

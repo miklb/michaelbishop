@@ -47,7 +47,6 @@
         "postcss-preset-env": "^9.3.0"
     },
     "dependencies": {
-        "i": "^0.3.7",
-        "npm": "^10.2.3"
+
     }
 }

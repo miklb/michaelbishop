@@ -4,10 +4,11 @@
   {% include "head.html" %}
 
   <body class="home">
-    <div class="site">
+    <div class="site-container">
+      <div class="site-grid">
       {% include "header.html" %}
-      <main class="content inner-grid">
-        <section class="home-primary inner-grid h-card">
+      <main class="content ">
+        <section class="home-primary h-card">
 			
           {%  image "assets/img/favicon.png", "Michael Bishop"  %}
 
@@ -97,7 +98,7 @@
         </section>
 		<section class="pinned">
 			{% for post in collections.pinned reversed %}
-				<article class=" h-entry">
+				<article class=" h-entry rad-shadow">
                 <header>
                   
                   <h2 class="h3 p-name">
@@ -116,7 +117,7 @@
                   </time>
                 </div>
           
-          <div class="content-wrap e-content fluid-type">
+          <div class="content-wrap e-content">
             
               {% if post.data.meta.desc %}
                 <p class="h4 lede p-summary">
@@ -136,5 +137,6 @@
 
       {% include "footer.html" %}
     </div>
+	  </div>
   </body>
 </html>
