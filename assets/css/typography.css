@@ -1,7 +1,9 @@
+html {
+  hanging-punctuation: first last;
+}
 
 body {
   font-family: var(--site-font-family-body);
-  font-size: var(--font-size-0);
   line-height: var(--site-line-height);
 }
 

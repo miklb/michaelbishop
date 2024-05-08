@@ -34,7 +34,8 @@ a {
   } 
 
   .home-primary {
-    
+    background: linear-gradient(in hsl to top, var(--surface2), var(--surface3));
+    border-radius: var(--space-2xs);
   }
 
 .home article {
