@@ -1,6 +1,7 @@
 ---
 tags:
   - news
+permalink: /note/word-for-word/
 ---
 
 Tonight I'm reminded what a service C-SPAN is. In particular the daily "Word for Word" email that goes out every evening. Here's what they are saying. That's it.

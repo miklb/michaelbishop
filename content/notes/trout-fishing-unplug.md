@@ -1,6 +1,7 @@
 ---
 tags:
   - note
+permalink: /note/trout-fishing-unpluggged/
 ---
 
 Today I hiked a mile into a nature preserve, then waded out thigh deep into Tampa Bay and caught trout all afternoon. Highly recommend unplugging and recharging. And I'll get to make more art.

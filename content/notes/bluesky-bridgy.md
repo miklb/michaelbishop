@@ -2,6 +2,7 @@
 tags:
   - Bluesky
   - IndieWeb
+permalink: /note/bluesky-bridgy/
 ---
 
 Testing Bridgy Publish to Bluesky. Take 2. Had to enable Bluesky publish on brid.gy.
