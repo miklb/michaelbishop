@@ -27,3 +27,8 @@ Every person who does any web development or design should be required to watch 
 
 Paul Everitt - "Never went to the browser and never went to the console.log" is a pretty good selling point.
 
+(I'm not linking to the speakers for speed but their profiles and links are on the conference site)
+
+During the break there's a beautiful video highlighting all of the people who are using 11ty. The diversity of design is inspiring.
+
+
