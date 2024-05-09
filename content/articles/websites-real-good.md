@@ -24,3 +24,6 @@ The chat is great and if you understand who and what Mat Marquis has done for re
 Top quote from chat about the question of when 3.0 will be released: "sustainable development, not arbitrary deadlines" (Eric Bailey)
 
 Every person who does any web development or design should be required to watch this Miriam Suzanne talk. ""Let the browser work out the details. If we can avoid touching it, we should." 
+
+Paul Everitt - "Never went to the browser and never went to the console.log" is a pretty good selling point.
+
