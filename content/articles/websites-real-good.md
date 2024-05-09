@@ -3,7 +3,7 @@ title: "International Symposium on Making Websites Real Good"
 tags:
   - 11ty
   - web
-  permalink: /article/11ty-international-symposium-on-making-websites-real-good/
+  permalink: "/article/11ty-international-symposium-on-making-websites-real-good/"
 ---
 
 Today marks the day for the [11ty International Symposium on Making Websites Real Good](https://conf.11ty.dev/). 
