@@ -40,3 +40,7 @@ My small connection to him was when he was doing imeachment.fyi He wanted a rela
 Work *with* the grain of  the web. - Chris Ferdinandi
 
 Watching people grok HTML web components in real time in the chat is nice.
+
+I need to revisit the code in the components I've made.
+
+make weird things on the internet - ivan zhao
