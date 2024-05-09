@@ -18,3 +18,9 @@ The chat is great and if you understand who and what Mat Marquis has done for re
 
 > eleventy made it so I personally do not have to think about responsive images anymore
 <cite>Mat Marquis</cite>
+
+"No Moat by Design"
+
+Top quote from chat about the question of when 3.0 will be released: "sustainable development, not arbitrary deadlines" (Eric Bailey)
+
+Every person who does any web development or design should be required to watch this Miriam Suzane talk.
