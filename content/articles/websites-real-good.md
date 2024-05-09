@@ -31,4 +31,8 @@ Paul Everitt - "Never went to the browser and never went to the console.log" is 
 
 During the break there's a beautiful video highlighting all of the people who are using 11ty. The diversity of design is inspiring.
 
+chrome user experience
 
+I could write a whole post about Dan Sinker but suffice to say it was the exact kind of inspiration.
+
+There's a lot that can be said about Dan Sinker. My small connection to him was when he was doing imeachment.fyi He wanted a relative "how many weeks" its been on the site. But the caveat was it had to be Liquid. He didn't care about your javascript solution. He wasn't interested in a different platform. Man after my own heart. So I took a look. He was using GitHub Pages with a custom YAML file that he wrote each day's notes in. It worked for him. He wasn't going to change that and if it couldn't be done in Liquid, fuck it. Really after my heart. I took a stab and cobbled together some Liquid using his data model and found a solution. Sort of. I didn't account for the impeachment to run into the next year. I hacked a one year fix in but I'm sure if you visit it now it's broken. But that's not the point. He made the point again today in his talk. Make things. Don't be afraid of a few rough edges. I'll add rough edges  wear down with use.
