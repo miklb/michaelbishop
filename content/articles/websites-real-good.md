@@ -14,3 +14,7 @@ I'll start by saying I think the philosophy behind 11ty is exactly how people wa
 
 Aren't you tired of spending all of your time on caching web pages and dealing with servers? Get it out of the way up front and focus on the content and the design. Lower the technical debt.
 
+The chat is great and if you understand who and what Mat Marquis has done for responsive images on the web, this says it all:
+
+> eleventy made it so I personally do not have to think about responsive images anymore
+<cite>Mat Marquis</cite>
