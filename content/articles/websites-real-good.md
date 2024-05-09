@@ -44,3 +44,5 @@ Watching people grok HTML web components in real time in the chat is nice.
 I need to revisit the code in the components I've made.
 
 make weird things on the internet - ivan zhao
+
+I appreciate that the last speaker, Sara Joy, is speaking to something most sites have either dealt (sort of) with or will need to deal with from an accessibility first stand point. Dark mode is something that I appreciate beyond aesthetics, particularly as my vision has declined as I've aged.
