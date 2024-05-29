@@ -52,3 +52,4 @@ Using Twenty-Twenty-Four as a blueprint for a custom block theme is a way to ens
 
 [^3]: Famous last words I know, but I don't see the finacial incentive for a company the size of GoDaddy to make this a freemium model. They employ folks that work on this and core and help integrate their own hosting products. I'm not saying they are altruistic, or it couldn't be sold off or left to rot, but for now it fills a niche.
  
+ <a class="u-bridgy-fed" href="https://fed.brid.gy/" hidden="from-humans"></a>
