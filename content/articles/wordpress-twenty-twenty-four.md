@@ -8,6 +8,7 @@ modDate:
 tags:
   - article
   - WordPress
+  - pinned
 
 meta:
   title: My State of WordPress
