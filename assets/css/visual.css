@@ -1,3 +1,7 @@
+@view-transition {
+  navigation: auto;
+}
+
 body {
   background-color: var(--surface2);
   color: var(--text1);
