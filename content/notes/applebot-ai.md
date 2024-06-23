@@ -3,7 +3,7 @@ permalink: /note/applebot-ai.html
 tags:
   - AI
   - Apple
- - privacy
+  - privacy
 ---
 
 For now I'm not allowing any AI scrapers as much as you can using [robots.txt](https://michaelbishop.me/robots.txt), including adding [Applebot-Extended](https://support.apple.com/en-us/119829). 
