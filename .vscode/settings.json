@@ -4,6 +4,8 @@
     "files.associations": {
         "*.html": "liquid"
     },
-    "liquid.format.enable": true
+    "liquid.format.enable": true,
+    "[markdown]": {
+    }
 }
 
