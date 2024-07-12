@@ -1,4 +1,5 @@
 ---
+permalink: "/note/grouper-offline/"
 tags:
   - note
   - fishing

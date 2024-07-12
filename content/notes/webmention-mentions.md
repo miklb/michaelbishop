@@ -1,4 +1,5 @@
 ---
+permalink: "/note/webmention-mentions/"
 tags:
   - webmentions
 ---

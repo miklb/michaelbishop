@@ -1,4 +1,5 @@
 ---
+permalink: "/note/mastodon-rss/"
 tags:
   - Mastodon
   - RSS

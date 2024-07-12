@@ -1,4 +1,5 @@
 ---
+permalink: "/note/blogs-social-magic/"
 tags:
   - Bluesky
   - Indieweb

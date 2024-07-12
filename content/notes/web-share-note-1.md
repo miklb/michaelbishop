@@ -1,4 +1,5 @@
 ---
+permalink: "/note/web-share-note-1/"
 tags:
   - HTML Web Components
   - project

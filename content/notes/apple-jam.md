@@ -1,4 +1,5 @@
 ---
+permalink: "/note/apple-jam/"
 tags:
   - web components
 ---
