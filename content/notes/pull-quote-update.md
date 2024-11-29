@@ -1,5 +1,5 @@
 ---
-permalink: /note/pull-quote-update
+permalink: /note/pull-quote-update.html
 tags:
   - javascript
   - tools

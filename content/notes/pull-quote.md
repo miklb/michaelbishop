@@ -1,6 +1,6 @@
 ---
 title: Pull Quote Web Component
-permalink: /note/pull-quote
+permalink: /note/pull-quote.html
 tags:
   - web component
   - project

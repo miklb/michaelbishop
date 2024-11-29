@@ -1,7 +1,6 @@
 ---
 title: 
 layout: "layouts/article.html"
-permalink: "/note/{{ page.date | unixTimestamp}}.html"
 date: git Created
 modDate: 
 tags:

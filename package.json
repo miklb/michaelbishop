@@ -3,15 +3,10 @@
     "version": "0.4.1",
     "description": "This will be my new blog & Internet home.",
     "main": "index.js",
+    "type": "module",
     "scripts": {
-        "dev:clean": "rm -rf _site && mkdir -p _site/assets",
-        "dev:11ty": "eleventy --port 8080 --serve --incremental",
-        "dev:css": "postcss assets/css/index.css -m -o _site/assets/css/main.css -w",
-        "dev:watchers": "run-p dev:css dev:11ty",
-        "dev": "run-s dev:clean dev:watchers",
-        "prod": "run-s  prod:css prod:11ty",
-        "prod:css": "postcss assets/css/index.css -m -o _site/assets/css/main.css",
-        "prod:11ty": "eleventy"
+        "build": "npx @11ty/eleventy",
+        "start": "npx @11ty/eleventy --serve"
     },
     "repository": {
         "type": "git",
@@ -25,26 +20,19 @@
     },
     "homepage": "https://github.com/miklb/michaelbishop#readme",
     "devDependencies": {
-        "@11ty/eleventy": "^2.0.0",
-        "@11ty/eleventy-fetch": "^4.0.0",
-        "@11ty/eleventy-img": "^3.1.8",
+        "@11ty/eleventy": "^3.0.0",
+        "@11ty/eleventy-fetch": "^5.0.1",
+        "@11ty/eleventy-img": "^5.0.0",
         "@11ty/eleventy-navigation": "^0.3.5",
-        "@11ty/eleventy-plugin-rss": "^1.2.0",
+        "@11ty/eleventy-plugin-rss": "^2.0.2",
         "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-        "cssnano": "^6.0.1",
-        "dotenv": "^16.3.1",
-        "eleventy-plugin-metagen": "^1.7.11",
-        "markdown-it": "^13.0.2",
-        "markdown-it-footnote": "^3.0.3",
-        "npm-run-all": "^4.1.5",
-        "outdent": "^0.8.0",
-        "postcss": "^8.4.16",
-        "postcss-cli": "^10.1.0",
-        "postcss-combine-duplicated-selectors": "^10.0.3",
-        "postcss-custom-properties": "^13.3.2",
-        "postcss-import": "^15.1.0",
-        "postcss-nested": "^6.0.1",
-        "postcss-preset-env": "^9.3.0"
-    },
-    "dependencies": {}
+        "@jgarber/eleventy-plugin-postcss": "^1.0.1",
+        "cssnano": "^7.0.6",
+        "dotenv": "^16.4.5",
+        "eleventy-plugin-metagen": "^1.8.3",
+        "markdown-it-footnote": "^4.0.0",
+        "postcss": "^8.4.49",
+        "postcss-cli": "^11.0.0",
+        "postcss-preset-env": "^10.1.1"
+    }
 }

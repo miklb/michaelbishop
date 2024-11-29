@@ -12,7 +12,7 @@ meta:
 
 I have been yearning for several years to start creating some kind of physical art. I experimented with mixed media, namely newspaper headlines and paper making, but it didn't scratch the itch.
 
-{% image "assets/img/sheepshead-12-22.jpg", "Gyotoaku print of a sheepshead." %}
+<img src="sheepshead-12-22.jpg" alt="Gyotoaku print of a sheepshead.">
 
 The past year I have been consumed by fishing. I want to be a small scale boat to table commercial fisherman and that has been a more difficult goal to achieve than it looked like on paper at the beginning of 2022. I also knew that there would be some seasonality to it with a lot of bad weather days mixed in. I wasn't sure if that time would be filled with web consulting or making stuff.
 

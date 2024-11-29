@@ -9,8 +9,8 @@
       {% include "header.html" %}
       <main class="content ">
         <section class="home-primary h-card">
-			
-          {%  image "assets/img/favicon.png", "Michael Bishop"  %}
+			<img src="favicon.png" alt="Michael Bishop">
+          
 
           <div class="card-intro">
             <h2>Welcome to the <a rel="me" class="u-url" href="/">website</a> of <span class="p-name">{{ site.author.name }}</span></h2>
@@ -112,9 +112,7 @@
                   </h2>
                 </header>
                 <div class="meta">
-                  <time datetime="{{ post.page.date | ISODate }}" class="dt-time post-date">
-                    {{ post.page.date | date: "%b %d, %Y" }}
-                  </time>
+					<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("LLLL yyyy") }}</time>
                 </div>
           
           <div class="content-wrap e-content">

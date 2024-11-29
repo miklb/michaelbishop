@@ -2,7 +2,7 @@
 tags:
   - 11ty
   - web
-permalink: "/note/rip-steve-albini"
+permalink: "/note/rip-steve-albini.html"
 ---
 
 The news hit hard. Music has been an important part of my life since my late teens and Steve Albini's influence on the music I listen to is incalcuable. I'm not a musician and never wanted to be in a band, but over the last couple of years, the last year in particular, I wanted to be like him. Be a fucking earnest professional with a strong set of ethics and to speak up for those that can't. 

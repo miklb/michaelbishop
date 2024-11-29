@@ -1,11 +1,13 @@
-module.exports = (ctx) => ({
+export default (ctx) => ({
     map: ctx.options.map,
     plugins: {
-        'postcss-import': { path: 'assets/css' },
-        'postcss-nested': {},
-        'postcss-preset-env': {},
-        'postcss-custom-properties': {},
-        'postcss-combine-duplicated-selectors': { removeDuplicatedProperties: true },
-        cssnano: { preset: 'default' },
+        'postcss-preset-env': {
+            stage: 1,
+            features: {
+                'nesting-rules': true,
+                'custom-properties': true
+            }
+        },
+        'cssnano': { preset: 'default' }
     }
 })

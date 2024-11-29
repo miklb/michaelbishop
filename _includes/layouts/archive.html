@@ -28,9 +28,7 @@
                       {% endif %}
                 </header>
                 <div class="meta">
-                  <time datetime="{{ post.page.date | ISODate }}" class="dt-time post-date">
-                    {{ post.page.date | date: "%b %d, %Y" }}
-                  </time>
+                <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("LLLL yyyy") }}</time>
                 </div>
           
           <div class="content-wrap e-content fluid-type">

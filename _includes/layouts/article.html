@@ -14,9 +14,7 @@
             
 
             <div class="meta">
-              <time datetime="{{ page.date | ISODate }}" class="dt-time post-date">Posted on {{ page.date | date: "%a, %b %d, %Y" }} | Last Modified
-                <span class="dt-updated">{{ modDate | date: "%a, %b %d, %Y" }}</span>
-              </time>
+              <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("LLLL yyyy") }}</time>
             </div>
           
           <div class="content-wrap e-content">
