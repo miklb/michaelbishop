@@ -20,8 +20,6 @@ const markdownItOptions = {
 
 const markdownLib = markdownIt(markdownItOptions).use(markdownItFootnote);
 
-/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
-// Add to Eleventy config
 export default async function(eleventyConfig) {
 
 
@@ -30,8 +28,7 @@ export default async function(eleventyConfig) {
 
     // Copy the contents of the `public` folder to the output folder
     // For example, `./public/css/` ends up in `_site/css/`
-    eleventyConfig
-        .addPassthroughCopy({
+    eleventyConfig .addPassthroughCopy({
             "./public/": "/"
         })
         .addPassthroughCopy("./content/feed/pretty-atom-feed.xsl");
