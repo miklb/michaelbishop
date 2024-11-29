@@ -4,7 +4,7 @@ tags:
   - birds
   - note
 ---
-<img src="cardinals-feeding.jpeg" alt="Adult female cardinal on a hanging feeder with juvenile cardinal perched above.">
+<img src="/img/cardinals-feeding.jpeg" alt="Adult female cardinal on a hanging feeder with juvenile cardinal perched above.">
 
 I've been a passive bird watcher since just before the pandemic. I started with a feeder on the font porch and have since added a few more around the house. Primarly around my backporch after I screened it in and added a fan. I spend as much time as I can out there, and the birds have become a constant source of joy. I picked up these [hanging feeders/bird baths](https://a.co/d/5anOs7a) off Amazon for $10 a piece and they're great[^1]. The hanger is *repurposed* galvanized pipe that used to be under the house.
 
