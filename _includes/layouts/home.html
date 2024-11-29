@@ -9,7 +9,7 @@
       {% include "header.html" %}
       <main class="content ">
         <section class="home-primary h-card">
-			<img src="favicon.png" alt="Michael Bishop">
+			<img src="/img/favicon.png" alt="Michael Bishop">
           
 
           <div class="card-intro">
@@ -112,7 +112,7 @@
                   </h2>
                 </header>
                 <div class="meta">
-					<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("LLLL yyyy") }}</time>
+					<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date |  readableDate: "LLLL yyyy" }}</time>
                 </div>
           
           <div class="content-wrap e-content">
