@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "npx @11ty/eleventy",
-        "start": "npx @11ty/eleventy --serve"
+        "start": "npx @11ty/eleventy --serve --quiet"
     },
     "repository": {
         "type": "git",
