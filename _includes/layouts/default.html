@@ -12,9 +12,9 @@
           <header>
             <h1 class="p-name">{{ title }}</h1>
           </header>
-            <div class="meta">
-              <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">
-                </div>
+          <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">
+            {{ post.date | readableDate: "LLLL yyyy" }}
+          </time>
           
           <div class="content-wrap e-content fluid-type">
             <p class="h4 lede p-summary">{{ meta.desc }}</p>

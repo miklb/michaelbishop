@@ -14,7 +14,9 @@
             
 
             <div class="meta">
-              <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date |  readableDate: "LLLL yyyy" }}</time>
+              <time class="postlist-date" datetime="{{ page.date | htmlDateString }}">
+                {{ page.date | readableDate: "LLLL dd yyyy" }}
+              </time>
             </div>
           
           <div class="content-wrap e-content">
