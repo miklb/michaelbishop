@@ -20,19 +20,19 @@
     },
     "homepage": "https://github.com/miklb/michaelbishop#readme",
     "devDependencies": {
-        "@11ty/eleventy": "^3.0.0",
-        "@11ty/eleventy-fetch": "^5.0.1",
-        "@11ty/eleventy-img": "^5.0.0",
-        "@11ty/eleventy-navigation": "^0.3.5",
-        "@11ty/eleventy-plugin-rss": "^2.0.2",
-        "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-        "@jgarber/eleventy-plugin-postcss": "^1.0.1",
-        "cssnano": "^7.0.6",
-        "dotenv": "^16.4.5",
+        "@11ty/eleventy": "^3.1.2",
+        "@11ty/eleventy-fetch": "^5.1.0",
+        "@11ty/eleventy-img": "^6.0.4",
+        "@11ty/eleventy-navigation": "^1.0.4",
+        "@11ty/eleventy-plugin-rss": "^2.0.4",
+        "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
+        "@jgarber/eleventy-plugin-postcss": "^3.0.1",
+        "cssnano": "^7.1.1",
+        "dotenv": "^17.2.2",
         "eleventy-plugin-metagen": "^1.8.3",
         "markdown-it-footnote": "^4.0.0",
-        "postcss": "^8.4.49",
-        "postcss-cli": "^11.0.0",
-        "postcss-preset-env": "^10.1.1"
+        "postcss": "^8.5.6",
+        "postcss-cli": "^11.0.1",
+        "postcss-preset-env": "^10.3.1"
     }
 }
