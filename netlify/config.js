@@ -30,6 +30,7 @@ export const micropub = new Micropub({
 		// Syndication targets (e.g., Bridgy Fed)
 		'syndicate-to': [
 			{ uid: 'https://fed.brid.gy/', name: 'w/ Bridgy Fed', checked: true },
+            {uid: 'https://brid.gy/publish/bluesky', name: `Bridgy Bluesky`, checked: true}
 		],
 		// Supported post types
 		'post-types': [
