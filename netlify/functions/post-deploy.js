@@ -14,11 +14,12 @@ export async function handler(event, context) {
     console.log('Post-deploy triggered');
     console.log('Headers:', JSON.stringify(event.headers));
     
-    // Netlify deploy notifications send x-netlify-event header
-    // But we also accept direct calls (for testing)
+    // Netlify deploy notifications: deploy_created, deploy_building, deploy_succeeded, etc.
     const netlifyEvent = event.headers['x-netlify-event'];
-    if (netlifyEvent && netlifyEvent !== 'deploy-succeeded') {
-        console.log('Not a deploy-succeeded event, got:', netlifyEvent);
+    const validEvents = ['deploy_created', 'deploy-succeeded', 'deploy_succeeded'];
+    
+    if (netlifyEvent && !validEvents.includes(netlifyEvent)) {
+        console.log('Not a deploy event we handle, got:', netlifyEvent);
         return { statusCode: 200, body: 'Not a deploy event' };
     }
 
