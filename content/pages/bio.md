@@ -18,4 +18,3 @@ Professionally I am web developer[*sic*], though I have a dream of being a small
 The one constant has been my struggle with my mental health. I was diagnosed with a Generalized Anxiety Disorder in 2000. I briefly attempted to try medication but I had a bad reaction to what was prescribed and lost insurance changing jobs. So it went unchecked until 2015. There's a lot more to say about that than can fit in this supposedly short version of a bio.
 
 Really, this web log is meant to be my autobiography.
- 

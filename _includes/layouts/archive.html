@@ -10,39 +10,34 @@
       <main class="content h-feed">
         <div class="archives inner-grid">
           <h1>Archives</h1>
-            {%- for post in collections.all reversed -%}
-              <article class=" inner-grid h-entry">
-                <header>
-                  
-                  
-                      {% if post.data.title %}
-                        <h2 class="p-name">
-                        <a class="u-url" href="{{ post.url }}">
-                      {{ post.data.title }}
-                      </a>
-                      </h2>
-                      {% else %}
-                      <a class="u-url" href="{{ post.url }}">
-                      #
-                      </a>
-                      {% endif %}
-                </header>
-                <div class="meta">
-                <time class="postlist-date" datetime="{{ post.date | htmlDateString }}">
-  {{ post.date | readableDate: "LLLL yyyy" }}
-</time>
+            {%- for post in collections.archivePosts -%}
+              <article class="archive-entry h-entry">
+                <div class="archive-date">
+                  <time class="dt-published" datetime="{{ post.date | htmlDateString }}">
+                    {{ post.date | readableDate: "MMM dd, yyyy" }}
+                  </time>
                 </div>
-          
-          {% if post.data.excerpt %}
-          <div class="content-wrap e-content fluid-type">
-            <p class="p-summary">
-          {{ post.data.excerpt }}
-          </p>
-          </div>
-          {% endif %}
-        </article>
+                
+                <div class="archive-content">
+                  {% if post.data.title %}
+                    <h2 class="archive-title p-name">
+                      <a class="u-url" href="{{ post.url }}">{{ post.data.title }}</a>
+                    </h2>
+                    {% if post.data.excerpt %}
+                      <p class="archive-excerpt p-summary">{{ post.data.excerpt }}</p>
+                    {% endif %}
+                  {% else %}
+                    <div class="archive-note e-content">
+                      {% if post.data.excerpt %}
+                        <p><a class="u-url" href="{{ post.url }}">{{ post.data.excerpt }}</a></p>
+                      {% else %}
+                        <p><a class="u-url" href="{{ post.url }}">View note →</a></p>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </article>
             {%- endfor -%}
-
         </div>
       </main>
       {% include "footer.html" %}

@@ -25,6 +25,35 @@ export default async function(eleventyConfig) {
 
     // Set markdown library
     eleventyConfig.setLibrary("md", markdownLib);
+    
+    // Create a collection for RSS feed that only includes content posts (not pages/archives)
+    eleventyConfig.addCollection("feedContent", function(collectionApi) {
+        return collectionApi.getAll().filter(item => {
+            // Exclude navigation pages and archives
+            return !item.data.eleventyNavigation && !item.inputPath.includes("/archives.html");
+        });
+    });
+    
+    // Create a collection for archives page that excludes navigation pages and generated files
+    eleventyConfig.addCollection("archivePosts", function(collectionApi) {
+        return collectionApi.getAll()
+            .filter(item => {
+                // Only include markdown/html content posts (notes, articles)
+                // Exclude: navigation pages, generated files (feed.xml, robots.txt, manifest), archives.html itself
+                const isNavPage = item.data.eleventyNavigation;
+                const isArchivesPage = item.inputPath.includes("/archives.html");
+                const isGeneratedFile = item.inputPath.includes("/public/") || 
+                                       item.outputPath.endsWith(".xml") || 
+                                       item.outputPath.endsWith(".txt") ||
+                                       item.outputPath.endsWith(".webmanifest");
+                
+                return !isNavPage && !isArchivesPage && !isGeneratedFile;
+            })
+            .sort((a, b) => {
+                // Sort by date, newest first
+                return b.date - a.date;
+            });
+    });
 
     // Copy the contents of the `public` folder to the output folder
     // For example, `./public/css/` ends up in `_site/css/`
@@ -46,7 +75,7 @@ export default async function(eleventyConfig) {
         outputPath: "/feed.xml",
         stylesheet: "pretty-atom-feed.xsl",
         collection: {
-            name: "all",
+            name: "feedContent",  // Use custom collection instead of "all"
             limit: 0,
         },
         metadata: {
