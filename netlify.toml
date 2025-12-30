@@ -29,3 +29,10 @@ status = 302
 from = "/.well-known/webfinger*"
 to = "https://fed.brid.gy/.well-known/webfinger"
 status = 302
+
+# Post-deploy webhook endpoint
+[[redirects]]
+from = "/post-deploy"
+to = "/.netlify/functions/post-deploy"
+status = 200
+status = 302

@@ -1,11 +1,15 @@
 name: Send Webmentions
 
+# Disabled - run manually with: npm run webmention
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'content/**'
+
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'content/notes/**/*.md'
+  workflow_dispatch:
       - 'content/articles/**/*.md'
 
 jobs:
