@@ -6,11 +6,22 @@ dotenv.config();
 const API_KEY = process.env.LFM_API_KEY;
 
 export default async function () {
-    let  url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=miklb&api_key=${API_KEY}&limit=20&format=json`;
+    if (!API_KEY) {
+        console.log('[LastFM] No API key found, skipping');
+        return { recenttracks: { track: [] } };
+    }
+    
+    let url = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=miklb&api_key=${API_KEY}&limit=20&format=json`;
 
-    let json = await Fetch(url , {
-        duration: "1h", // save for 1 hour
-        type: "json" // we’ll parse JSON for you
-    });
-    return json;
+    try {
+        let json = await Fetch(url, {
+            duration: "1h",
+            type: "json"
+        });
+        return json;
+    } catch (error) {
+        console.log('[LastFM] Fetch failed:', error.message);
+        // Return empty data structure so build doesn't fail
+        return { recenttracks: { track: [] } };
+    }
 };
