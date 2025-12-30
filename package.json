@@ -6,7 +6,8 @@
     "type": "module",
     "scripts": {
         "build": "npx @11ty/eleventy",
-        "start": "npx @11ty/eleventy --serve --quiet"
+        "start": "npx @11ty/eleventy --serve --quiet",
+        "webmention": "node scripts/send-webmentions.js"
     },
     "repository": {
         "type": "git",

@@ -12,6 +12,8 @@
 
             <h1 class="p-name">{{ title }}</h1>
             
+            {%- comment -%}Only add backlink if post is too long for Bluesky{%- endcomment -%}
+            <data class="p-bridgy-omit-link" value="maybe"></data>
 
             <div class="meta">
               <time class="postlist-date" datetime="{{ page.date | htmlDateString }}">
@@ -37,6 +39,26 @@
                   <a class="u-bridgy" href="https://brid.gy/publish/mastodon"></a>
                 {%- endif -%}
               {%- endfor -%}
+            {%- endif -%}
+            
+            {%- comment -%}Display syndication links{%- endcomment -%}
+            {%- if syndication -%}
+              <div class="syndication-links">
+                <p>Also posted on:</p>
+                <ul>
+                  {%- for url in syndication -%}
+                    <li>
+                      {%- if url contains 'bsky.app' -%}
+                        <a href="{{ url }}" class="u-syndication" rel="syndication">Bluesky</a>
+                      {%- elsif url contains 'mastodon' or url contains 'fediverse' -%}
+                        <a href="{{ url }}" class="u-syndication" rel="syndication">Fediverse</a>
+                      {%- else -%}
+                        <a href="{{ url }}" class="u-syndication" rel="syndication">{{ url }}</a>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
             {%- endif -%}
           </div>
         </article>

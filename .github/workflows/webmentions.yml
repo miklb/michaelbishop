@@ -1,0 +1,42 @@
+name: Send Webmentions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'content/notes/**/*.md'
+      - 'content/articles/**/*.md'
+
+jobs:
+  webmentions:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build site
+        run: npm run build
+      
+      - name: Send webmentions
+        run: npm run webmention
+      
+      - name: Commit syndication URLs
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add content/
+          git diff --staged --quiet || git commit -m "Add syndication URLs [skip ci]"
+          git push
