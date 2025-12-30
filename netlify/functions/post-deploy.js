@@ -165,12 +165,12 @@ async function processFile(filePath, repoPath) {
 }
 
 function getPostUrl(filePath) {
-    // content/notes/1234.md -> /note/1234/
+    // content/notes/1234.md -> /notes/1234/
     // content/articles/foo.md -> /article/foo/
     const match = filePath.match(/content\/(notes|articles)\/(.+)\.md$/);
     if (!match) return null;
 
-    const type = match[1] === 'notes' ? 'note' : 'article';
+    const type = match[1] === 'notes' ? 'notes' : 'article';
     const slug = match[2];
     return `${SITE_URL}/${type}/${slug}/`;
 }
@@ -183,8 +183,11 @@ async function sendWebmention(source, target) {
     } else if (target.includes('brid.gy/publish/bluesky')) {
         endpoint = 'https://brid.gy/publish/webmention';
     } else {
+        console.log('Unknown target:', target);
         return null;
     }
+
+    console.log(`Sending webmention: source=${source}, target=${target}, endpoint=${endpoint}`);
 
     try {
         const response = await fetch(endpoint, {
@@ -193,8 +196,12 @@ async function sendWebmention(source, target) {
             body: new URLSearchParams({ source, target })
         });
 
+        console.log(`Webmention response: status=${response.status}`);
+        
         // Bridgy returns Location header with syndication URL
         const location = response.headers.get('location');
+        console.log('Location header:', location);
+        
         if (location && !location.includes('brid.gy')) {
             return location;
         }
@@ -202,9 +209,13 @@ async function sendWebmention(source, target) {
         // For 201 responses, try to get URL from response body
         if (response.status === 201) {
             try {
-                const data = await response.json();
+                const text = await response.text();
+                console.log('Response body:', text);
+                const data = JSON.parse(text);
                 if (data.url) return data.url;
-            } catch {}
+            } catch (e) {
+                console.log('Could not parse response as JSON');
+            }
         }
 
         return null;
