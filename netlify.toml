@@ -9,6 +9,17 @@ NODE_VERSION = "22"
 directory = "netlify/functions"
 node_bundler = "esbuild"
 
+# Micropub endpoints - use 200 status for rewrites (not redirects)
+[[redirects]]
+from = "/micropub"
+to = "/.netlify/functions/micropub"
+status = 200
+
+[[redirects]]
+from = "/media"
+to = "/.netlify/functions/media"
+status = 200
+
 [[redirects]]
 from = "/.well-known/host-meta*"
 to = "https://fed.brid.gy/.well-known/host-meta:splat"
