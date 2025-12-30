@@ -8,7 +8,8 @@ const {
     GITHUB_REPO,
 } = process.env;
 
-const SITE_URL = ME || 'https://michaelbishop.me';
+// Remove trailing slash from site URL
+const SITE_URL = (ME || 'https://michaelbishop.me').replace(/\/$/, '');
 
 export async function handler(event, context) {
     console.log('Post-deploy triggered');
@@ -139,7 +140,8 @@ async function processFile(filePath, repoPath) {
     const targets = syndicateMatch[1].match(/-\s+(.+)/g) || [];
 
     for (const target of targets) {
-        const url = target.replace(/^-\s+/, '').trim();
+        // Strip YAML formatting: leading "- ", quotes, whitespace
+        const url = target.replace(/^-\s+/, '').replace(/^['"]|['"]$/g, '').trim();
         const syndicationUrl = await sendWebmention(postUrl, url);
         if (syndicationUrl) {
             syndicationUrls.push(syndicationUrl);
