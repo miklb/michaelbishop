@@ -11,8 +11,14 @@ const {
 const SITE_URL = ME || 'https://michaelbishop.me';
 
 export async function handler(event, context) {
-    // Only run on deploy-succeeded events
-    if (event.headers['x-netlify-event'] !== 'deploy-succeeded') {
+    console.log('Post-deploy triggered');
+    console.log('Headers:', JSON.stringify(event.headers));
+    
+    // Netlify deploy notifications send x-netlify-event header
+    // But we also accept direct calls (for testing)
+    const netlifyEvent = event.headers['x-netlify-event'];
+    if (netlifyEvent && netlifyEvent !== 'deploy-succeeded') {
+        console.log('Not a deploy-succeeded event, got:', netlifyEvent);
         return { statusCode: 200, body: 'Not a deploy event' };
     }
 
@@ -22,10 +28,12 @@ export async function handler(event, context) {
     }
 
     const repoPath = `${GITHUB_USER}/${GITHUB_REPO}`;
+    console.log('Repo path:', repoPath);
 
     try {
         // Get list of recent content files from GitHub
         const files = await getRecentContentFiles(repoPath);
+        console.log('Found files:', files);
         const results = [];
 
         for (const file of files) {
@@ -33,6 +41,7 @@ export async function handler(event, context) {
             if (result) results.push(result);
         }
 
+        console.log('Results:', JSON.stringify(results));
         return {
             statusCode: 200,
             body: JSON.stringify({ processed: results.length, results })
