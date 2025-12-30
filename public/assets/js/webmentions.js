@@ -14,9 +14,13 @@ class WebmentionFetcher {
         this.existingIds = new Set();
         
         // Collect IDs of webmentions already rendered at build time
+        // Check both id="webmention-{id}" (replies) and data-wm-id (facepile items)
         this.container?.querySelectorAll('[id^="webmention-"]').forEach(el => {
             const id = el.id.replace('webmention-', '');
             this.existingIds.add(id);
+        });
+        this.container?.querySelectorAll('[data-wm-id]').forEach(el => {
+            this.existingIds.add(el.dataset.wmId);
         });
     }
 
@@ -89,15 +93,16 @@ class WebmentionFetcher {
 
         // Add new faces
         mentions.forEach(mention => {
+            const id = mention['wm-id'];
             const photo = mention.author?.photo || '/assets/img/webmention.svg';
             const name = mention.author?.name || 'Anonymous';
             const url = mention.url || '';
             
             const html = url
-                ? `<a class="h-card u-url link-u-exempt" href="${url}" target="_blank" rel="noopener noreferrer">
+                ? `<a class="h-card u-url link-u-exempt" href="${url}" target="_blank" rel="noopener noreferrer" data-wm-id="${id}">
                      <img src="${photo}" alt="${name}" width="48" height="48" loading="lazy">
                    </a>`
-                : `<img src="${photo}" alt="${name}" width="48" height="48" loading="lazy">`;
+                : `<img src="${photo}" alt="${name}" width="48" height="48" loading="lazy" data-wm-id="${id}">`;
             
             facepile.insertAdjacentHTML('beforeend', html);
         });

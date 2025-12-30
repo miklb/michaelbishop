@@ -11,7 +11,7 @@
     {% for webmention in likes %}
 
       {% if webmention.url != "" %}
-        <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+        <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
       {% endif %}
 
       {% if webmention.author.photo != "" %}
@@ -34,7 +34,7 @@
               {% for webmention in reposts %}
 
                 {% if webmention.url != "" %}
-                  <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                  <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
                 {% endif %}
           
                 {% if webmention.author.photo != ""%}
