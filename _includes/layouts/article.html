@@ -25,6 +25,19 @@
             <p class="h3 lede p-summary e-bridgy-mastodon-content e-bridgy-bluesky-content">{{ lede }}</p>
             {% endif %}
             {{ content }}
+            
+            {%- comment -%}Add Bridgy syndication links if mp-syndicate-to is set{%- endcomment -%}
+            {%- if mp-syndicate-to -%}
+              {%- for target in mp-syndicate-to -%}
+                {%- if target contains 'fed.brid.gy' -%}
+                  <a class="u-bridgy-fed" href="https://fed.brid.gy/"></a>
+                {%- elsif target contains 'brid.gy/publish/bluesky' -%}
+                  <a class="u-bridgy" href="https://brid.gy/publish/bluesky"></a>
+                {%- elsif target contains 'brid.gy/publish/mastodon' -%}
+                  <a class="u-bridgy" href="https://brid.gy/publish/mastodon"></a>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
           </div>
         </article>
       </main>
