@@ -11,13 +11,12 @@ body {
   display: grid;
   gap: var(--grid-gutter);
   grid-template-columns: repeat(var(--grid-columns), [col-start] 1fr);
-  max-width: calc(1px*var(--live-container));
+  max-width: calc(1px * var(--live-container));
 }
 
 .site-header {
   padding-block-start: var(--space-s);
 }
-
 
 h1 {
   margin: 0;
@@ -34,7 +33,6 @@ h1 {
   display: flex;
   align-content: flex-start;
   justify-content: space-between;
-
 }
 
 @media (min-width: 500px) {
@@ -49,25 +47,25 @@ h1 {
 }
 
 @media (min-width: 700px) {
-    .main-nav {
-      grid-column: col-start / span 1;
-    }
+  .main-nav {
+    grid-column: col-start / span 1;
+  }
   .content {
-      grid-column: col-start 1 / -1;
-    }
+    grid-column: col-start 1 / -1;
+  }
   .single-post {
     display: grid;
     grid-template-columns: subgrid;
     grid-gap: var(--grid-gutter);
     grid-template-rows: auto auto;
-      h1 {
-        grid-column: 1 / span 12;
-        grid-row: 1/2;
-      }
+    h1 {
+      grid-column: 1 / span 12;
+      grid-row: 1/2;
+    }
     .content-wrap {
       grid-column: 1 / span 5;
       grid-row: 2/2;
-      max-width: calc(12*var(--space-2xl));
+      max-width: calc(12 * var(--space-2xl));
     }
     .meta {
       grid-column: col-start 6 / span 5;
@@ -82,26 +80,26 @@ h1 {
     padding: var(--space-s);
     margin-block-end: var(--space-l);
 
-      .card-intro {
-          grid-column: 1 / span 6;
-          grid-row: 1 / 2;
-      }
-      img {
-          grid-column: 7 / span 3;
-      }
+    .card-intro {
+      grid-column: 1 / span 6;
+      grid-row: 1 / 2;
+    }
+    img {
+      grid-column: 7 / span 3;
+    }
     .profiles {
-        grid-column: col-start 9 / span 3;
+      grid-column: col-start 9 / span 3;
     }
     .post-date > * {
       display: inline-block;
+    }
   }
-}
-.pinned {
-  grid-column:  1 / -1;
-  display: grid;
-  grid-gap: var(--grid-gutter);
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
+  .pinned {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-gap: var(--grid-gutter);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
   .colophon {
     grid-column: col-start 1 / span 12;
   }
@@ -169,7 +167,7 @@ article h2 {
     grid-template-columns: 1fr;
     gap: var(--space-2xs, 0.5rem);
   }
-  
+
   .archives .archive-date {
     font-size: var(--step--2, 0.75rem);
   }
