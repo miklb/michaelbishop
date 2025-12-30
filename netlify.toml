@@ -35,4 +35,3 @@ status = 302
 from = "/post-deploy"
 to = "/.netlify/functions/post-deploy"
 status = 200
-status = 302
