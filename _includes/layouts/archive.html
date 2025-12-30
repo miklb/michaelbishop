@@ -33,17 +33,13 @@
 </time>
                 </div>
           
-          <div class="content-wrap e-content fluid-type">
-            
           {% if post.data.excerpt %}
+          <div class="content-wrap e-content fluid-type">
             <p class="p-summary">
           {{ post.data.excerpt }}
           </p>
-          {%  else %}
-          {{ post.content }}
-          {% endif %}
-              
           </div>
+          {% endif %}
         </article>
             {%- endfor -%}
 

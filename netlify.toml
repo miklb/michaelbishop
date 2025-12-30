@@ -1,8 +1,20 @@
+[build]
+command = "npm run build"
+publish = "_site"
+
+[build.environment]
+NODE_VERSION = "22"
+
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"
+
 [[redirects]]
-  from = "/.well-known/host-meta*"
-  to = "https://fed.brid.gy/.well-known/host-meta:splat"
-  status = 302
+from = "/.well-known/host-meta*"
+to = "https://fed.brid.gy/.well-known/host-meta:splat"
+status = 302
+
 [[redirects]]
-  from = "/.well-known/webfinger*"
-  to = "https://fed.brid.gy/.well-known/webfinger"
-  status = 302
+from = "/.well-known/webfinger*"
+to = "https://fed.brid.gy/.well-known/webfinger"
+status = 302
