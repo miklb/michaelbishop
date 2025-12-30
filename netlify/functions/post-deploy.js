@@ -238,7 +238,7 @@ async function updateFile(filePath, content, sha, repoPath) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message: `Add syndication URLs to ${filePath.split('/').pop()} [skip ci]`,
+                message: `Add syndication URLs to ${filePath.split('/').pop()}`,
                 content: Buffer.from(content).toString('base64'),
                 sha: sha
             })
