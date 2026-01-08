@@ -7,6 +7,13 @@ body {
   line-height: var(--site-line-height);
 }
 
+/* Font Awesome icon defaults */
+svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
 h1,
 .h1 {
   --font-size: var(--font-size-5);

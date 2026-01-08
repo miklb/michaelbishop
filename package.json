@@ -22,7 +22,6 @@
     "homepage": "https://github.com/miklb/michaelbishop#readme",
     "devDependencies": {
         "@11ty/eleventy": "^3.1.2",
-        "netlify-plugin-webmentions": "github:miklb/netlify-plugin-webmentions",
         "@11ty/eleventy-fetch": "^5.1.0",
         "@11ty/eleventy-img": "^6.0.4",
         "@11ty/eleventy-navigation": "^1.0.4",
@@ -33,11 +32,13 @@
         "dotenv": "^17.2.2",
         "eleventy-plugin-metagen": "^1.8.3",
         "markdown-it-footnote": "^4.0.0",
+        "netlify-plugin-webmentions": "github:miklb/netlify-plugin-webmentions",
         "postcss": "^8.5.6",
         "postcss-cli": "^11.0.1",
         "postcss-preset-env": "^10.3.1"
     },
     "dependencies": {
+        "@11ty/font-awesome": "^1.0.1",
         "@benjifs/github-store": "^0.2.0",
         "@benjifs/micropub": "^2.0.1"
     }

@@ -49,9 +49,9 @@
                   {%- for url in syndication -%}
                     <li>
                       {%- if url contains 'bsky.app' -%}
-                        <a href="{{ url }}" class="u-syndication" rel="syndication">Bluesky</a>
+                        <a href="{{ url }}" class="u-syndication" rel="syndication"><i class="fa-brands fa-bluesky"></i> Bluesky</a>
                       {%- elsif url contains 'mastodon' or url contains 'fediverse' -%}
-                        <a href="{{ url }}" class="u-syndication" rel="syndication">Fediverse</a>
+                        <a href="{{ url }}" class="u-syndication" rel="syndication"><i class="fa-brands fa-mastodon"></i> Fediverse</a>
                       {%- else -%}
                         <a href="{{ url }}" class="u-syndication" rel="syndication">{{ url }}</a>
                       {%- endif -%}
@@ -67,6 +67,7 @@
       {% include "footer.html" %}
     </div>
   </div>
+  {% getBundle "fontawesome" %}
   <script src="/assets/js/webmentions.js" defer></script>
   </body>
 </html>

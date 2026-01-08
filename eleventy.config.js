@@ -4,6 +4,7 @@ import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
+import fontAwesomePlugin from "@11ty/font-awesome";
 import markdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
 import metagen from 'eleventy-plugin-metagen';
@@ -66,6 +67,7 @@ export default async function(eleventyConfig) {
     eleventyConfig.addPlugin(pluginSyntaxHighlight, {
         preAttributes: { tabindex: 0 }
     });
+    eleventyConfig.addPlugin(fontAwesomePlugin);
     eleventyConfig.addPlugin(metagen);
     eleventyConfig.addPlugin(pluginNavigation);
     eleventyConfig.addPlugin(HtmlBasePlugin);
