@@ -22,6 +22,7 @@
     "homepage": "https://github.com/miklb/michaelbishop#readme",
     "devDependencies": {
         "@11ty/eleventy": "^3.1.2",
+        "netlify-plugin-webmentions": "github:miklb/netlify-plugin-webmentions",
         "@11ty/eleventy-fetch": "^5.1.0",
         "@11ty/eleventy-img": "^6.0.4",
         "@11ty/eleventy-navigation": "^1.0.4",

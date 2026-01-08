@@ -6,7 +6,7 @@ publish = "_site"
 NODE_VERSION = "22"
 
 [[plugins]]
-package = "https://github.com/miklb/netlify-plugin-webmentions"
+package = "netlify-plugin-webmentions"
 
 [functions]
 directory = "netlify/functions"
