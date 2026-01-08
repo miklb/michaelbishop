@@ -131,7 +131,7 @@ article h2 {
 
 .archives .archive-date {
   font-size: var(--step--1, 0.875rem);
-  color: var(--color-text-muted, #666);
+  color: var(--text2, #666);
 }
 
 .archives .archive-content {
@@ -146,6 +146,7 @@ article h2 {
 
 .archives .archive-title a {
   text-decoration: none;
+  color: var(--text1, inherit);
 }
 
 .archives .archive-title a:hover {
@@ -155,7 +156,7 @@ article h2 {
 .archives .archive-excerpt,
 .archives .archive-note {
   margin-block-start: var(--space-2xs, 0.5rem);
-  color: var(--color-text-secondary, #444);
+  color: var(--text1, #444);
 }
 
 .archives .archive-note p {
