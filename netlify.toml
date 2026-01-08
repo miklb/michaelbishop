@@ -5,6 +5,9 @@ publish = "_site"
 [build.environment]
 NODE_VERSION = "22"
 
+[[plugins]]
+package = "https://github.com/miklb/netlify-plugin-webmentions"
+
 [functions]
 directory = "netlify/functions"
 node_bundler = "esbuild"
