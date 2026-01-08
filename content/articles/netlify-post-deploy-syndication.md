@@ -13,6 +13,8 @@ tags:
 meta:
   title: Automating Bridgy Syndication with Netlify Functions
   desc: A Netlify Function that sends webmentions to Bridgy after deploy and commits syndication URLs back to your repo.
+  img: https://michaelbishop.me/assets/img/og-image-bridgy-syndication-netlify.png
+  img_alt: Automating Bridgy Syndication with Netlify Functions
 ---
 
 I have been exploring ways to easily post to the site and syndicate to Bluesky for a few years. The obvious solution is [Micropub](https://micropub.spec.indieweb.org/) and [Bridgy](https://brid.gy) however the missing piece was how to automate all of the steps. The other thing I wanted was to avoid including the post link in the syndicated note. That creates a problem for Bridgy to "discover" the notes for backfeed. It requires a syndication link. Years ago using Jekyll I wired up (hacked) a solution using Travis CI to get the response from Bridgy and commit it back to the repo. Until last week, I hadn't found a solution to replicate that workflow.
