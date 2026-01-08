@@ -9,91 +9,89 @@
       {% include "header.html" %}
       <main class="content ">
         <section class="home-primary h-card">
-			<img src="/img/favicon.png" alt="Michael Bishop">
-          
-
-          <div class="card-intro">
-            <h2>Welcome to the <a rel="me" class="u-url" href="/">website</a> of <span class="p-name">{{ site.author.name }}</span></h2>
-			<div class="p-note">
-				{{ content }} 
-			</div>
-            
+          <div class="card-avatar">
+            <img src="/img/favicon.png" alt="Michael Bishop" class="u-photo">
           </div>
-            
-          <div class="profiles">
-            <p>Elsewhere</p>
-            <ul>
-              {% if site.twitter_username %}
-								<li class="profile">
-									<a href="https://twitter.com/{{ site.twitter_username }}" class="twitter" title="Twitter" rel="me">
-										<i class="fa-brands fa-x-twitter"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.github_username %}
-								<li class="profile">
-									<a href="https://github.com/{{ site.github_username }}" class="github" title="GitHub" rel="me">
-										<i class="fa-brands fa-github"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.instagram_username %}
-								<li class="profile">
-									<a href="https://instagram.com/{{ site.instagram_username }} " class="instagram" title="Instagram" rel="me">
-										<i class="fa-brands fa-instagram"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.facebook_url %}
-								<li class="profile">
-									<a href="{{ site.facebook_url }}" class="facebook" title="Facebook" rel="me">
-										<i class="fa-brands fa-facebook"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.linkedin_url %}
-								<li class="profile">
-									<a href="{{ site.linkedin_url }}" class="linkedin" title="LinkedIn" rel="me">
-										<i class="fa-brands fa-linkedin"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.tumblr_url %}
-								<li class="profile">
-									<a href="{{ site.tumblr_url }}" class="tumblr" title="Tumblr" rel="me">
-										<i class="fa-brands fa-tumblr"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.flickr_username %}
-								<li class="profile">
-									<a href="https://www.flickr.com/photos/{{ site.flickr_username }}" class="flickr" title="Flickr" rel="me">
-										<i class="fa-brands fa-flickr"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.foursquare_username %}
-								<li class="profile">
-									<a href="https://foursquare.com/{{site.foursquare_username }}" class="foursquare" title="Foursquare" rel="me">
-										<i class="fa-brands fa-foursquare"></i>
-									</a>
-								</li>
-							{% endif %}
-							{% if site.email %}
-								<li class="profile">
-									<a href="mailto:{{ site.email }}" class="email u-email" title="Email">
-										<i class="fa-solid fa-envelope"></i>
-									</a>
-								</li>
-							{% endif %}
-							<li class="profile"><a rel="me" href="https://fed.brid.gy/r/https://michaelbishop.me/"><i class="fa-brands fa-mastodon"></i></a></li>
-							<li class="profile"><a rel="me" href="https://bsky.app/profile/michaelbishop.me"><i class="fa-brands fa-bluesky"></i></a></li>
-							<li class="profile">
-								<a href="feed.xml" class="rss" title="RSS">
-									<i class="fa-solid fa-rss"></i>
-								</a>
-							</li>
-            </ul>
+          <div class="card-content">
+            <h2>Welcome to the <a rel="me" class="u-url" href="/">website</a> of <span class="p-name">{{ site.author.name }}</span></h2>
+            <div class="p-note">
+              {{ content }} 
+            </div>
+            <div class="profiles">
+              <p>Elsewhere</p>
+              <ul>
+                {% if site.twitter_username %}
+                  <li class="profile">
+                    <a href="https://twitter.com/{{ site.twitter_username }}" class="twitter" title="Twitter" rel="me">
+                      <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.github_username %}
+                  <li class="profile">
+                    <a href="https://github.com/{{ site.github_username }}" class="github" title="GitHub" rel="me">
+                      <i class="fa-brands fa-github"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.instagram_username %}
+                  <li class="profile">
+                    <a href="https://instagram.com/{{ site.instagram_username }}" class="instagram" title="Instagram" rel="me">
+                      <i class="fa-brands fa-instagram"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.facebook_url %}
+                  <li class="profile">
+                    <a href="{{ site.facebook_url }}" class="facebook" title="Facebook" rel="me">
+                      <i class="fa-brands fa-facebook"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.linkedin_url %}
+                  <li class="profile">
+                    <a href="{{ site.linkedin_url }}" class="linkedin" title="LinkedIn" rel="me">
+                      <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.tumblr_url %}
+                  <li class="profile">
+                    <a href="{{ site.tumblr_url }}" class="tumblr" title="Tumblr" rel="me">
+                      <i class="fa-brands fa-tumblr"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.flickr_username %}
+                  <li class="profile">
+                    <a href="https://www.flickr.com/photos/{{ site.flickr_username }}" class="flickr" title="Flickr" rel="me">
+                      <i class="fa-brands fa-flickr"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.foursquare_username %}
+                  <li class="profile">
+                    <a href="https://foursquare.com/{{site.foursquare_username }}" class="foursquare" title="Foursquare" rel="me">
+                      <i class="fa-brands fa-foursquare"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if site.email %}
+                  <li class="profile">
+                    <a href="mailto:{{ site.email }}" class="email u-email" title="Email">
+                      <i class="fa-solid fa-envelope"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                <li class="profile"><a rel="me" href="https://fed.brid.gy/r/https://michaelbishop.me/" title="Fediverse/Mastodon"><i class="fa-brands fa-mastodon"></i></a></li>
+                <li class="profile"><a rel="me" href="https://bsky.app/profile/michaelbishop.me" title="Bluesky"><i class="fa-brands fa-bluesky"></i></a></li>
+                <li class="profile">
+                  <a href="feed.xml" class="rss" title="RSS">
+                    <i class="fa-solid fa-rss"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 		<section class="pinned">

@@ -46,9 +46,12 @@ img {
   margin-bottom: 0;
 }
 
-.home-primary img {
-  width: 240px;
+.home-primary .card-avatar img {
+  width: 100%;
+  max-width: 280px;
   border-radius: 33%;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .profile svg {

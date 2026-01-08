@@ -67,10 +67,12 @@ h4,
   line-height: 1.3;
 }
 
-h1, h2, h3 {
-    line-height: 1.2;
-    font-family: var(--site-font-family-heading);
-    font-weight: 300;
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  font-family: var(--site-font-family-heading);
+  font-weight: 300;
 }
 
 article {

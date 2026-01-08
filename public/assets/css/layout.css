@@ -35,6 +35,61 @@ h1 {
   justify-content: space-between;
 }
 
+/* Mobile-first h-card layout */
+.home-primary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  padding: var(--space-m);
+  margin-block-end: var(--space-l);
+}
+
+.home-primary .card-avatar {
+  text-align: center;
+}
+
+.home-primary .card-avatar img {
+  max-width: 180px;
+}
+
+.home-primary .card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+
+.home-primary .profiles {
+  margin-block-start: var(--space-s);
+  padding-block-start: var(--space-s);
+  border-block-start: 1px solid var(--surface4);
+}
+
+.home-primary .profiles p {
+  margin: 0 0 var(--space-2xs) 0;
+  font-size: var(--font-size--1);
+  color: var(--text2);
+}
+
+.home-primary .profiles ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.home-primary .profiles a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+}
+
+.home-primary .profiles svg {
+  width: 1.5em;
+  height: 1.5em;
+}
+
 @media (min-width: 500px) {
   .ad {
     grid-column: col-start / span 3;
@@ -77,21 +132,56 @@ h1 {
     display: grid;
     grid-template-columns: subgrid;
     grid-gap: var(--grid-gutter);
-    padding: var(--space-s);
+    padding: var(--space-m);
     margin-block-end: var(--space-l);
 
-    .card-intro {
-      grid-column: 1 / span 6;
-      grid-row: 1 / 2;
+    .card-avatar {
+      grid-column: 1 / span 4;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
     }
-    img {
-      grid-column: 7 / span 3;
+
+    .card-content {
+      grid-column: 5 / span 8;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-s);
     }
+
     .profiles {
-      grid-column: col-start 9 / span 3;
+      margin-block-start: var(--space-s);
+      padding-block-start: var(--space-s);
+      border-block-start: 1px solid var(--surface4);
     }
-    .post-date > * {
-      display: inline-block;
+
+    .profiles p {
+      margin: 0 0 var(--space-2xs) 0;
+      font-size: var(--font-size--1);
+      color: var(--text2);
+    }
+
+    .profiles ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+      padding: 0;
+      margin: 0;
+    }
+
+    .profiles .profile {
+      list-style: none;
+    }
+
+    .profiles a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3xs);
+    }
+
+    .profiles svg {
+      width: 1.5em;
+      height: 1.5em;
     }
   }
   .pinned {
