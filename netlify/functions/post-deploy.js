@@ -125,9 +125,11 @@ async function processFile(filePath, repoPath) {
         return { file: filePath, status: 'skipped', reason: 'already syndicated' };
     }
 
-    // Check for syndicate-to targets
-    const syndicateMatch = frontmatter.match(/mp-syndicate-to:\s*\n((?:\s+-\s+.+\n?)*)/);
-    if (!syndicateMatch) {
+    // Check for syndicate-to targets (support both single value and array)
+    const singleValueMatch = frontmatter.match(/mp-syndicate-to:\s*['"]?([^\n'"]+)['"]?/);
+    const arrayMatch = frontmatter.match(/mp-syndicate-to:\s*\n((?:\s+-\s+.+\n?)*)/);
+    
+    if (!singleValueMatch && !arrayMatch) {
         return { file: filePath, status: 'skipped', reason: 'no syndication targets' };
     }
 
@@ -137,12 +139,20 @@ async function processFile(filePath, repoPath) {
 
     // Send webmentions and collect syndication URLs
     const syndicationUrls = [];
-    const targets = syndicateMatch[1].match(/-\s+(.+)/g) || [];
+    let targets = [];
+    
+    if (singleValueMatch && !arrayMatch) {
+        // Single value format: mp-syndicate-to: 'https://...'
+        targets = [singleValueMatch[1].trim()];
+    } else if (arrayMatch) {
+        // Array format: mp-syndicate-to:\n  - 'https://...'
+        targets = arrayMatch[1].match(/-\s+(.+)/g)?.map(t => 
+            t.replace(/^-\s+/, '').replace(/^['"]|['"]$/g, '').trim()
+        ) || [];
+    }
 
-    for (const target of targets) {
-        // Strip YAML formatting: leading "- ", quotes, whitespace
-        const url = target.replace(/^-\s+/, '').replace(/^['"]|['"]$/g, '').trim();
-        const syndicationUrl = await sendWebmention(postUrl, url);
+    for (const targetUrl of targets) {
+        const syndicationUrl = await sendWebmention(postUrl, targetUrl);
         if (syndicationUrl) {
             syndicationUrls.push(syndicationUrl);
         }
