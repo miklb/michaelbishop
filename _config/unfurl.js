@@ -26,8 +26,9 @@ async function getUrlMetadata(url) {
     }
 
     try {
+        console.log(`[unfurl] Fetching: ${url}`);
         const result = await unfurl(url, {
-            timeout: 5000,
+            timeout: 10000,
             follow: 3
         });
 
@@ -42,10 +43,12 @@ async function getUrlMetadata(url) {
 
         // Only return if we have at least a title
         if (processed.title) {
+            console.log(`[unfurl] Success: ${url}`);
             unfurlCache.set(url, processed);
             return processed;
         }
         
+        console.log(`[unfurl] No title found for: ${url}`);
         unfurlCache.set(url, null);
         return null;
     } catch (error) {
