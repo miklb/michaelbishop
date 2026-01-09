@@ -40,6 +40,7 @@
     "dependencies": {
         "@11ty/font-awesome": "^1.0.1",
         "@benjifs/github-store": "^0.2.0",
-        "@benjifs/micropub": "^2.0.1"
+        "@benjifs/micropub": "^2.0.1",
+        "unfurl.js": "^6.4.0"
     }
 }

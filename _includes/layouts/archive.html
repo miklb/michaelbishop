@@ -28,7 +28,7 @@
                     {% endif %}
                   {% else %}
                     <div class="archive-note e-content">
-                      {{ post.content }}
+                      {{ post.content | unfurlUrls }}
                       <a class="u-url" href="{{ post.url }}"><i class="fa-solid fa-link"></i></a>
                     </div>
                   {% endif %}

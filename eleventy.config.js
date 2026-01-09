@@ -10,6 +10,7 @@ import markdownItFootnote from "markdown-it-footnote";
 import metagen from 'eleventy-plugin-metagen';
 
 import pluginFilters from "./_config/filters.js";
+import pluginUnfurl from "./_config/unfurl.js";
 
 // Add markdown-it configuration with footnotes
 const markdownItOptions = {
@@ -110,6 +111,7 @@ export default async function(eleventyConfig) {
     });
 
 	eleventyConfig.addPlugin(pluginFilters);
+	eleventyConfig.addPlugin(pluginUnfurl);
 }
 
 export const config = {

@@ -26,7 +26,11 @@
             {% if lede %}
             <p class="h3 lede p-summary e-bridgy-mastodon-content e-bridgy-bluesky-content">{{ lede }}</p>
             {% endif %}
-            {{ content }}
+            {% if tags contains "note" %}
+              {{ content | unfurlUrls }}
+            {% else %}
+              {{ content }}
+            {% endif %}
             
             {%- comment -%}Add Bridgy syndication links if mp-syndicate-to is set{%- endcomment -%}
             {%- if mp-syndicate-to -%}
