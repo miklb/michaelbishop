@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webmention Debug Tool</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        pre {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .error {
+            color: #cc0000;
+        }
+        .success {
+            color: #008800;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Webmention.io Debug Tool</h1>
+    
+    <div class="section">
+        <h2>Check Webmentions for URL</h2>
+        <input 
+            type="text" 
+            id="targetUrl" 
+            placeholder="https://michaelbishop.me/article/your-post/"
+            value="https://michaelbishop.me/"
+        >
+        <button onclick="checkWebmentions()">Check Webmentions</button>
+        <div id="results"></div>
+    </div>
+
+    <div class="section">
+        <h2>Check Domain Stats</h2>
+        <button onclick="checkDomain()">Get Domain Info</button>
+        <div id="domainResults"></div>
+    </div>
+
+    <div class="section">
+        <h2>Test Webmention Endpoint</h2>
+        <p>Test if your webmention endpoint is working:</p>
+        <input 
+            type="text" 
+            id="sourceUrl" 
+            placeholder="Source URL (e.g., https://bsky.app/profile/...)"
+        >
+        <input 
+            type="text" 
+            id="targetTestUrl" 
+            placeholder="Target URL (your article)"
+        >
+        <button onclick="sendTestWebmention()">Send Test Webmention</button>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        const domain = 'michaelbishop.me';
+
+        async function checkWebmentions() {
+            const target = document.getElementById('targetUrl').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Fetching...</p>';
+
+            try {
+                // Check with target parameter
+                const targetUrl = `https://webmention.io/api/mentions.jf2?target=${encodeURIComponent(target)}&per-page=100`;
+                console.log('Fetching:', targetUrl);
+                
+                const response = await fetch(targetUrl);
+                const data = await response.json();
+
+                let html = '<h3>Results:</h3>';
+                html += `<p><strong>Total mentions:</strong> ${data.children?.length || 0}</p>`;
+                html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+
+                // Also try without trailing slash
+                const altTarget = target.endsWith('/') ? target.slice(0, -1) : target + '/';
+                const altUrl = `https://webmention.io/api/mentions.jf2?target=${encodeURIComponent(altTarget)}&per-page=100`;
+                const altResponse = await fetch(altUrl);
+                const altData = await altResponse.json();
+
+                html += `<h3>Alternative URL (${altTarget}):</h3>`;
+                html += `<p><strong>Total mentions:</strong> ${altData.children?.length || 0}</p>`;
+                html += '<pre>' + JSON.stringify(altData, null, 2) + '</pre>';
+
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function checkDomain() {
+            const resultsDiv = document.getElementById('domainResults');
+            resultsDiv.innerHTML = '<p>Fetching domain stats...</p>';
+
+            try {
+                const url = `https://webmention.io/api/mentions.jf2?domain=${domain}&per-page=100`;
+                console.log('Fetching:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let html = '<h3>Domain Mentions:</h3>';
+                html += `<p><strong>Total recent mentions:</strong> ${data.children?.length || 0}</p>`;
+                
+                if (data.children && data.children.length > 0) {
+                    html += '<p><strong>Recent targets:</strong></p><ul>';
+                    const targets = [...new Set(data.children.map(m => m['wm-target']))];
+                    targets.forEach(t => {
+                        html += `<li>${t}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function sendTestWebmention() {
+            const source = document.getElementById('sourceUrl').value;
+            const target = document.getElementById('targetTestUrl').value;
+            const resultsDiv = document.getElementById('testResults');
+
+            if (!source || !target) {
+                resultsDiv.innerHTML = '<p class="error">Please enter both source and target URLs</p>';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<p>Sending test webmention...</p>';
+
+            try {
+                const endpoint = `https://webmention.io/${domain}/webmention`;
+                const formData = new FormData();
+                formData.append('source', source);
+                formData.append('target', target);
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const text = await response.text();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `<p class="success">Webmention sent successfully!</p><pre>${text}</pre>`;
+                } else {
+                    resultsDiv.innerHTML = `<p class="error">Failed to send webmention (${response.status})</p><pre>${text}</pre>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        // Auto-load domain stats on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkDomain();
+        });
+    </script>
+</body>
+</html>
