@@ -4,4 +4,9 @@ date: git Created
 eleventyNavigation:
   key: Archives
   order: 2
+pagination:
+  data: collections.archivePosts
+  size: 20
+  alias: posts
+permalink: "archives{% if pagination.pageNumber > 0 %}/page-{{ pagination.pageNumber | plus: 1 }}{% endif %}/index.html"
 ---

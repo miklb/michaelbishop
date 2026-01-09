@@ -253,6 +253,42 @@ article h2 {
   margin: 0;
 }
 
+/* Pagination */
+.pagination {
+  margin-block-start: var(--space-l, 2rem);
+  padding-block-start: var(--space-m, 1.5rem);
+  border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+.pagination ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-s, 1rem);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination__info {
+  font-size: var(--step--1, 0.875rem);
+  color: var(--text2, #666);
+}
+
+.pagination a {
+  padding: var(--space-2xs, 0.5rem) var(--space-s, 1rem);
+  text-decoration: none;
+  color: var(--text1, #333);
+  background-color: var(--surface2, #f5f5f5);
+  border: 1px solid var(--text2, #666);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+  background-color: var(--surface3, #e5e5e5);
+}
+
 @media (max-width: 600px) {
   .archives .archive-entry {
     grid-template-columns: 1fr;

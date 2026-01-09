@@ -10,7 +10,7 @@
       <main class="content h-feed">
         <div class="archives inner-grid">
           <h1>Archives</h1>
-            {%- for post in collections.archivePosts -%}
+            {%- for post in posts -%}
               <article class="archive-entry h-entry">
                 <div class="archive-date">
                   <time class="dt-published" datetime="{{ post.date | htmlDateString }}">
@@ -35,6 +35,28 @@
                 </div>
               </article>
             {%- endfor -%}
+            
+            {% if pagination.href.previous or pagination.href.next %}
+            <nav class="pagination" aria-label="Archive pagination">
+              <ul>
+                {% if pagination.href.previous %}
+                <li class="pagination__prev">
+                  <a href="{{ pagination.href.previous }}">← Newer</a>
+                </li>
+                {% endif %}
+                
+                <li class="pagination__info">
+                  Page {{ pagination.pageNumber | plus: 1 }} of {{ pagination.pages.length }}
+                </li>
+                
+                {% if pagination.href.next %}
+                <li class="pagination__next">
+                  <a href="{{ pagination.href.next }}">Older →</a>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+            {% endif %}
         </div>
       </main>
       {% include "footer.html" %}
