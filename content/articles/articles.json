@@ -3,6 +3,8 @@
     "date": "git Created",
     "tags": "article",
     "meta": {
-        "url": "{{ page.url }}"
+        "url": "{{ page.url }}",
+        "img": "https://michaelbishop.me/assets/img/og/og-{{ page.fileSlug }}.png",
+        "img_alt": "{{ title }}"
     }
 }

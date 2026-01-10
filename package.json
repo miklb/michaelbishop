@@ -5,7 +5,8 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "build": "npx @11ty/eleventy",
+        "build": "node scripts/generate-og-images.js && npx @11ty/eleventy",
+        "og-images": "node scripts/generate-og-images.js",
         "start": "npx @11ty/eleventy --serve --quiet",
         "webmention": "node scripts/send-webmentions.js"
     },
@@ -28,6 +29,7 @@
         "@11ty/eleventy-plugin-rss": "^2.0.4",
         "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
         "@jgarber/eleventy-plugin-postcss": "^3.0.1",
+        "canvas": "^2.11.2",
         "cssnano": "^7.1.1",
         "dotenv": "^17.2.2",
         "eleventy-plugin-metagen": "^1.8.3",
