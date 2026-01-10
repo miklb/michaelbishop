@@ -108,50 +108,127 @@ function findAutoLinkedUrls(content) {
     return matches;
 }
 
+/**
+ * Core unfurl processing function
+ */
+export async function processUnfurl(content) {
+    if (!content || typeof content !== 'string') {
+        return content;
+    }
+
+    const autoLinkedUrls = findAutoLinkedUrls(content);
+    
+    if (autoLinkedUrls.length === 0) {
+        return content;
+    }
+
+    // Fetch metadata for all URLs in parallel
+    const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
+    const metadataResults = await Promise.all(metadataPromises);
+
+    // Build replacement array with positions
+    const replacements = [];
+    for (let i = 0; i < autoLinkedUrls.length; i++) {
+        const { fullMatch, index } = autoLinkedUrls[i];
+        const metadata = metadataResults[i];
+
+        if (metadata) {
+            const card = renderUnfurlCard(metadata);
+            replacements.push({
+                start: index,
+                end: index + fullMatch.length,
+                replacement: card
+            });
+        }
+    }
+
+    // Apply replacements in reverse order to preserve positions
+    let result = content;
+    for (let i = replacements.length - 1; i >= 0; i--) {
+        const { start, end, replacement } = replacements[i];
+        result = result.substring(0, start) + replacement + result.substring(end);
+    }
+
+    return result;
+}
+
+/**
+ * RSS-specific unfurl processing - creates simple text links without card markup
+ * Format: <a href="url">Site Name - Page Title</a>
+ * Handles both regular HTML and XML-encoded HTML
+ */
+export async function processUnfurlForRSS(content) {
+    if (!content || typeof content !== 'string') {
+        return content;
+    }
+
+    // Check if content is XML-encoded (from RSS feed)
+    const isXmlEncoded = content.includes('&lt;') && content.includes('&gt;');
+    
+    let workingContent = content;
+    if (isXmlEncoded) {
+        // Temporarily decode to process
+        workingContent = content
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&amp;/g, '&');
+    }
+
+    const autoLinkedUrls = findAutoLinkedUrls(workingContent);
+    
+    if (autoLinkedUrls.length === 0) {
+        return content;
+    }
+
+    // Fetch metadata for all URLs in parallel
+    const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
+    const metadataResults = await Promise.all(metadataPromises);
+
+    // Build replacement array with positions
+    const replacements = [];
+    for (let i = 0; i < autoLinkedUrls.length; i++) {
+        const { fullMatch, url, index } = autoLinkedUrls[i];
+        const metadata = metadataResults[i];
+
+        if (metadata) {
+            // Create simple link text: "Site Name - Page Title"
+            const linkText = `${metadata.siteName} - ${metadata.title}`;
+            const simpleLink = `<a href="${metadata.url}">${linkText}</a>`;
+            replacements.push({
+                start: index,
+                end: index + fullMatch.length,
+                replacement: simpleLink
+            });
+        }
+    }
+
+    // Apply replacements in reverse order to preserve positions
+    let result = workingContent;
+    for (let i = replacements.length - 1; i >= 0; i--) {
+        const { start, end, replacement } = replacements[i];
+        result = result.substring(0, start) + replacement + result.substring(end);
+    }
+
+    // Re-encode if input was XML-encoded
+    if (isXmlEncoded) {
+        result = result
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    return result;
+}
+
 export default function(eleventyConfig) {
     /**
      * Async filter to unfurl auto-linked URLs in note content
      * Usage: {{ content | unfurlUrls }}
      */
     eleventyConfig.addAsyncFilter("unfurlUrls", async function(content) {
-        if (!content || typeof content !== 'string') {
-            return content;
-        }
-
-        const autoLinkedUrls = findAutoLinkedUrls(content);
-        
-        if (autoLinkedUrls.length === 0) {
-            return content;
-        }
-
-        // Fetch metadata for all URLs in parallel
-        const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
-        const metadataResults = await Promise.all(metadataPromises);
-
-        // Build replacement array with positions
-        const replacements = [];
-        for (let i = 0; i < autoLinkedUrls.length; i++) {
-            const { fullMatch, index } = autoLinkedUrls[i];
-            const metadata = metadataResults[i];
-
-            if (metadata) {
-                const card = renderUnfurlCard(metadata);
-                replacements.push({
-                    start: index,
-                    end: index + fullMatch.length,
-                    replacement: card
-                });
-            }
-        }
-
-        // Apply replacements in reverse order to preserve positions
-        let result = content;
-        for (let i = replacements.length - 1; i >= 0; i--) {
-            const { start, end, replacement } = replacements[i];
-            result = result.substring(0, start) + replacement + result.substring(end);
-        }
-
-        return result;
+        return processUnfurl(content);
     });
 
     /**

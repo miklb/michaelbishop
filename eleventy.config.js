@@ -10,7 +10,7 @@ import markdownItFootnote from "markdown-it-footnote";
 import metagen from 'eleventy-plugin-metagen';
 
 import pluginFilters from "./_config/filters.js";
-import pluginUnfurl from "./_config/unfurl.js";
+import pluginUnfurl, { processUnfurlForRSS } from "./_config/unfurl.js";
 
 // Add markdown-it configuration with footnotes
 const markdownItOptions = {
@@ -90,6 +90,15 @@ export default async function(eleventyConfig) {
                 name: "Michael Bishop",
             }
         }
+    });
+    
+    // Transform RSS feed content to apply unfurl for simple text links
+    eleventyConfig.addTransform("unfurlRssLinks", async function(content) {
+        // Only process the RSS feed file
+        if (this.page.outputPath && this.page.outputPath.endsWith("/feed.xml")) {
+            return await processUnfurlForRSS(content);
+        }
+        return content;
     });
 
     // Image optimization: https://www.11ty.dev/docs/plugins/image/#eleventy-transform
