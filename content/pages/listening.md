@@ -29,8 +29,10 @@ at the Cuban Club and hair bands at Lakeland Civic Center. In the nearly 40 year
   {% for track in uniqueTracks offset:1  %}
   <li class="recently-played__track">
    <a href="{{ track.url }}" class="track__url"> 
-      <div class="track__media"> 
-        <img src="{{ track.image[2]['#text'] }}" alt="Album artwork for {{ track.name }} by {{ track.artist['#text'] }}" loading="lazy" />
+      <div class="track__media">
+        {% capture albumArt %}{{ track.image[2]['#text'] }}{% endcapture %}
+        {% capture altText %}Album artwork for {{ track.name }} by {{ track.artist['#text'] }}{% endcapture %}
+        {% image albumArt, altText, "(min-width: 30em) 150px, 100px" %}
       </div> 
       <span class="track__name">{{ track.name }}</span> 
       <span class="track__artist">{{ track.artist['#text'] }}</span> 

@@ -4,6 +4,7 @@ import { feedPlugin } from "@11ty/eleventy-plugin-rss";
 import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
+import Image from "@11ty/eleventy-img";
 import fontAwesomePlugin from "@11ty/font-awesome";
 import markdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -21,6 +22,34 @@ const markdownItOptions = {
 };
 
 const markdownLib = markdownIt(markdownItOptions).use(markdownItFootnote);
+
+// Safe image shortcode with error handling for eleventy-img
+async function safeImageShortcode(src, alt = "", sizes = "100vw", options = {}) {
+    try {
+        const metadata = await Image(src, {
+            widths: [300, 600, 900],
+            formats: ["avif", "webp", "jpeg"],
+            outputDir: "_site/assets/img",
+            urlPath: "/assets/img/",
+            ...options
+        });
+
+        const imageAttributes = {
+            alt,
+            sizes,
+            loading: "lazy",
+            decoding: "async",
+            "eleventy:ignore": "" // Prevent transform plugin from re-processing
+        };
+
+        // Generate picture element with responsive images
+        return Image.generateHTML(metadata, imageAttributes);
+    } catch (err) {
+        console.warn(`[eleventy-img] Failed to process image: ${src}`, err.message || err);
+        // Return Font Awesome music icon as fallback for failed remote images
+        return `<div class="image-fallback" aria-label="${alt}"><i class="fa-solid fa-compact-disc" style="font-size: 3rem; color: #999;"></i></div>`;
+    }
+}
 
 export default async function(eleventyConfig) {
 
@@ -116,8 +145,17 @@ export default async function(eleventyConfig) {
             // e.g. <img loading decoding> assigned on the HTML tag will override these values.
             loading: "lazy",
             decoding: "async",
+        },
+        
+        // Skip images that fail to download
+        sharpOptions: {
+            failOnError: false
         }
     });
+
+    // Add safe image shortcode with error handling
+    eleventyConfig.addAsyncShortcode("image", safeImageShortcode);
+    eleventyConfig.addAsyncShortcode("img", safeImageShortcode);
 
 	eleventyConfig.addPlugin(pluginFilters);
 	eleventyConfig.addPlugin(pluginUnfurl);
