@@ -179,12 +179,24 @@ async function processFile(filePath, repoPath) {
 function getPostUrl(filePath) {
     // content/notes/1234.md -> /notes/1234/
     // content/articles/foo.md -> /article/foo/
-    const match = filePath.match(/content\/(notes|articles)\/(.+)\.md$/);
+    // content/replies/1234.md -> /replies/1234/
+    const match = filePath.match(/content\/(\w+)\/(.+)\.md$/);
     if (!match) return null;
 
-    const type = match[1] === 'notes' ? 'notes' : 'article';
+    const dir = match[1];
     const slug = match[2];
-    return `${SITE_URL}/${type}/${slug}/`;
+
+    // Map directory names to URL path segments
+    const dirToPath = {
+        notes: 'notes',
+        articles: 'article',
+        replies: 'replies',
+    };
+
+    const pathSegment = dirToPath[dir];
+    if (!pathSegment) return null;
+
+    return `${SITE_URL}/${pathSegment}/${slug}/`;
 }
 
 async function sendWebmention(source, target) {
