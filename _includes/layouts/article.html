@@ -28,7 +28,7 @@
             {% endif %}
             {% if tags contains "note" %}
               {{ content | unfurlUrls }}
-              <div class="e-bridgy-bluesky-content" style="display:none">{{ content | stripAutoLinks }}</div>
+              <div class="e-bridgy-bluesky-content" style="display:none">{{ content }}</div>
             {% else %}
               {{ content }}
             {% endif %}
