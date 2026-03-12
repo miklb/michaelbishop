@@ -45,7 +45,12 @@
             {%- if mp-syndicate-to -%}
               {%- for target in mp-syndicate-to -%}
                 {%- if target contains 'fed.brid.gy' -%}
+                  {%- comment -%}Skip fed.brid.gy for replies — it reads e-content directly
+                  and includes the reply context in the federated post. Replies use
+                  brid.gy/publish/* which respects e-bridgy-*-content overrides.{%- endcomment -%}
+                  {%- unless in-reply-to -%}
                   <a class="u-bridgy-fed" href="https://fed.brid.gy/"></a>
+                  {%- endunless -%}
                 {%- elsif target contains 'brid.gy/publish/bluesky' -%}
                   <a class="u-bridgy" href="https://brid.gy/publish/bluesky"></a>
                 {%- elsif target contains 'brid.gy/publish/mastodon' -%}
