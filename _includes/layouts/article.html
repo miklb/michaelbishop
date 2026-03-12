@@ -24,10 +24,11 @@
           <div class="content-wrap e-content">
             
             {% if lede %}
-            <p class="h3 lede p-summary e-bridgy-mastodon-content e-bridgy-bluesky-content">{{ lede }}</p>
+            <p class="h3 lede p-summary e-bridgy-mastodon-content">{{ lede }}</p>
             {% endif %}
             {% if tags contains "note" %}
               {{ content | unfurlUrls }}
+              <div class="e-bridgy-bluesky-content" style="display:none">{{ content | stripAutoLinks }}</div>
             {% else %}
               {{ content }}
             {% endif %}

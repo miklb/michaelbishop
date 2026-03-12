@@ -112,7 +112,7 @@ export default async function(eleventyConfig) {
         },
         metadata: {
             language: "en",
-            title: "Blog Title",
+            title: "Bytes of Michael Bishop",
             subtitle: "Full content feed for Michael Bishop's web log.",
             base: "https://michaelbishop.me/",
             author: {

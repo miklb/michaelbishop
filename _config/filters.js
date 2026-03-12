@@ -35,4 +35,9 @@ export default function(eleventyConfig) {
 		return (tags || []).filter(tag => ["all", "posts"].indexOf(tag) === -1);
 	});
 
+	eleventyConfig.addFilter("stripAutoLinks", function(content) {
+		if (!content) return content;
+		return content.replace(/<a href="(https?:\/\/[^"]+)">\1<\/a>/g, '$1');
+	});
+
 };

@@ -155,68 +155,71 @@ export async function processUnfurl(content) {
 /**
  * RSS-specific unfurl processing - creates simple text links without card markup
  * Format: <a href="url">Site Name - Page Title</a>
- * Handles both regular HTML and XML-encoded HTML
+ * Only processes HTML inside <content type="html"> sections to preserve XML structure
  */
 export async function processUnfurlForRSS(content) {
     if (!content || typeof content !== 'string') {
         return content;
     }
 
-    // Check if content is XML-encoded (from RSS feed)
-    const isXmlEncoded = content.includes('&lt;') && content.includes('&gt;');
-    
-    let workingContent = content;
-    if (isXmlEncoded) {
-        // Temporarily decode to process
-        workingContent = content
+    // Process only inside <content type="html">...</content> blocks
+    // The HTML inside these blocks is entity-encoded in the Atom XML
+    const contentBlockPattern = /(<content type="html">)([\s\S]*?)(<\/content>)/g;
+    const blocks = [];
+    let match;
+
+    while ((match = contentBlockPattern.exec(content)) !== null) {
+        blocks.push({
+            start: match.index + match[1].length,
+            end: match.index + match[1].length + match[2].length,
+            encoded: match[2]
+        });
+    }
+
+    if (blocks.length === 0) {
+        return content;
+    }
+
+    // Process each content block: decode, find URLs, replace, re-encode
+    let result = content;
+    for (let i = blocks.length - 1; i >= 0; i--) {
+        const block = blocks[i];
+        let decoded = block.encoded
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>')
             .replace(/&quot;/g, '"')
             .replace(/&amp;/g, '&');
-    }
 
-    const autoLinkedUrls = findAutoLinkedUrls(workingContent);
-    
-    if (autoLinkedUrls.length === 0) {
-        return content;
-    }
+        const autoLinkedUrls = findAutoLinkedUrls(decoded);
+        if (autoLinkedUrls.length === 0) continue;
 
-    // Fetch metadata for all URLs in parallel
-    const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
-    const metadataResults = await Promise.all(metadataPromises);
+        const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
+        const metadataResults = await Promise.all(metadataPromises);
 
-    // Build replacement array with positions
-    const replacements = [];
-    for (let i = 0; i < autoLinkedUrls.length; i++) {
-        const { fullMatch, url, index } = autoLinkedUrls[i];
-        const metadata = metadataResults[i];
-
-        if (metadata) {
-            // Create simple link text: "Site Name - Page Title"
-            const linkText = `${metadata.siteName} - ${metadata.title}`;
-            const simpleLink = `<a href="${metadata.url}">${linkText}</a>`;
-            replacements.push({
-                start: index,
-                end: index + fullMatch.length,
-                replacement: simpleLink
-            });
+        const replacements = [];
+        for (let j = 0; j < autoLinkedUrls.length; j++) {
+            const { fullMatch, url, index } = autoLinkedUrls[j];
+            const metadata = metadataResults[j];
+            if (metadata) {
+                const linkText = `${metadata.siteName} - ${metadata.title}`;
+                const simpleLink = `<a href="${metadata.url}">${linkText}</a>`;
+                replacements.push({ start: index, end: index + fullMatch.length, replacement: simpleLink });
+            }
         }
-    }
 
-    // Apply replacements in reverse order to preserve positions
-    let result = workingContent;
-    for (let i = replacements.length - 1; i >= 0; i--) {
-        const { start, end, replacement } = replacements[i];
-        result = result.substring(0, start) + replacement + result.substring(end);
-    }
+        for (let j = replacements.length - 1; j >= 0; j--) {
+            const { start, end, replacement } = replacements[j];
+            decoded = decoded.substring(0, start) + replacement + decoded.substring(end);
+        }
 
-    // Re-encode if input was XML-encoded
-    if (isXmlEncoded) {
-        result = result
+        // Re-encode only this content block
+        const reEncoded = decoded
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
+
+        result = result.substring(0, block.start) + reEncoded + result.substring(block.end);
     }
 
     return result;
