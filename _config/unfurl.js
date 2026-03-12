@@ -32,13 +32,16 @@ async function getUrlMetadata(url) {
             follow: 3
         });
 
+        const isBluesky = url.includes('bsky.app');
+
         const processed = {
             url,
             title: result?.title || result?.open_graph?.title || null,
             description: result?.description || result?.open_graph?.description || null,
             image: result?.open_graph?.images?.[0]?.url || result?.twitter_card?.images?.[0]?.url || null,
             favicon: result?.favicon || null,
-            siteName: result?.open_graph?.site_name || new URL(url).hostname
+            siteName: result?.open_graph?.site_name || new URL(url).hostname,
+            isBluesky
         };
 
         // Only return if we have at least a title
@@ -64,6 +67,18 @@ async function getUrlMetadata(url) {
 function renderUnfurlCard(metadata) {
     if (!metadata) return '';
 
+    const cardClass = metadata.isBluesky ? 'unfurl-card unfurl-card--bluesky link-u-exempt' : 'unfurl-card link-u-exempt';
+
+    if (metadata.isBluesky) {
+        const avatarHtml = metadata.image
+            ? `<img class="unfurl-card__avatar" src="${metadata.image}" alt="" width="48" height="48" loading="lazy" eleventy:ignore>`
+            : '';
+        const titleHtml = `<span class="unfurl-card__title">${metadata.title}</span>`;
+        const descHtml = metadata.description ? `<span class="unfurl-card__description">${metadata.description}</span>` : '';
+
+        return `<a href="${metadata.url}" class="${cardClass}" target="_blank" rel="noopener noreferrer">${avatarHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}</span></a>`;
+    }
+
     const imageHtml = metadata.image 
         ? `<img class="unfurl-card__image" src="${metadata.image}" alt="" loading="lazy" eleventy:ignore>`
         : '';
@@ -72,12 +87,11 @@ function renderUnfurlCard(metadata) {
         ? `<img class="unfurl-card__favicon" src="${metadata.favicon}" alt="" width="16" height="16" eleventy:ignore>`
         : '';
 
-    // Use span instead of div to keep it inline-compatible
     const titleHtml = `<span class="unfurl-card__title">${faviconHtml} ${metadata.title}</span>`;
     const descHtml = metadata.description ? `<span class="unfurl-card__description">${metadata.description}</span>` : '';
     const siteHtml = `<span class="unfurl-card__site">${metadata.siteName}</span>`;
     
-    return `<a href="${metadata.url}" class="unfurl-card link-u-exempt" target="_blank" rel="noopener noreferrer">${imageHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}${siteHtml}</span></a>`;
+    return `<a href="${metadata.url}" class="${cardClass}" target="_blank" rel="noopener noreferrer">${imageHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}${siteHtml}</span></a>`;
 }
 
 /**

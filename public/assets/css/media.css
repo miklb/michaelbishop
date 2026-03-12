@@ -135,3 +135,20 @@ p:has(.unfurl-card) {
   opacity: 0.7;
   margin: 0;
 }
+
+/* Bluesky post variant - avatar + inline layout */
+.unfurl-card--bluesky {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  padding: 0.75em;
+}
+
+.unfurl-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin: 0;
+}

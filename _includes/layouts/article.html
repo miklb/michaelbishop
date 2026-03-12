@@ -23,6 +23,14 @@
           
           <div class="content-wrap e-content">
             
+            {% if in-reply-to %}
+            <div class="reply-context">
+              <p>In reply to:</p>
+              <a href="{{ in-reply-to }}" class="u-in-reply-to" rel="in-reply-to" hidden></a>
+              {% unfurl in-reply-to %}
+            </div>
+            {% endif %}
+
             {% if lede %}
             <p class="h3 lede p-summary e-bridgy-mastodon-content">{{ lede }}</p>
             {% endif %}
