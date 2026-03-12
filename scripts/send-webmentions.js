@@ -99,9 +99,22 @@ async function findRecentPosts(dir, limit = 5) {
 async function main() {
   console.log('🔗 Sending webmentions to Bridgy...\n')
   
-  const recentPosts = await findRecentPosts('./content/notes', 3)
+  // Scan both notes and replies directories
+  const contentDirs = ['./content/notes', './content/replies']
+  const recentPosts = []
+  for (const dir of contentDirs) {
+    try {
+      const posts = await findRecentPosts(dir, 3)
+      recentPosts.push(...posts)
+    } catch (e) {
+      // Directory may not exist yet
+    }
+  }
+  // Sort combined results by date, take most recent
+  recentPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date))
+  const postsToProcess = recentPosts.slice(0, 5)
   
-  for (const post of recentPosts) {
+  for (const post of postsToProcess) {
     const targets = post.frontmatter['mp-syndicate-to'] || []
     
     // Skip if already syndicated (has syndication URLs)
@@ -110,9 +123,10 @@ async function main() {
       continue
     }
     
-    // Construct post URL (this assumes notes use timestamp slugs)
+    // Determine content type from file path
     const slug = post.file.replace('.md', '')
-    const postUrl = `${SITE_URL}/notes/${slug}/`
+    const contentType = post.filePath.includes('/replies/') ? 'replies' : 'notes'
+    const postUrl = `${SITE_URL}/${contentType}/${slug}/`
     
     console.log(`\nPost: ${postUrl}`)
     
