@@ -1,5 +1,5 @@
 ---
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 title: Lasting Impressions
 permalink: "/articles/lasting-impressions.html"
 date: git Created

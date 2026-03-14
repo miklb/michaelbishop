@@ -4,7 +4,7 @@
   <nav role='navigation' class="main-nav" id="main-nav">
     
 
-    {% assign navPages = collections.all | eleventyNavigation %}
+    {% set navPages = collections.all | eleventyNavigation %}
     <ul id="main-nav-list">
 {%- for entry in navPages %}
   <li>

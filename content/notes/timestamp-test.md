@@ -1,6 +1,6 @@
 ---
 title: 
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 date: 2023-11-04 21:19:54
 modDate: 
 tags:

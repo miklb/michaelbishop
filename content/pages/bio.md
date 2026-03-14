@@ -1,5 +1,5 @@
 ---
-layout: layouts/default.html
+layout: layouts/default.njk
 title: Bio
 permalink: "bio.html"
 date: git Created

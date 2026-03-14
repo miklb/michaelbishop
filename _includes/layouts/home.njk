@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="{{ lang | default: site.lang | default: "en" }}">
+<html lang="{{ lang or site.lang or 'en' }}">
 
-  {% include "head.html" %}
+  {% include "head.njk" %}
 
   <body class="home">
     <div class="site-container">
       <div class="site-grid">
-      {% include "header.html" %}
+      {% include "header.njk" %}
       <main class="content ">
         <section class="home-primary h-card">
           <div class="card-avatar">
@@ -15,7 +15,7 @@
           <div class="card-content">
             <h2>Welcome to the <a rel="me" class="u-url" href="/">website</a> of <span class="p-name">{{ site.author.name }}</span></h2>
             <div class="p-note">
-              {{ content }} 
+              {{ content | safe }} 
             </div>
             <div class="profiles">
               <p>Elsewhere</p>
@@ -71,7 +71,7 @@
                 {% endif %}
                 {% if site.foursquare_username %}
                   <li class="profile">
-                    <a href="https://foursquare.com/{{site.foursquare_username }}" class="foursquare" title="Foursquare" rel="me">
+                    <a href="https://foursquare.com/{{ site.foursquare_username }}" class="foursquare" title="Foursquare" rel="me">
                       <i class="fa-brands fa-foursquare"></i>
                     </a>
                   </li>
@@ -95,7 +95,7 @@
           </div>
         </section>
 		<section class="pinned">
-			{% for post in collections.pinned reversed %}
+			{% for post in collections.pinned | reverse %}
 				<article class=" h-entry rad-shadow">
                 <header>
                   
@@ -110,7 +110,7 @@
                   </h2>
                 </header>
                 <div class="meta">
-					<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date |  readableDate: "LLLL yyyy" }}</time>
+					<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate("LLLL yyyy") }}</time>
                 </div>
           
           <div class="content-wrap e-content">
@@ -119,8 +119,8 @@
                 <p class="h4 lede p-summary">
               {{ post.data.meta.desc }}
               </p>
-              {%  else %}
-              {{ post.content }}
+              {% else %}
+              {{ post.content | safe }}
               {% endif %}
               
           </div>
@@ -131,7 +131,7 @@
       </main>
       
 
-      {% include "footer.html" %}
+      {% include "footer.njk" %}
     </div>
 	  </div>
   {% getBundle "fontawesome" %}

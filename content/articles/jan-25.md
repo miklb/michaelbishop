@@ -1,6 +1,6 @@
 ---
 title: Test. test. test January 2025
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 permalink: /article/january-2025/
 date: git Created
 modDate: 2025-01-21 15:43:47
