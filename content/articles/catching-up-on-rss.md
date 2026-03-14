@@ -1,6 +1,6 @@
 ---
 title: Catching Up on RSS
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 permalink: "/article/catching-up-on-rss.html"
 date: git Created
 modDate: 

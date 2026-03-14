@@ -1,5 +1,5 @@
 ---
-layout: layouts/default.html
+layout: layouts/default.njk
 title: Listening
 permalink: "listening.html"
 date: git Created
@@ -16,27 +16,21 @@ at the Cuban Club and hair bands at Lakeland Civic Center. In the nearly 40 year
 <p>This section will focus on what I'm listening to now as well as tales of shows from the past.</p>
 
 <h3>Recently Played</h3>
-{% assign recentTracks=  lastfm.recenttracks.track %}
-{% assign uniqueTrackNames = "" %}
-{% assign uniqueTracks ="" %}
-  {% for track in recentTracks %}
-  {% unless uniqueTrackNames contains track.name %}
-   {% assign uniqueTrackNames = uniqueTrackNames | push: track.name %}
-  {% assign uniqueTracks = uniqueTracks | push: track %} 
-  {% endunless %}
-  {% endfor %}
+{% set uniqueTracks = lastfm.recenttracks.track | uniqueByKey("name") %}
   <ul class="recently-played"> 
-  {% for track in uniqueTracks offset:1  %}
+  {% for track in uniqueTracks %}
+  {% if loop.index0 > 0 %}
   <li class="recently-played__track">
    <a href="{{ track.url }}" class="track__url"> 
       <div class="track__media">
-        {% capture albumArt %}{{ track.image[2]['#text'] }}{% endcapture %}
-        {% capture altText %}Album artwork for {{ track.name }} by {{ track.artist['#text'] }}{% endcapture %}
+        {% set albumArt = track.image[2]['#text'] %}
+        {% set altText = "Album artwork for " + track.name + " by " + track.artist['#text'] %}
         {% image albumArt, altText, "(min-width: 30em) 150px, 100px" %}
       </div> 
       <span class="track__name">{{ track.name }}</span> 
       <span class="track__artist">{{ track.artist['#text'] }}</span> 
     </a> 
   </li> 
+  {% endif %}
   {% endfor %}
   </ul>

@@ -1,6 +1,6 @@
 ---
 title: Hand Rolled
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 permalink: "/article/hand-rolled.html"
 date: git Created
 tags:

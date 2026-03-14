@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="{{ lang or site.lang or 'en' }}">
+
+    {% include "head.njk" %}
+
+    <body class="article">
+        <div class="site-container">
+            <div class="site-grid">
+                {% include "header.njk" %}
+                <main class="content">
+                    <article class="h-entry single-post">
+
+                        <h1 class="p-name">{{ title }}</h1>
+
+                        {# Only add backlink if post is too long for Bluesky #}
+                        <data class="p-bridgy-omit-link" value="maybe"></data>
+
+                        <div class="meta">
+                            <time class="postlist-date" datetime="{{ page.date | htmlDateString }}">
+                                {{ page.date | readableDate("LLLL dd yyyy") }}
+                            </time>
+                        </div>
+
+                        <div class="content-wrap e-content">
+
+                            {% if in_reply_to %}
+                                <div class="reply-context">
+                                    <p>In reply to:</p>
+                                    {% unfurl in_reply_to %}
+                                </div>
+                                <div class="e-bridgy-bluesky-content e-bridgy-mastodon-content" style="display:none">{{ content | safe }}</div>
+                            {% endif %}
+
+                            {% if lede %}
+                                <p class="h3 lede p-summary e-bridgy-mastodon-content">{{ lede }}</p>
+                            {% endif %}
+                            {% if "note" in tags %}
+                                {{ content | unfurlUrls | safe }}
+                                <div class="e-bridgy-bluesky-content" style="display:none">{{ content | safe }}</div>
+                            {% else %}
+                                {{ content | safe }}
+                            {% endif %}
+
+                            {# Add Bridgy syndication links if mp-syndicate-to is set #}
+                            {%- if mp_syndicate_to -%}
+                                {%- for target in mp_syndicate_to -%}
+                                    {%- if 'fed.brid.gy' in target -%}
+                                        {# Skip fed.brid.gy for replies — it reads e-content directly
+                  and includes the reply context in the federated post. Replies use
+                  brid.gy/publish/* which respects e-bridgy-*-content overrides. #}
+                                        {%- if not in_reply_to -%}
+                                            <a class="u-bridgy-fed" href="https://fed.brid.gy/"></a>
+                                        {%- endif -%}
+                                    {%- elif 'brid.gy/publish/bluesky' in target -%}
+                                        <a class="u-bridgy" href="https://brid.gy/publish/bluesky"></a>
+                                    {%- elif 'brid.gy/publish/mastodon' in target -%}
+                                        <a class="u-bridgy" href="https://brid.gy/publish/mastodon"></a>
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            {%- endif -%}
+
+                            {# Display syndication links #}
+                            {%- if syndication -%}
+                                <div class="syndication-links">
+                                    <p>Also posted on:</p>
+                                    <ul>
+                                        {%- for url in syndication -%}
+                                            <li>
+                                                {%- if 'bsky.app' in url -%}
+                                                    <a href="{{ url }}" class="u-syndication" rel="syndication">
+                                                        <i class="fa-brands fa-bluesky"></i>
+                                                        Bluesky</a>
+                                                {%- elif 'mastodon' in url or 'fediverse' in url -%}
+                                                    <a href="{{ url }}" class="u-syndication" rel="syndication">
+                                                        <i class="fa-brands fa-mastodon"></i>
+                                                        Fediverse</a>
+                                                {%- else -%}
+                                                    <a href="{{ url }}" class="u-syndication" rel="syndication">{{ url }}</a>
+                                                {%- endif -%}
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                        {%- if in_reply_to -%}
+                            <a href="{{ in_reply_to }}" class="u-in-reply-to" rel="in-reply-to" hidden="hidden"></a>
+                        {%- endif -%}
+                    </article>
+                </main>
+                {% include "webmentions.njk" %}
+                {% include "footer.njk" %}
+            </div>
+        </div>
+        {% getBundle "fontawesome" %}
+        <script src="/assets/js/webmentions.js" defer="defer"></script>
+    </body>
+</html>

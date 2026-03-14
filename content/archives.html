@@ -1,5 +1,5 @@
 ---
-layout: layouts/archive.html
+layout: layouts/archive.njk
 date: git Created
 eleventyNavigation:
   key: Archives
@@ -8,5 +8,5 @@ pagination:
   data: collections.archivePosts
   size: 20
   alias: posts
-permalink: "archives{% if pagination.pageNumber > 0 %}/page-{{ pagination.pageNumber | plus: 1 }}{% endif %}/index.html"
+permalink: "archives{% if pagination.pageNumber > 0 %}/page-{{ pagination.pageNumber + 1 }}{% endif %}/index.html"
 ---

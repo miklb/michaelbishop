@@ -1,7 +1,7 @@
 ---
 title: What Happened to miklb?
 excerpt: The blog is dead, long live the blog.
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 permalink: /article/what-happened-to-miklb/
 date: git Created
 tags:

@@ -1,6 +1,6 @@
 ---
 title: 
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 date: git Created
 modDate: 
 tags:

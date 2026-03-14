@@ -146,8 +146,10 @@ export default async function(eleventyConfig) {
             loading: "lazy",
             decoding: "async",
         },
-        
-        // Skip images that fail to download
+
+        // Skip images that fail (e.g. remote 404s) instead of erroring the build
+        failOnError: false,
+
         sharpOptions: {
             failOnError: false
         }
@@ -162,8 +164,6 @@ export default async function(eleventyConfig) {
 }
 
 export const config = {
-    // Control which files Eleventy will process
-    // e.g.: *.md, *.njk, *.html, *.liquid
     templateFormats: [
         "md",
 		"njk",
@@ -172,11 +172,13 @@ export const config = {
 		"11ty.js",
     ],
 
-    // These are all optional:
+    markdownTemplateEngine: "njk",
+    htmlTemplateEngine: "njk",
+
     dir: {
-        input: "content",          // default: "."
-        includes: "../_includes",  // default: "_includes" (`input` relative)
-        data: "../_data",          // default: "_data" (`input` relative)
+        input: "content",
+        includes: "../_includes",
+        data: "../_data",
         output: "_site"
     },
 };

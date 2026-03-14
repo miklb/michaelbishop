@@ -1,7 +1,7 @@
 ---
 title: My State of WordPress
 excerpt: My thoughts on the state of custom WordPress theme development.
-layout: "layouts/article.html"
+layout: "layouts/article.njk"
 permalink: "/article/wordpress-twenty-twenty-four.html"
 date: git Created
 modDate: 
