@@ -1,150 +1,178 @@
 <section class="webmentions">
     <h2>Reactions</h2>
-        {% set webmentionUrl = site.url + page.url %}
-        {# Also check for URL without .html extension for webmention matching #}
-        {% set webmentionUrlNoHtml = webmentionUrl | replace(".html", "") %}
-        {% set filteredWebmentions = webmentions.children | where("wm-target", webmentionUrl) %}
-        {% set filteredWebmentionsNoHtml = webmentions.children | where("wm-target", webmentionUrlNoHtml) %}
-        {# Combine both arrays and remove duplicates #}
-        {% set filteredWebmentions = filteredWebmentions | concat(filteredWebmentionsNoHtml) | uniq %}
-        {% set likes = filteredWebmentions | where("wm-property", "like-of") %}
-        {% set likeSize = likes | size %}
-        {% if likeSize > 0 %}
-          <div class="webmentions__facepile">
-  <h3>{{ likeSize }} Like{% if likeSize != 1 %}s{% endif %}</h3>
+    {% set webmentionUrl = site.url + page.url %}
+    {# Also check for URL without .html extension for webmention matching #}
+    {% set webmentionUrlNoHtml = webmentionUrl | replace(".html", "") %}
+    {% set filteredWebmentions = webmentions.children | where("wm-target", webmentionUrl) %}
+    {% set filteredWebmentionsNoHtml = webmentions.children | where("wm-target", webmentionUrlNoHtml) %}
+    {# Combine both arrays and remove duplicates #}
+    {% set filteredWebmentions = filteredWebmentions | concat(filteredWebmentionsNoHtml) | uniq %}
+    {% set likes = filteredWebmentions | where("wm-property", "like-of") %}
+    {% set likeSize = likes | size %}
+    {% if likeSize > 0 %}
+        <div class="webmentions__facepile">
+            <h3>{{ likeSize }}
+                Like{% if likeSize != 1 %}s{% endif %}
+            </h3>
 
-    {% for webmention in likes %}
-
-      {% if webmention.url != "" %}
-        <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
-      {% endif %}
-
-      {% if webmention.author.photo != "" %}
-      <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
-      {% else %}
-      <img class="webmention__author__photo" src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore>
-      {% endif %}
-
-      {% if webmention.url != "" %}
-        </a>
-      {% endif %}
-    {% endfor %}
-</div>
-        {% endif %}
-        {% set reposts = filteredWebmentions | where("wm-property", "repost-of") %}
-        {% set repostSize = reposts | size %}
-        {% if repostSize > 0 %}
-          <div class="webmentions__facepile">
-            <h3>{{ repostSize }} Repost{% if repostSize != 1 %}s{% endif %}</h3>
-              {% for webmention in reposts %}
+            {% for webmention in likes %}
 
                 {% if webmention.url != "" %}
-                  <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
+                    <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
+                    {% endif %}
+
+                    {% if webmention.author.photo != "" %}
+                        <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+                    {% else %}
+                        <img class="webmention__author__photo" src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                    {% endif %}
+
+                    {% if webmention.url != "" %}
+                    </a>
                 {% endif %}
-          
-                {% if webmention.author.photo != "" %}
-                <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
-                {% else %}
-                <img class="webmention__author__photo" src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore>
-                {% endif %}
-          
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% set reposts = filteredWebmentions | where("wm-property", "repost-of") %}
+    {% set repostSize = reposts | size %}
+    {% if repostSize > 0 %}
+        <div class="webmentions__facepile">
+            <h3>{{ repostSize }}
+                Repost{% if repostSize != 1 %}s{% endif %}
+            </h3>
+            {% for webmention in reposts %}
+
                 {% if webmention.url != "" %}
-                  </a>
+                    <a class="h-card u-url link-u-exempt" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer" data-wm-id="{{ webmention['wm-id'] }}">
+                    {% endif %}
+
+                    {% if webmention.author.photo != "" %}
+                        <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+                    {% else %}
+                        <img class="webmention__author__photo" src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                    {% endif %}
+
+                    {% if webmention.url != "" %}
+                    </a>
                 {% endif %}
-              {% endfor %}
-          </div>
-        {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
 
-        {% set mentions = filteredWebmentions | where("wm-property", "mention-of") %}
+    {% set mentions = filteredWebmentions | where("wm-property", "mention-of") %}
 
-       {% set mentionSize = mentions | size %}
-        {% if mentionSize > 0 %}
-            <h3>Mentions</h3>
+    {% set mentionSize = mentions | size %}
+    {% if mentionSize > 0 %}
+        <h3>Mentions</h3>
         {% for webmention in mentions %}
-          <article class="webmention" id="webmention-{{ webmention['wm-id'] }}">
-  <div class="webmention__meta">
-    {% if webmention.author and webmention.author.name != "" %}
-      {% if webmention.author.photo != "" %}
-        <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
-      {% else %}
-        <img src="/assets/img/webmention.svg" alt="" width="48" height="48" eleventy:ignore>
-      {% endif %}
-      <span>
-        <a class="h-card u-url" {% if webmention.url %}href="{{ webmention.url }}" {% endif %} target="_blank" rel="noopener noreferrer"><strong class="p-name">{{ webmention.author.name }}</strong></a>
-      </span>
-    {% else %}
-      <img src="/assets/img/webmention.svg" alt="" width="48" height="48" eleventy:ignore>
-      <span>
-        {% if "bsky.app" in webmention.url or "bsky.brid.gy" in webmention['wm-source'] %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong><i class="fa-brands fa-bluesky"></i> via Bluesky</strong></a>
-        {% elif "mastodon" in webmention.url or "fed.brid.gy" in webmention['wm-source'] %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong><i class="fa-brands fa-mastodon"></i> via Mastodon</strong></a>
-        {% else %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong>Mention</strong></a>
-        {% endif %}
-      </span>
+            <article class="webmention" id="webmention-{{ webmention['wm-id'] }}">
+                <div class="webmention__meta">
+                    {% if webmention.author and webmention.author.name != "" %}
+                        {% if webmention.author.photo != "" %}
+                            <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+                        {% else %}
+                            <img src="/assets/img/webmention.svg" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                        {% endif %}
+                        <span>
+                            <a class="h-card u-url" {% if webmention.url %} href="{{ webmention.url }}" {% endif %} target="_blank" rel="noopener noreferrer">
+                                <strong class="p-name">{{ webmention.author.name }}</strong>
+                            </a>
+                        </span>
+                    {% else %}
+                        <img src="/assets/img/webmention.svg" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                        <span>
+                            {% if "bsky.app" in webmention.url or "bsky.brid.gy" in webmention['wm-source'] %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>
+                                        <i class="fa-brands fa-bluesky"></i>
+                                        via Bluesky</strong>
+                                </a>
+                            {% elif "mastodon" in webmention.url or "fed.brid.gy" in webmention['wm-source'] %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>
+                                        <i class="fa-brands fa-mastodon"></i>
+                                        via Mastodon</strong>
+                                </a>
+                            {% else %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>Mention</strong>
+                                </a>
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                    {% if webmention.published %}
+                        <time class="postlist-date" datetime="{{ webmention.published }}">
+                            {{ webmention.published | date("%a, %b %d, %Y") }}
+                        </time>
+                    {% endif %}
+                </div>
+                <div class="webmention__content">
+                    {% if webmention.content.html %}
+                        {{ webmention.content.html | safe }}
+                    {% else %}
+                        {{ webmention.content.text }}
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
     {% endif %}
-    {% if webmention.published %}
-        <time class="postlist-date" datetime="{{ webmention.published }}">
-            {{ webmention.published | date("%a, %b %d, %Y") }}
-        </time>
-    {% endif %}
-  </div>
-  <div class="webmention__content">
-      {% if webmention.content.html %}
-        {{ webmention.content.html | safe }}
-      {% else %}
-        {{ webmention.content.text }}
-      {% endif %}
-  </div>
-</article>
-{% endfor %}
-{% endif %}
 
-        {% set replies = filteredWebmentions | where("wm-property", "in-reply-to") %}
+    {% set replies = filteredWebmentions | where("wm-property", "in-reply-to") %}
 
-       {% set replySize = replies | size %}
-        {% if replySize > 0 %}
+    {% set replySize = replies | size %}
+    {% if replySize > 0 %}
         <h3>Replies</h3>
         {% for webmention in replies %}
-          <article class="webmention" id="webmention-{{ webmention['wm-id'] }}">
-  <div class="webmention__meta">
-    {% if webmention.author and webmention.author.name != "" %}
-        {% if webmention.author.photo != "" %}
-      <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
-      {% else %}
-      <img src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore>
-      {% endif %}
-      <span>
-        <a class="h-card u-url" {% if webmention.url %}href="{{ webmention.url }}" {% endif %} target="_blank" rel="noopener noreferrer"><strong class="p-name">{{ webmention.author.name }}</strong></a>
-      </span>
-    {% else %}
-      <img src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore>
-      <span>
-        {% if "bsky.app" in webmention.url or "brid.gy" in webmention.url %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong><i class="fa-brands fa-bluesky"></i> via Bluesky</strong></a>
-        {% elif "mastodon" in webmention.url %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong><i class="fa-brands fa-mastodon"></i> via Mastodon</strong></a>
-        {% else %}
-          <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer"><strong>Anonymous</strong></a>
-        {% endif %}
-      </span>
+            <article class="webmention" id="webmention-{{ webmention['wm-id'] }}">
+                <div class="webmention__meta">
+                    {% if webmention.author and webmention.author.name != "" %}
+                        {% if webmention.author.photo != "" %}
+                            <img src="{{ webmention.author.photo }}" alt="{{ webmention.author.name }}" width="48" height="48" loading="lazy">
+                        {% else %}
+                            <img src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                        {% endif %}
+                        <span>
+                            <a class="h-card u-url" {% if webmention.url %} href="{{ webmention.url }}" {% endif %} target="_blank" rel="noopener noreferrer">
+                                <strong class="p-name">{{ webmention.author.name }}</strong>
+                            </a>
+                        </span>
+                    {% else %}
+                        <img src="{{ '/assets/img/webmention.svg' | url }}" alt="" width="48" height="48" eleventy:ignore="eleventy:ignore">
+                        <span>
+                            {% if "bsky.app" in webmention.url or "brid.gy" in webmention.url %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>
+                                        <i class="fa-brands fa-bluesky"></i>
+                                        via Bluesky</strong>
+                                </a>
+                            {% elif "mastodon" in webmention.url %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>
+                                        <i class="fa-brands fa-mastodon"></i>
+                                        via Mastodon</strong>
+                                </a>
+                            {% else %}
+                                <a class="h-card u-url" href="{{ webmention.url }}" target="_blank" rel="noopener noreferrer">
+                                    <strong>Anonymous</strong>
+                                </a>
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                    {% if webmention.published %}
+                        <time class="postlist-date" datetime="{{ webmention.published }}">
+                            {{ webmention.published | date("%a, %b %d, %Y") }}
+                        </time>
+                    {% endif %}
+                </div>
+                <div class="webmention__content">
+                    {% if webmention.content.html %}
+                        {{ webmention.content.html | safe }}
+                    {% else %}
+                        {{ webmention.content.text }}
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
     {% endif %}
-    {% if webmention.published %}
-        <time class="postlist-date" datetime="{{ webmention.published }}">
-            {{ webmention.published | date("%a, %b %d, %Y") }}
-        </time>
-    {% endif %}
-  </div>
-  <div class="webmention__content">
-      {% if webmention.content.html %}
-        {{ webmention.content.html | safe }}
-      {% else %}
-        {{ webmention.content.text }}
-      {% endif %}
-  </div>
-</article>
-{% endfor %}
-{% endif %}
-       
-      </section>
+
+</section>

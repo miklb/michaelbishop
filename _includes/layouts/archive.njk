@@ -1,67 +1,72 @@
 <!doctype html>
 <html lang="{{ lang or site.lang or 'en' }}">
 
-  {% include "head.njk" %}
+    {% include "head.njk" %}
 
-  <body>
-    <div class="site-container">
-      <div class="site-grid">
-      {% include "header.njk" %}
-      <main class="content h-feed">
-        <div class="archives inner-grid">
-          <h1>Archives</h1>
-            {%- for post in posts -%}
-              <article class="archive-entry h-entry">
-                <div class="archive-date">
-                  <time class="dt-published" datetime="{{ post.date | htmlDateString }}">
-                    {{ post.date | readableDate("MMM dd, yyyy") }}
-                  </time>
-                </div>
-                
-                <div class="archive-content">
-                  {% if post.data.title %}
-                    <h2 class="archive-title p-name">
-                      <a class="u-url" href="{{ post.url }}">{{ post.data.title }}</a>
-                    </h2>
-                    {% if post.data.excerpt %}
-                      <p class="archive-excerpt p-summary">{{ post.data.excerpt }}</p>
-                    {% endif %}
-                  {% else %}
-                    <div class="archive-note e-content">
-                      {{ post.content | unfurlUrls | safe }}
-                      <a class="u-url" href="{{ post.url }}"><i class="fa-solid fa-link"></i></a>
+    <body>
+        <div class="site-container">
+            <div class="site-grid">
+                {% include "header.njk" %}
+                <main class="content h-feed">
+                    <div class="archives inner-grid">
+                        <h1>Archives</h1>
+                        {%- for post in posts -%}
+                            <article class="archive-entry h-entry">
+                                <div class="archive-date">
+                                    <time class="dt-published" datetime="{{ post.date | htmlDateString }}">
+                                        {{ post.date | readableDate("MMM dd, yyyy") }}
+                                    </time>
+                                </div>
+
+                                <div class="archive-content">
+                                    {% if post.data.title %}
+                                        <h2 class="archive-title p-name">
+                                            <a class="u-url" href="{{ post.url }}">{{ post.data.title }}</a>
+                                        </h2>
+                                        {% if post.data.excerpt %}
+                                            <p class="archive-excerpt p-summary">{{ post.data.excerpt }}</p>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="archive-note e-content">
+                                            {{ post.content | unfurlUrls | safe }}
+                                            <a class="u-url" href="{{ post.url }}">
+                                                <i class="fa-solid fa-link"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {%- endfor -%}
+
+                        {% if pagination.href.previous or pagination.href.next %}
+                            <nav class="pagination" aria-label="Archive pagination">
+                                <ul>
+                                    {% if pagination.href.previous %}
+                                        <li class="pagination__prev">
+                                            <a href="{{ pagination.href.previous }}">← Newer</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="pagination__info">
+                                        Page
+                                        {{ pagination.pageNumber + 1 }}
+                                        of
+                                        {{ pagination.pages.length }}
+                                    </li>
+
+                                    {% if pagination.href.next %}
+                                        <li class="pagination__next">
+                                            <a href="{{ pagination.href.next }}">Older →</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
                     </div>
-                  {% endif %}
-                </div>
-              </article>
-            {%- endfor -%}
-            
-            {% if pagination.href.previous or pagination.href.next %}
-            <nav class="pagination" aria-label="Archive pagination">
-              <ul>
-                {% if pagination.href.previous %}
-                <li class="pagination__prev">
-                  <a href="{{ pagination.href.previous }}">← Newer</a>
-                </li>
-                {% endif %}
-                
-                <li class="pagination__info">
-                  Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}
-                </li>
-                
-                {% if pagination.href.next %}
-                <li class="pagination__next">
-                  <a href="{{ pagination.href.next }}">Older →</a>
-                </li>
-                {% endif %}
-              </ul>
-            </nav>
-            {% endif %}
+                </main>
+                {% include "footer.njk" %}
+            </div>
         </div>
-      </main>
-      {% include "footer.njk" %}
-    </div>
-  </div>
-  {% getBundle "fontawesome" %}
-  </body>
+        {% getBundle "fontawesome" %}
+    </body>
 </html>
