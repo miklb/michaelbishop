@@ -11,6 +11,25 @@ const {
 // Remove trailing slash from site URL
 const SITE_URL = (ME || 'https://michaelbishop.me').replace(/\/$/, '');
 
+// Wait for a URL to return 200, retrying with backoff
+async function waitForPage(url, { retries = 5, delayMs = 10000 } = {}) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const res = await fetch(url, { redirect: 'follow' });
+            if (res.ok) {
+                console.log(`Page live: ${url} (attempt ${i + 1})`);
+                return true;
+            }
+            console.log(`Page not ready: ${url} (${res.status}, attempt ${i + 1})`);
+        } catch (e) {
+            console.log(`Page fetch error: ${url} (${e.message}, attempt ${i + 1})`);
+        }
+        await new Promise(r => setTimeout(r, delayMs));
+    }
+    console.log(`Page never became available: ${url}`);
+    return false;
+}
+
 export async function handler(event, context) {
     console.log('Post-deploy triggered');
     console.log('Headers:', JSON.stringify(event.headers));
@@ -149,6 +168,12 @@ async function processFile(filePath, repoPath) {
         targets = arrayMatch[1].match(/-\s+(.+)/g)?.map(t => 
             t.replace(/^-\s+/, '').replace(/^['"]|['"]$/g, '').trim()
         ) || [];
+    }
+
+    // Wait for the page to be live on the CDN before sending webmentions
+    const isLive = await waitForPage(postUrl, { retries: 5, delayMs: 10000 });
+    if (!isLive) {
+        return { file: filePath, status: 'skipped', reason: 'page not live yet' };
     }
 
     for (const targetUrl of targets) {
