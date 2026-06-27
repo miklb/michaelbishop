@@ -50,8 +50,24 @@ Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
 Deploys run on **Cloudflare Workers Builds** (dashboard → the `michaelbishop`
 Worker → Builds), triggered by pushes to `main`. Build command **must** be
 `npm run build` (the `_site/` output is gitignored, so it doesn't exist until the
-build runs); deploy command is `npx wrangler deploy`, reading `wrangler.jsonc`.
+build runs); deploy command is `npx wrangler deploy`, reading `wrangler.jsonc`;
+version command `npx wrangler versions upload` (branch/PR previews).
 **No GitHub `CF_*` secrets** — the GitHub App connection authenticates builds.
+
+### Build-time secrets (Workers Builds)
+
+These are consumed by Node during `npm run build` (11ty `_data/` fetches), **not**
+by the runtime Worker — set them as **Build variables and secrets** in Workers
+Builds, not as Worker runtime secrets. Locally they live in the gitignored `.env`.
+
+| Name | Used by | Purpose |
+| --- | --- | --- |
+| `LFM_API_KEY` | `_data/lastfm.js` | LastFM listening data on `/listening.html` |
+| `WEBMENTION_IO_TOKEN` | `_data/webmentions.js` | webmention.io counts/data on posts |
+
+If a Workers Build runs **without** these, the build still succeeds but that data
+comes back empty/unauthorized and silently disappears from the live site —
+re-trigger a build after the secrets are set.
 
 This site is **Workers, not Pages** — the global `/deploy-preview` and
 `/port-component` skills don't apply. For local checks:

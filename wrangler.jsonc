@@ -8,6 +8,10 @@
     "directory": "./_site/",
     // Serves _site/404.html (built from content/404.md) on unmatched paths.
     "not_found_handling": "404-page"
+    // NOTE: default html_handling redirects /foo.html -> /foo (307). Homepage
+    // and directory URLs (/notes/123/) resolve fine; only the .html article
+    // permalinks take a redirect hop. "none" would serve .html directly but
+    // breaks index.html resolution (homepage/dirs 404), so we keep the default.
   },
   // Enable the *.workers.dev URL for testing before the DNS switch
   "workers_dev": true,
