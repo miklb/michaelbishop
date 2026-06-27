@@ -30,8 +30,9 @@ over going back to `node-canvas`.
 
 ## Posting model (how content goes live)
 
-Git-based: write markdown → commit to `main` → `.github/workflows/deploy.yml`
-builds (`npm run build`), deploys (`wrangler deploy`), then syndicates.
+Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
+(native Git integration) runs `npm run build` and `wrangler deploy` →
+`.github/workflows/syndicate.yml` syndicates to Bridgy.
 
 - **Post types**: `content/notes/`, `content/replies/`, `content/articles/`.
   Microformats2 (`h-entry`) + Bridgy Fed / Bridgy Bluesky. Reply context and
@@ -44,18 +45,22 @@ builds (`npm run build`), deploys (`wrangler deploy`), then syndicates.
 - Captured syndication URLs are committed back with `[skip ci]` to avoid a
   rebuild loop.
 
-## Deploy / preview commands
+## Deploy / preview
+
+Deploys run on **Cloudflare Workers Builds** (dashboard → the `michaelbishop`
+Worker → Builds), triggered by pushes to `main`. Build command **must** be
+`npm run build` (the `_site/` output is gitignored, so it doesn't exist until the
+build runs); deploy command is `npx wrangler deploy`, reading `wrangler.jsonc`.
+**No GitHub `CF_*` secrets** — the GitHub App connection authenticates builds.
 
 This site is **Workers, not Pages** — the global `/deploy-preview` and
-`/port-component` skills don't apply. Use wrangler directly:
+`/port-component` skills don't apply. For local checks:
 
 ```bash
-npm run build && npx wrangler deploy           # production
+npm run build && npx wrangler deploy           # manual production deploy
 npm run build && npx wrangler versions upload  # preview URL (no traffic)
 npm run dev:cf                                  # 11ty watch + wrangler dev
 ```
-
-CI needs repo secrets `CF_API_TOKEN` and `CF_ACCOUNT_ID`.
 
 ## Deferred / future direction
 

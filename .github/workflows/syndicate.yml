@@ -1,0 +1,79 @@
+name: Syndicate to Bridgy
+
+# Build + deploy are handled by Cloudflare Workers Builds (native Git
+# integration), so this workflow does ONLY post-deploy syndication.
+# It needs no Cloudflare secrets — it just pings Bridgy and commits the
+# captured syndication URLs back to the repo.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: syndicate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  syndicate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Diff against the previous commit to find changed posts.
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Determine changed posts
+        id: changed
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BEFORE="HEAD~1"
+          fi
+          CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" -- 'content/notes' 'content/replies' | grep '\.md$' || true)
+          {
+            echo "files<<EOF"
+            echo "$CHANGED"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Wait for Cloudflare deploy, then syndicate
+        if: steps.changed.outputs.files != ''
+        run: |
+          echo "Changed posts:"; printf '%s\n' "${{ steps.changed.outputs.files }}"
+          # Workers Builds deploys asynchronously — poll the live site until the
+          # new build is serving before asking Bridgy to fetch the post.
+          for i in $(seq 1 30); do
+            if curl -fsS -o /dev/null https://michaelbishop.me/; then
+              echo "Site reachable."; break
+            fi
+            echo "Waiting for deploy... ($i)"; sleep 10
+          done
+          # Small extra margin for CDN propagation of the new post pages.
+          sleep 20
+          npm run webmention -- ${{ steps.changed.outputs.files }}
+
+      - name: Commit captured syndication URLs
+        if: steps.changed.outputs.files != ''
+        run: |
+          if [ -n "$(git status --porcelain content/)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add content/
+            # [skip ci] keeps both this workflow and Cloudflare Workers Builds
+            # from rebuilding on the syndication commit-back.
+            git commit -m "chore: capture syndication URLs [skip ci]"
+            git push
+          else
+            echo "No syndication URL changes to commit."
+          fi
