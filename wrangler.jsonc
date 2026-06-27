@@ -6,9 +6,8 @@
   // Micropub/admin phase (see CLOUDFLARE-WORKERS-PORT.md, Phases 2–5).
   "assets": {
     "directory": "./_site/",
-    // No 404.html is generated yet; "none" serves CF's default 404.
-    // Switch to "404-page" once a 404 page exists in the build.
-    "not_found_handling": "none"
+    // Serves _site/404.html (built from content/404.md) on unmatched paths.
+    "not_found_handling": "404-page"
   },
   // Enable the *.workers.dev URL for testing before the DNS switch
   "workers_dev": true,

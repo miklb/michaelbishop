@@ -96,23 +96,62 @@ async function findRecentPosts(dir, limit = 5) {
   return posts.slice(0, limit)
 }
 
-async function main() {
-  console.log('🔗 Sending webmentions to Bridgy...\n')
-  
-  // Scan both notes and replies directories
-  const contentDirs = ['./content/notes', './content/replies']
-  const recentPosts = []
-  for (const dir of contentDirs) {
+/**
+ * Build the post list from an explicit set of file paths (e.g. the files
+ * changed in a push). Only syndicatable posts under notes/ or replies/ with
+ * `mp-syndicate-to` are kept. Used by CI to scope syndication to new posts
+ * instead of re-scanning everything (which spams Bridgy with "already
+ * published" responses).
+ */
+async function postsFromFiles(filePaths) {
+  const posts = []
+  for (const filePath of filePaths) {
+    if (!filePath.endsWith('.md')) continue
+    if (!/content\/(notes|replies)\//.test(filePath)) continue
     try {
-      const posts = await findRecentPosts(dir, 3)
-      recentPosts.push(...posts)
+      const content = await readFile(filePath, 'utf-8')
+      const { data } = matter(content)
+      if (data['mp-syndicate-to']) {
+        posts.push({ filePath, frontmatter: data, file: filePath.split('/').pop() })
+      }
     } catch (e) {
-      // Directory may not exist yet
+      console.log(`⚠ Skipping unreadable file: ${filePath}`)
     }
   }
-  // Sort combined results by date, take most recent
-  recentPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date))
-  const postsToProcess = recentPosts.slice(0, 5)
+  return posts
+}
+
+async function main() {
+  console.log('🔗 Sending webmentions to Bridgy...\n')
+
+  // If file paths are passed as args, only process those (CI: changed files).
+  // Otherwise fall back to scanning recent posts (manual / backfill runs).
+  const fileArgs = process.argv.slice(2)
+  let postsToProcess
+
+  if (fileArgs.length > 0) {
+    console.log(`Scoped to ${fileArgs.length} changed file(s).`)
+    postsToProcess = await postsFromFiles(fileArgs)
+    if (postsToProcess.length === 0) {
+      console.log('No syndicatable posts among the changed files. Nothing to do.')
+      return
+    }
+  } else {
+    // Scan both notes and replies directories
+    const contentDirs = ['./content/notes', './content/replies']
+    const recentPosts = []
+    for (const dir of contentDirs) {
+      try {
+        const posts = await findRecentPosts(dir, 3)
+        recentPosts.push(...posts)
+      } catch (e) {
+        // Directory may not exist yet
+      }
+    }
+    // Sort combined results by date, take most recent
+    recentPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date))
+    postsToProcess = recentPosts.slice(0, 5)
+  }
   
   for (const post of postsToProcess) {
     const targets = post.frontmatter['mp-syndicate-to'] || []

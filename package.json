@@ -4,6 +4,9 @@
     "description": "This will be my new blog & Internet home.",
     "main": "index.js",
     "type": "module",
+    "engines": {
+        "node": ">=26"
+    },
     "scripts": {
         "build": "node scripts/generate-og-images.js && npx @11ty/eleventy",
         "og-images": "node scripts/generate-og-images.js",
@@ -32,11 +35,11 @@
         "@11ty/eleventy-plugin-rss": "^2.0.4",
         "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
         "@jgarber/eleventy-plugin-postcss": "^3.0.1",
-        "canvas": "^2.11.2",
         "concurrently": "^9.2.1",
         "cssnano": "^7.1.1",
         "dotenv": "^17.2.2",
         "eleventy-plugin-metagen": "^1.8.3",
+        "gray-matter": "^4.0.3",
         "markdown-it-footnote": "^4.0.0",
         "netlify-plugin-webmentions": "github:miklb/netlify-plugin-webmentions",
         "postcss": "^8.5.6",
@@ -48,6 +51,7 @@
         "@11ty/font-awesome": "^1.0.1",
         "@benjifs/github-store": "^0.2.0",
         "@benjifs/micropub": "^2.0.1",
+        "@napi-rs/canvas": "^1.0.1",
         "unfurl.js": "^6.4.0"
     }
 }

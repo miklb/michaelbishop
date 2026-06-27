@@ -6,7 +6,7 @@
  * Run before Eleventy build: npm run og-images
  */
 
-import { createCanvas, registerFont, loadImage } from 'canvas';
+import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, basename } from 'path';
