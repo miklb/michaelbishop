@@ -1,0 +1,59 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow the syndication step to commit captured syndication URLs back to main.
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Needed so the syndication commit-back can push to main.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+      - name: Build (11ty)
+        run: npm run build
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # --- Bridgy syndication (notes/replies with mp-syndicate-to) ---
+      # Bridgy fetches the live page, so wait for the deploy to propagate.
+      # send-webmentions.js writes captured syndication URLs into frontmatter;
+      # we commit those back with [skip ci] so it doesn't trigger another deploy.
+      - name: Syndicate to Bridgy
+        run: |
+          sleep 45
+          npm run webmention
+
+      - name: Commit syndication URLs
+        run: |
+          if [ -n "$(git status --porcelain content/)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add content/
+            git commit -m "chore: capture syndication URLs [skip ci]"
+            git push
+          else
+            echo "No syndication URL changes to commit."
+          fi

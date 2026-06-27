@@ -1,0 +1,16 @@
+{
+  "name": "michaelbishop",
+  "compatibility_date": "2026-04-01",
+  // Static-only deploy: 11ty build output served via Workers Static Assets.
+  // No Worker entry point, R2, or cron yet — those come with the optional
+  // Micropub/admin phase (see CLOUDFLARE-WORKERS-PORT.md, Phases 2–5).
+  "assets": {
+    "directory": "./_site/",
+    // No 404.html is generated yet; "none" serves CF's default 404.
+    // Switch to "404-page" once a 404 page exists in the build.
+    "not_found_handling": "none"
+  },
+  // Enable the *.workers.dev URL for testing before the DNS switch
+  "workers_dev": true,
+  "preview_urls": true
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} — Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 1rem;
+      max-width: 40rem;
+      margin: 0 auto;
+    }
+    h1 { font-size: 1.25rem; margin-bottom: 1rem; }
+    nav { margin-bottom: 1.5rem; display: flex; gap: 1rem; }
+    nav a { color: #0066cc; text-decoration: none; font-size: 0.9rem; }
+    nav a:hover { text-decoration: underline; }
+    label { display: block; font-weight: 600; margin-bottom: 0.25rem; font-size: 0.9rem; }
+    input[type="text"], input[type="url"], textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #fff;
+    }
+    textarea { min-height: 10rem; resize: vertical; }
+    .field { margin-bottom: 1rem; }
+    .field-toggle { margin-bottom: 0.75rem; }
+    .field-toggle summary {
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+      user-select: none;
+    }
+    .field-toggle[open] summary { margin-bottom: 0.5rem; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+    .checkbox-group label { font-weight: normal; display: flex; align-items: center; gap: 0.35rem; }
+    .checkbox-group input[type="checkbox"] { width: 1.25rem; height: 1.25rem; }
+    .tags-input { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .tags-input input { flex: 1; min-width: 8rem; }
+    .tag-chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: #e0e0e0; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;
+    }
+    .tag-chip button {
+      background: none; border: none; cursor: pointer; font-size: 1rem; line-height: 1; color: #666;
+    }
+    button[type="submit"], .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #0066cc;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 44px;
+    }
+    button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary {
+      background: #e0e0e0; color: #333;
+    }
+    .actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .photo-btn { position: relative; overflow: hidden; }
+    .photo-btn input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      font-size: 100px; /* Ensures large tap target on mobile */
+    }
+    .status {
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .status-success { background: #d4edda; color: #155724; }
+    .status-error { background: #f8d7da; color: #721c24; }
+    .status a { color: inherit; font-weight: 600; }
+    .photo-preview { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .photo-preview img { max-width: 100px; max-height: 100px; border-radius: 4px; object-fit: cover; }
+    .progress { display: none; font-size: 0.85rem; color: #666; }
+  </style>
+</head>
+<body>
+  {{ content | safe }}
+</body>
+</html>

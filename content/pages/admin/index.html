@@ -1,0 +1,229 @@
+---
+layout: layouts/admin.njk
+title: Post
+permalink: "admin/index.html"
+eleventyExcludeFromCollections: true
+---
+
+<h1>New Post</h1>
+<nav>
+  <a href="/admin/">Note / Reply</a>
+  <a href="/admin/article.html">Article</a>
+  <a href="/">← Site</a>
+</nav>
+
+<form id="post-form">
+  <div class="field">
+    <label for="body">Content (Markdown)</label>
+    <textarea id="body" name="body" placeholder="What's on your mind?" required></textarea>
+  </div>
+
+  <details class="field-toggle">
+    <summary>Reply to a URL</summary>
+    <div class="field">
+      <label for="in-reply-to">In Reply To</label>
+      <input type="url" id="in-reply-to" name="in-reply-to" placeholder="https://example.com/post">
+    </div>
+  </details>
+
+  <details class="field-toggle">
+    <summary>Tags</summary>
+    <div class="field">
+      <div id="tags-container" class="tags-input">
+        <input type="text" id="tag-input" placeholder="Add tag, press Enter">
+      </div>
+    </div>
+  </details>
+
+  <div class="field">
+    <label>Syndicate To</label>
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" name="syndicate" value="https://fed.brid.gy/" checked>
+        Bridgy Fed
+      </label>
+      <label>
+        <input type="checkbox" name="syndicate" value="https://brid.gy/publish/bluesky" checked>
+        Bluesky
+      </label>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="submit" id="submit-btn">Publish</button>
+    <div class="photo-btn btn btn-secondary">
+      📷 Photo
+      <input type="file" id="photo-input" accept="image/*" multiple>
+    </div>
+    <span class="progress" id="progress"></span>
+  </div>
+</form>
+
+<div class="photo-preview" id="photo-preview"></div>
+<div id="status"></div>
+
+<script>
+(function () {
+  const form = document.getElementById('post-form');
+  const bodyEl = document.getElementById('body');
+  const replyToEl = document.getElementById('in-reply-to');
+  const submitBtn = document.getElementById('submit-btn');
+  const statusEl = document.getElementById('status');
+  const progressEl = document.getElementById('progress');
+  const photoInput = document.getElementById('photo-input');
+  const photoPreview = document.getElementById('photo-preview');
+  const tagInput = document.getElementById('tag-input');
+  const tagsContainer = document.getElementById('tags-container');
+
+  const uploadedPhotos = [];
+  const tags = [];
+
+  // --- Tags ---
+  tagInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const tag = tagInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+      if (tag && !tags.includes(tag)) {
+        tags.push(tag);
+        renderTags();
+      }
+      tagInput.value = '';
+    }
+  });
+
+  function renderTags() {
+    const chips = tagsContainer.querySelectorAll('.tag-chip');
+    chips.forEach(c => c.remove());
+    tags.forEach((tag, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'tag-chip';
+      chip.innerHTML = `${tag} <button type="button" data-index="${i}">&times;</button>`;
+      chip.querySelector('button').addEventListener('click', () => {
+        tags.splice(i, 1);
+        renderTags();
+      });
+      tagsContainer.insertBefore(chip, tagInput);
+    });
+  }
+
+  // --- Photo Upload ---
+  photoInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    for (const file of files) {
+      await uploadPhoto(file);
+    }
+    photoInput.value = '';
+  });
+
+  // Paste-to-upload for screenshots
+  bodyEl.addEventListener('paste', async (e) => {
+    const items = Array.from(e.clipboardData?.items || []);
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) await uploadPhoto(file);
+      }
+    }
+  });
+
+  async function uploadPhoto(file) {
+    progressEl.style.display = 'inline';
+    progressEl.textContent = `Uploading ${file.name}…`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+      uploadedPhotos.push(data.url);
+
+      // Insert markdown image at cursor in body
+      const pos = bodyEl.selectionStart;
+      const before = bodyEl.value.slice(0, pos);
+      const after = bodyEl.value.slice(pos);
+      const imgMd = `![](${data.url})`;
+      bodyEl.value = before + imgMd + after;
+      bodyEl.selectionStart = bodyEl.selectionEnd = pos + imgMd.length;
+
+      // Show preview
+      const img = document.createElement('img');
+      img.src = data.url;
+      img.alt = file.name;
+      photoPreview.appendChild(img);
+
+      progressEl.textContent = '';
+    } catch (err) {
+      progressEl.textContent = `Upload failed: ${err.message}`;
+    }
+
+    setTimeout(() => { progressEl.style.display = 'none'; }, 3000);
+  }
+
+  // --- Submit ---
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    statusEl.innerHTML = '';
+
+    const body = bodyEl.value.trim();
+    if (!body) {
+      statusEl.innerHTML = '<div class="status status-error">Content is required.</div>';
+      submitBtn.disabled = false;
+      return;
+    }
+
+    const replyTo = replyToEl.value.trim();
+    const type = replyTo ? 'reply' : 'note';
+
+    const syndicateCheckboxes = form.querySelectorAll('input[name="syndicate"]:checked');
+    const syndicateTo = Array.from(syndicateCheckboxes).map(cb => cb.value);
+
+    const payload = { type, body, 'mp-syndicate-to': syndicateTo };
+    if (replyTo) payload['in-reply-to'] = replyTo;
+    if (tags.length) payload.tags = tags;
+    if (uploadedPhotos.length) payload.photos = uploadedPhotos;
+
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Submit failed');
+
+      statusEl.innerHTML = `<div class="status status-success">
+        Published! <a href="${data.url}" target="_blank">${data.url}</a>
+        <br>Commit: ${data.commit?.slice(0, 7)}
+      </div>`;
+
+      // Reset form
+      bodyEl.value = '';
+      replyToEl.value = '';
+      uploadedPhotos.length = 0;
+      tags.length = 0;
+      renderTags();
+      photoPreview.innerHTML = '';
+    } catch (err) {
+      statusEl.innerHTML = `<div class="status status-error">${err.message}</div>`;
+    }
+
+    submitBtn.disabled = false;
+  });
+
+  // Keyboard shortcut: Cmd+Enter to submit
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+})();
+</script>

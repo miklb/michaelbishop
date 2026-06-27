@@ -6,3 +6,5 @@ node_modules
 
 _site/*
 netlify-post-deploy-syndication/
+netlify-plugin-webmentions/
+.wrangler/
