@@ -161,6 +161,24 @@ export default async function(eleventyConfig) {
 
 	eleventyConfig.addPlugin(pluginFilters);
 	eleventyConfig.addPlugin(pluginUnfurl);
+
+    // Stamp the deployed commit so CI can tell when a new build is actually
+    // serving. A changed post's URL returns 200 from the *previous* build
+    // during the deploy window, so syndication must compare commit SHAs, not
+    // poll for a 200 (see .github/workflows/syndicate.yml).
+    eleventyConfig.on("eleventy.after", async ({ dir }) => {
+        const { execSync } = await import("node:child_process");
+        const { writeFile } = await import("node:fs/promises");
+        let sha = process.env.WORKERS_CI_COMMIT_SHA || "";
+        if (!sha) {
+            try {
+                sha = execSync("git rev-parse HEAD", { encoding: "utf8" }).trim();
+            } catch {
+                sha = "unknown";
+            }
+        }
+        await writeFile(`${dir.output}/build-info.json`, JSON.stringify({ sha }));
+    });
 }
 
 export const config = {

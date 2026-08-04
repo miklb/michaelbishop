@@ -47,12 +47,32 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Wait for this commit's build to be live
+        if: steps.changed.outputs.files != ''
+        run: |
+          # An edited post's URL serves 200 from the PREVIOUS build during the
+          # deploy window, so Bridgy would capture stale content. Wait until
+          # the live build-info.json stamp matches this commit (or a newer
+          # build that already contains it) before syndicating.
+          is_live() {
+            LIVE=$(curl -fsS https://michaelbishop.me/build-info.json | jq -r .sha) || return 1
+            [ "$LIVE" = "${{ github.sha }}" ] && return 0
+            git fetch -q --depth=50 origin "$LIVE" 2>/dev/null || return 1
+            git merge-base --is-ancestor "${{ github.sha }}" "$LIVE" 2>/dev/null
+          }
+          for i in $(seq 1 60); do
+            if is_live; then echo "New build is live."; exit 0; fi
+            echo "Waiting for deploy... ($i)"; sleep 10
+          done
+          echo "Timed out waiting for this commit's build — refusing to syndicate stale content."
+          exit 1
+
       - name: Syndicate changed posts
         if: steps.changed.outputs.files != ''
         run: |
           echo "Changed posts:"; printf '%s\n' "${{ steps.changed.outputs.files }}"
-          # send-webmentions.js polls each post's own URL until the Workers
-          # Builds deploy is serving it, then pings Bridgy.
+          # send-webmentions.js additionally polls each post's own URL (covers
+          # brand-new pages still propagating), then pings Bridgy.
           npm run webmention -- ${{ steps.changed.outputs.files }}
 
       - name: Commit captured syndication URLs
