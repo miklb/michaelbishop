@@ -75,22 +75,57 @@ async function updatePostWithSyndicationUrls(filePath, urls) {
   console.log(`  ✓ Updated ${filePath} with syndication URLs`)
 }
 
+/**
+ * Syndication targets for a post: the `mp-syndicate-to` frontmatter (legacy,
+ * written by Micropub) or the u-bridgy / u-bridgy-fed links hand-written posts
+ * carry in their body. Bridgy Publish requires that body link to be present on
+ * the live page anyway, so the body is the source of truth.
+ */
+function syndicationTargets(frontmatter, body) {
+  const fm = frontmatter['mp-syndicate-to']
+  if (fm) return Array.isArray(fm) ? fm : [fm]
+  const targets = []
+  if (/class="u-bridgy-fed"/.test(body)) targets.push('https://fed.brid.gy/')
+  if (/class="u-bridgy"\s+href="https:\/\/brid\.gy\/publish\/bluesky/.test(body)) {
+    targets.push('https://brid.gy/publish/bluesky')
+  }
+  return targets
+}
+
+// Poll until the post page is actually serving — Workers Builds deploys
+// asynchronously after the push, and Bridgy fetches the source URL live.
+async function waitForUrl(url, timeoutMs = 5 * 60 * 1000, intervalMs = 10 * 1000) {
+  const deadline = Date.now() + timeoutMs
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(url, { method: 'HEAD' })
+      if (res.ok) return true
+    } catch {
+      // network hiccup — keep polling
+    }
+    console.log(`  … waiting for ${url} to deploy`)
+    await new Promise(resolve => setTimeout(resolve, intervalMs))
+  }
+  return false
+}
+
 async function findRecentPosts(dir, limit = 5) {
   const posts = []
   const entries = await readdir(dir, { withFileTypes: true, recursive: true })
-  
+
   for (const entry of entries) {
     if (entry.isFile() && entry.name.endsWith('.md')) {
       const filePath = join(entry.path, entry.name)
       const content = await readFile(filePath, 'utf-8')
-      const { data } = matter(content)
-      
-      if (data['mp-syndicate-to']) {
-        posts.push({ filePath, frontmatter: data, file: entry.name })
+      const { data, content: body } = matter(content)
+
+      const targets = syndicationTargets(data, body)
+      if (targets.length > 0) {
+        posts.push({ filePath, frontmatter: data, targets, file: entry.name })
       }
     }
   }
-  
+
   // Sort by date, most recent first
   posts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date))
   return posts.slice(0, limit)
@@ -110,9 +145,10 @@ async function postsFromFiles(filePaths) {
     if (!/content\/(notes|replies)\//.test(filePath)) continue
     try {
       const content = await readFile(filePath, 'utf-8')
-      const { data } = matter(content)
-      if (data['mp-syndicate-to']) {
-        posts.push({ filePath, frontmatter: data, file: filePath.split('/').pop() })
+      const { data, content: body } = matter(content)
+      const targets = syndicationTargets(data, body)
+      if (targets.length > 0) {
+        posts.push({ filePath, frontmatter: data, targets, file: filePath.split('/').pop() })
       }
     } catch (e) {
       console.log(`⚠ Skipping unreadable file: ${filePath}`)
@@ -154,20 +190,30 @@ async function main() {
   }
   
   for (const post of postsToProcess) {
-    const targets = post.frontmatter['mp-syndicate-to'] || []
-    
+    const targets = post.targets
+
     // Skip if already syndicated (has syndication URLs)
     if (post.frontmatter.syndication && post.frontmatter.syndication.length > 0) {
       console.log(`\nSkipping (already syndicated): ${post.file}`)
       continue
     }
-    
-    // Determine content type from file path
-    const slug = post.file.replace('.md', '')
-    const contentType = post.filePath.includes('/replies/') ? 'replies' : 'notes'
-    const postUrl = `${SITE_URL}/${contentType}/${slug}/`
-    
+
+    // Explicit permalink wins; otherwise the default /notes/<slug>/ scheme
+    let postUrl
+    if (post.frontmatter.permalink) {
+      postUrl = `${SITE_URL}${post.frontmatter.permalink.startsWith('/') ? '' : '/'}${post.frontmatter.permalink}`
+    } else {
+      const slug = post.file.replace('.md', '')
+      const contentType = post.filePath.includes('/replies/') ? 'replies' : 'notes'
+      postUrl = `${SITE_URL}/${contentType}/${slug}/`
+    }
+
     console.log(`\nPost: ${postUrl}`)
+
+    if (!(await waitForUrl(postUrl))) {
+      console.log(`✗ Gave up waiting for ${postUrl} — not deployed yet, skipping`)
+      continue
+    }
     
     const syndicationUrls = []
     

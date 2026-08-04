@@ -47,20 +47,12 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Wait for Cloudflare deploy, then syndicate
+      - name: Syndicate changed posts
         if: steps.changed.outputs.files != ''
         run: |
           echo "Changed posts:"; printf '%s\n' "${{ steps.changed.outputs.files }}"
-          # Workers Builds deploys asynchronously — poll the live site until the
-          # new build is serving before asking Bridgy to fetch the post.
-          for i in $(seq 1 30); do
-            if curl -fsS -o /dev/null https://michaelbishop.me/; then
-              echo "Site reachable."; break
-            fi
-            echo "Waiting for deploy... ($i)"; sleep 10
-          done
-          # Small extra margin for CDN propagation of the new post pages.
-          sleep 20
+          # send-webmentions.js polls each post's own URL until the Workers
+          # Builds deploy is serving it, then pings Bridgy.
           npm run webmention -- ${{ steps.changed.outputs.files }}
 
       - name: Commit captured syndication URLs
