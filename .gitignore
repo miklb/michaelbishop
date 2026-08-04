@@ -5,6 +5,7 @@ node_modules
 .DS_Store
 
 _site/*
-netlify-post-deploy-syndication/
-netlify-plugin-webmentions/
 .wrangler/
+PORTING-GUIDE.md
+CLOUDFLARE-WORKERS-PORT.md
+migration/

@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "New note",
+            "type": "shell",
+            "command": "npm run note -- \"${input:noteSlug}\"",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true
+            }
+        },
+        {
+            "label": "Publish post",
+            "type": "shell",
+            "command": "npm run post",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "noteSlug",
+            "type": "promptString",
+            "description": "Note slug or title (leave empty for a timestamped filename)"
+        }
+    ]
+}

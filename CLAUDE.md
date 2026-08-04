@@ -34,6 +34,15 @@ Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
 (native Git integration) runs `npm run build` and `wrangler deploy` →
 `.github/workflows/syndicate.yml` syndicates to Bridgy.
 
+- **Local posting**: `npm run note -- "slug"` scaffolds a note and opens it in
+  VS Code; `npm run post` commits everything under `content/` and pushes. Both
+  are also VS Code tasks ("New note", "Publish post").
+- **Dates must be explicit in frontmatter.** Workers Builds uses a shallow
+  clone, so 11ty's `"git Created"` / `"git Last Modified"` silently resolve to
+  build time in production (every post dated "today"). The `"git Created"`
+  defaults in `content/*/*.json` are a local-only fallback — every committed
+  post carries a real `date:`, the note scaffolder and snippets stamp one, and
+  never rely on git dates for anything user-visible.
 - **Post types**: `content/notes/`, `content/replies/`, `content/articles/`.
   Microformats2 (`h-entry`) + Bridgy Fed / Bridgy Bluesky. Reply context and
   Bridgy content-separation live in `_includes/layouts/article.njk`
@@ -91,5 +100,3 @@ npm run dev:cf                                  # 11ty watch + wrangler dev
   originals + `eleventy-img` responsive variants. Keep an eye on EXIF/GPS
   stripping when this lands.
 
-`netlify/`, `netlify.toml`, and the `netlify-*` dirs are kept only for rollback
-until the DNS cutover from Netlify is verified; remove them afterward.
