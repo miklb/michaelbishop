@@ -1,4 +1,5 @@
 ---
+date: 2023-12-28T13:14:17-05:00
 permalink: "/note/blogs-social-magic/"
 tags:
   - Bluesky

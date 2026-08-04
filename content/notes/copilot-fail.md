@@ -1,4 +1,5 @@
 ---
+date: 2024-07-08T13:55:04-04:00
 permalink: /note/copilot-fail.html
 tags:
   - javascript

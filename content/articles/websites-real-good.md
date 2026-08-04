@@ -1,4 +1,5 @@
 ---
+date: 2024-05-09T10:45:12-04:00
 title: "International Symposium on Making Websites Real Good"
 tags:
   - 11ty

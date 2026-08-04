@@ -1,4 +1,5 @@
 ---
+date: 2024-02-11T12:29:13-05:00
 title: Pull Quote Web Component
 permalink: /note/pull-quote.html
 tags:

@@ -2,7 +2,7 @@
 title: Hand Rolled
 layout: "layouts/article.njk"
 permalink: "/article/hand-rolled.html"
-date: git Created
+date: 2023-03-09T20:14:35-05:00
 tags:
   - blogging
 meta:

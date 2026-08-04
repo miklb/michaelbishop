@@ -1,4 +1,5 @@
 ---
+date: 2024-01-30T22:56:13-05:00
 tags:
   - accessibility
   - charts

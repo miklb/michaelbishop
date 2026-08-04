@@ -3,7 +3,7 @@ title: What Happened to miklb?
 excerpt: The blog is dead, long live the blog.
 layout: "layouts/article.njk"
 permalink: /article/what-happened-to-miklb/
-date: git Created
+date: 2023-11-06T19:19:59-05:00
 tags:
   - blogging
   - bio

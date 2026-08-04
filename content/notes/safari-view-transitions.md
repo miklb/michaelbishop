@@ -1,4 +1,5 @@
 ---
+date: 2024-06-10T22:18:45-04:00
 permalink: /note/safari-view-transitions.html
 tags:
   - css

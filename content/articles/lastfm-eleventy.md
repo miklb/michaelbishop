@@ -1,4 +1,5 @@
 ---
+date: 2023-12-26T14:36:33-05:00
 title: LastFM Recently Played with Eleventy
 excerpt: How I'm using Eleventy Fetch to display my recently played tracks from LastFM.
 layout: "layouts/article.njk"

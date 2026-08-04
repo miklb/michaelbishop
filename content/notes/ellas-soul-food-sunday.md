@@ -1,4 +1,5 @@
 ---
+date: 2024-06-09T20:29:43-04:00
 permalink: /note/ellas-soul-food-sunday.html
 tags:
   - gardening

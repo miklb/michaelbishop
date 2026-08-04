@@ -1,4 +1,5 @@
 ---
+date: 2024-06-11T13:02:31-04:00
 permalink: /note/sure-another-project.html
 tags:
   - blogging

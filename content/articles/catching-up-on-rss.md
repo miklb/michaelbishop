@@ -2,7 +2,7 @@
 title: Catching Up on RSS
 layout: "layouts/article.njk"
 permalink: "/article/catching-up-on-rss.html"
-date: git Created
+date: 2023-11-08T14:29:42-05:00
 modDate: 
 tags:
   - article

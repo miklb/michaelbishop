@@ -3,7 +3,7 @@ title: Another Approach to Webmentions in Eleventy
 excerpt: A quick and dirty way of using Eleventy Fetch and Liquid to display webmentions on your site.
 layout: "layouts/article.njk"
 permalink: "/article/eleventy-webmentions.html"
-date: git Created
+date: 2023-12-26T11:37:32-05:00
 modDate:
 tags:
   - article

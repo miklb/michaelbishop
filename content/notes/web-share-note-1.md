@@ -1,4 +1,5 @@
 ---
+date: 2023-12-18T22:23:21-05:00
 permalink: "/note/web-share-note-1/"
 tags:
   - HTML Web Components

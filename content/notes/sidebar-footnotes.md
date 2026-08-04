@@ -1,4 +1,5 @@
 ---
+date: 2024-06-12T14:23:22-04:00
 permalink: /note/sidebar-footnotes.html
 tags:
   - blogging

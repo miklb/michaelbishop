@@ -1,4 +1,5 @@
 ---
+date: 2023-12-18T22:24:00-05:00
 permalink: "/note/mastodon-rss/"
 tags:
   - Mastodon

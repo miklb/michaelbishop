@@ -1,4 +1,5 @@
 ---
+date: 2024-01-05T11:21:44-05:00
 permalink: "/note/apple-jam/"
 tags:
   - web components

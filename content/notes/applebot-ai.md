@@ -1,4 +1,5 @@
 ---
+date: 2024-06-21T23:37:14-04:00
 permalink: /note/applebot-ai.html
 tags:
   - AI

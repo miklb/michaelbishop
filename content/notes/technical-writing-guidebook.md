@@ -1,4 +1,5 @@
 ---
+date: 2024-01-05T21:55:46-05:00
 tags:
   - documentation
   - technical writing

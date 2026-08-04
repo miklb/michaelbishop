@@ -1,4 +1,5 @@
 ---
+date: 2024-04-07T22:38:28-04:00
 permalink: "/note/wordpress-hosting-2024/"
 tags:
   - WordPress

@@ -1,4 +1,5 @@
 ---
+date: 2024-06-23T22:15:14-04:00
 permalink: /articles/current-ai-hot-take.html
 title: Where I'm at with AI
 tags:

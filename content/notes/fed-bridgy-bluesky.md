@@ -1,4 +1,5 @@
 ---
+date: 2024-05-10T12:01:00-04:00
 tags:
   - bridgyfed
   - note

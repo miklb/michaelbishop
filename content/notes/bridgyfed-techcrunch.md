@@ -1,4 +1,5 @@
 ---
+date: 2024-06-06T14:33:56-04:00
 permalink: /note/bridgyfed-techcrunch.html
 tags:
   - bridgyfed

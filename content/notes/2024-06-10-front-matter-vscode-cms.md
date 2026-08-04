@@ -1,4 +1,5 @@
 ---
+date: 2024-06-10T22:50:25-04:00
 permalink: /note/front-matter-vscode-cms.html
 tags:
   - blogging

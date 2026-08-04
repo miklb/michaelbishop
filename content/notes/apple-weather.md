@@ -1,4 +1,5 @@
 ---
+date: 2024-06-23T16:36:11-04:00
 permalink: /note/apple-weather.html
 tags:
   - Apple

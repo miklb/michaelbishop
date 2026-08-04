@@ -2,7 +2,7 @@
 title: Test. test. test January 2025
 layout: "layouts/article.njk"
 permalink: /article/january-2025/
-date: git Created
+date: 2025-01-21T15:49:50-05:00
 modDate: 2025-01-21 15:43:47
 tags:
   - blogging

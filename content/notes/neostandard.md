@@ -1,4 +1,5 @@
 ---
+date: 2024-05-31T13:27:18-04:00
 permalink: /note/neostandard.html
 tags:
   - javascript

@@ -1,4 +1,5 @@
 ---
+date: 2023-12-23T21:12:58-05:00
 tags:
   - gyotaku
   - photo

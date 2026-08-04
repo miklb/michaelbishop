@@ -1,4 +1,5 @@
 ---
+date: 2024-06-19T15:59:07-04:00
 permalink: /note/mask-composite.html
 tags:
   - css

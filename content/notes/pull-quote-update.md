@@ -1,4 +1,5 @@
 ---
+date: 2024-07-12T22:10:44-04:00
 permalink: /note/pull-quote-update.html
 tags:
   - javascript

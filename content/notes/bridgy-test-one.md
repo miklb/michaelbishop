@@ -1,7 +1,7 @@
 ---
 title: 
 layout: "layouts/article.njk"
-date: git Created
+date: 2023-11-04T16:11:57-04:00
 modDate: 
 tags:
   - note

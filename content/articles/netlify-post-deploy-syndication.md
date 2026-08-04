@@ -1,4 +1,5 @@
 ---
+date: 2026-01-08T09:14:33-05:00
 title: Automating Bridgy Syndication with Netlify Functions
 excerpt: A Netlify Function that sends webmentions to Bridgy after deploy and commits syndication URLs back to your repo.
 permalink: "/article/netlify-post-deploy-syndication.html"

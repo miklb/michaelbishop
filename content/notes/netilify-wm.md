@@ -1,4 +1,5 @@
 ---
+date: 2024-02-06T13:43:55-05:00
 tags:
   - Netlify
   - IndieWeb

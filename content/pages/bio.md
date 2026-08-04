@@ -2,7 +2,7 @@
 layout: layouts/default.njk
 title: Bio
 permalink: "bio.html"
-date: git Created
+date: 2022-10-13T23:49:30-04:00
 eleventyNavigation:
   key: Bio
   order: 3

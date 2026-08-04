@@ -1,4 +1,5 @@
 ---
+date: 2024-02-19T22:51:14-05:00
 title: Utopia
 permalink: /note/utopia/
 tags:

@@ -1,4 +1,5 @@
 ---
+date: 2024-03-12T23:36:12-04:00
 
 title: Changelog 0.4.0
 permalink: /notes/changelog/0.4.0/

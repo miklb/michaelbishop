@@ -3,7 +3,7 @@ title: In Defense of PostCSS as a Super Basic CSS Processing SetUp
 excerpt: Outlining how I use PostCSS for CSS processing.
 layout: "layouts/article.njk"
 permalink: "/article/postcss-superbasic-css-processing.html"
-date: git Created
+date: 2024-01-03T12:17:14-05:00
 tags:
   - PostCSS
   - CSS

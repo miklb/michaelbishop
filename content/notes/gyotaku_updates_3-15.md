@@ -1,4 +1,5 @@
 ---
+date: 2024-04-15T21:32:24-04:00
 title: Gyotaku Updates
 tags:
   - Gyotaku

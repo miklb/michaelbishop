@@ -1,4 +1,5 @@
 ---
+date: 2024-03-04T11:09:29-05:00
 permalink: "/note/grouper-offline/"
 tags:
   - note
