@@ -2,9 +2,9 @@
 
 Cranking this bad boy back up.
 
-I've thought long and hard on how **I** want to make websites for **me**. This is where I've landed. Eleventy as a static site generator and PostCSS for styling development. I am borrowing heavily from work I've previously done with Jekyll-IndieWeb.
+I've thought long and hard on how **I** want to make websites for **me**. This is where I've landed. Eleventy as a static site generator, PostCSS for styling, served on Cloudflare Workers Static Assets. I am borrowing heavily from work I've previously done with Jekyll-IndieWeb.
 
-This project will be the building blocks for the next iteration of that project. The primary difference will be that this project will be built to used with CloudCannon instead of Micropub. That's not to say micropub can't also be used, but for broader appeal a web interface to post from without configuring a micropub server is in my opinion a more viable option for the broader community.
+It's an IndieWeb site at heart: posts are `h-entry` microformats, webmentions flow through [webmention.io](https://webmention.io), and [Bridgy](https://brid.gy) syndicates notes and replies to Bluesky and the fediverse. After years of trying Micropub servers and clients, I landed somewhere simpler — publishing is just markdown committed to `main`, and everything downstream is automated.
 
 ## Posting
 

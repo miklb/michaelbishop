@@ -3,7 +3,7 @@
   "compatibility_date": "2026-04-01",
   // Static-only deploy: 11ty build output served via Workers Static Assets.
   // No Worker entry point, R2, or cron yet — those come with the optional
-  // Micropub/admin phase (see CLOUDFLARE-WORKERS-PORT.md, Phases 2–5).
+  // /admin mobile-posting phase (see CLOUDFLARE-WORKERS-PORT.md, Phases 2–5).
   "assets": {
     "directory": "./_site/",
     // Serves _site/404.html (built from content/404.md) on unmatched paths.

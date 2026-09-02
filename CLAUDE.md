@@ -94,11 +94,14 @@ npm run dev:cf                                  # 11ty watch + wrangler dev
 
 ## Deferred / future direction
 
-- **Micropub + `/admin` posting UI on a Worker** — scaffolding exists
-  (`src/worker.js`, `src/handlers/*`, `functions/api/`, `content/pages/admin/`)
-  but is **not** wired into the static deploy. Full plan:
+- **`/admin` posting UI on a Worker** — scaffolding exists (`src/worker.js`,
+  `src/handlers/*`, `content/pages/admin/`) but is **not** wired into the
+  static deploy. Desktop quick posting is solved by QuickPost, so what's left
+  of this phase is **phone posting + photo upload** (R2). Full plan:
   `CLOUDFLARE-WORKERS-PORT.md` (Phases 2–5: Worker entry, R2 uploads, CF Access,
-  cron webmentions).
+  cron webmentions). `functions/api/` is dead code copy-pasted from
+  `poynor-agenda-review` (a Pages Functions pattern this Workers site won't
+  use) — reference only, don't build on it.
 - **Content backfill** — importing/normalizing older posts.
 - **Photo galleries from Apple Photos** — publishing image sets from the user's
   Apple Photos library. Will land on a future branch; likely wants R2 for
