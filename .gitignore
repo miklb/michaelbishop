@@ -6,6 +6,8 @@ node_modules
 
 _site/*
 .wrangler/
+app/.build/
+app/build/
 PORTING-GUIDE.md
 CLOUDFLARE-WORKERS-PORT.md
 migration/
