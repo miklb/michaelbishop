@@ -6,6 +6,17 @@ I've thought long and hard on how **I** want to make websites for **me**. This i
 
 This project will be the building blocks for the next iteration of that project. The primary difference will be that this project will be built to used with CloudCannon instead of Micropub. That's not to say micropub can't also be used, but for broader appeal a web interface to post from without configuring a micropub server is in my opinion a more viable option for the broader community.
 
+## Posting
+
+Content is git-based: markdown lands on `main`, Cloudflare Workers Builds
+deploys, and a GitHub Action syndicates to Bluesky/the fediverse via
+[Bridgy](https://brid.gy). Three ways in:
+
+- **[QuickPost](app/)** — a native macOS menu bar app for quick notes and
+  replies (copy a `bsky.app` link, click, type, ⌘↩). See [app/README.md](app/README.md).
+- `npm run note -- "slug"` + `npm run post` — terminal/VS Code flow for notes.
+- Plain markdown in `content/` committed by hand — articles and everything else.
+
 See a bug? Please [open an issue](https://github.com/miklb/michaelbishop/issues).
 
 Reference:

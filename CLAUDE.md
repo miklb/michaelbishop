@@ -37,6 +37,11 @@ Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
 - **Local posting**: `npm run note -- "slug"` scaffolds a note and opens it in
   VS Code; `npm run post` commits everything under `content/` and pushes. Both
   are also VS Code tasks ("New note", "Publish post").
+- **QuickPost** (`app/`): native SwiftUI menu bar app for notes + replies —
+  writes the file, commits just it, rebase-pushes to `main`. Its templates in
+  `app/Sources/QuickPost/PostService.swift` must stay in sync with
+  `scripts/new-note.js` and the Bridgy link conventions; build with
+  `app/build.sh` (CLT only, no Xcode). See `app/README.md`.
 - **Dates must be explicit in frontmatter.** Workers Builds uses a shallow
   clone, so 11ty's `"git Created"` / `"git Last Modified"` silently resolve to
   build time in production (every post dated "today"). The `"git Created"`
