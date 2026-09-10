@@ -85,7 +85,19 @@ jobs:
             # [skip ci] keeps both this workflow and Cloudflare Workers Builds
             # from rebuilding on the syndication commit-back.
             git commit -m "chore: capture syndication URLs [skip ci]"
-            git push
+            # main may have moved during the deploy-wait window (an unrelated
+            # push races this workflow's ~2 minutes of waiting), so rebase and
+            # retry rather than failing the run after syndication succeeded.
+            for i in 1 2 3; do
+              git pull --rebase origin main
+              if git push; then
+                exit 0
+              fi
+              echo "Push rejected, retrying ($i)..."
+              sleep 5
+            done
+            echo "Could not push syndication URLs after 3 attempts."
+            exit 1
           else
             echo "No syndication URL changes to commit."
           fi
