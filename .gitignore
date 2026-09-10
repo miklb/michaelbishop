@@ -10,4 +10,5 @@ app/.build/
 app/build/
 PORTING-GUIDE.md
 CLOUDFLARE-WORKERS-PORT.md
+GRANARY-PR-GUIDE.md
 migration/
