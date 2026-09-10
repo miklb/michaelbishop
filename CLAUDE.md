@@ -102,6 +102,13 @@ npm run dev:cf                                  # 11ty watch + wrangler dev
   cron webmentions). `functions/api/` is dead code copy-pasted from
   `poynor-agenda-review` (a Pages Functions pattern this Workers site won't
   use) — reference only, don't build on it.
+- **Bluesky link-card thumbnails** — note-body unfurl cards carry
+  `u-quotation-of h-cite` microformats that Bridgy turns into
+  `app.bsky.embed.external` (title + description work). Thumbnails are blocked
+  upstream: granary doesn't upload images nested in cited attachments
+  (snarfed/granary#1195). No site-side fix — an entry-level `u-photo` would
+  *replace* the card with an image post (embed precedence in granary's
+  `from_as1`). When #1195 lands, thumbnails start working with no changes here.
 - **Content backfill** — importing/normalizing older posts.
 - **Photo galleries from Apple Photos** — publishing image sets from the user's
   Apple Photos library. Will land on a future branch; likely wants R2 for
