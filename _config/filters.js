@@ -40,6 +40,19 @@ export default function(eleventyConfig) {
 		return content.replace(/<a href="(https?:\/\/[^"]+)">\1<\/a>/g, '$1');
 	});
 
+	// For the hidden e-bridgy-*-content overrides: the empty Bridgy anchors
+	// render as a trailing empty paragraph, which Bridgy converts to "\n\n\n"
+	// at the end of the syndicated post text. The anchors must stay in the
+	// visible e-content (webmention validity) — only the override copy is
+	// stripped.
+	eleventyConfig.addFilter("stripBridgyLinks", function(content) {
+		if (!content) return content;
+		return content
+			.replace(/<a class="u-bridgy[^"]*"[^>]*>\s*<\/a>/g, '')
+			.replace(/<p>(?:\s|<br\s*\/?>)*<\/p>/g, '')
+			.trimEnd();
+	});
+
 	// Nunjucks equivalents for Liquid array filters
 	eleventyConfig.addFilter("where", (array, key, value) => {
 		if (!Array.isArray(array)) return [];

@@ -28,7 +28,7 @@
                                     <p>In reply to:</p>
                                     {% unfurl in_reply_to %}
                                 </div>
-                                <div class="e-bridgy-bluesky-content e-bridgy-mastodon-content" style="display:none">{{ content | safe }}</div>
+                                <div class="e-bridgy-bluesky-content e-bridgy-mastodon-content" style="display:none">{{ content | stripBridgyLinks | safe }}</div>
                             {% endif %}
 
                             {% if lede %}
@@ -36,7 +36,7 @@
                             {% endif %}
                             {% if "note" in tags %}
                                 {{ content | unfurlUrls | safe }}
-                                <div class="e-bridgy-bluesky-content" style="display:none">{{ content | safe }}</div>
+                                <div class="e-bridgy-bluesky-content" style="display:none">{{ content | stripBridgyLinks | safe }}</div>
                             {% else %}
                                 {{ content | safe }}
                             {% endif %}

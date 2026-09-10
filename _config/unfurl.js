@@ -63,11 +63,24 @@ async function getUrlMetadata(url) {
 
 /**
  * Generate HTML card for unfurled URL
+ *
+ * With `cite: true` (note bodies), non-Bluesky cards carry microformats
+ * (`u-quotation-of h-cite` + p-name/p-summary/u-photo/u-url). Bridgy
+ * parses the citation into an AS1 attachment and granary converts it to
+ * an app.bsky.embed.external — so the same OG fetch that renders the
+ * local card also produces the Bluesky link preview. Bluesky-post cards
+ * are deliberately excluded: an h-cite of a bsky.app URL would syndicate
+ * as a quote post (embed.record), which notifies the quoted author —
+ * enable that on purpose someday, not as a side effect.
  */
-function renderUnfurlCard(metadata) {
+function renderUnfurlCard(metadata, { cite = false } = {}) {
     if (!metadata) return '';
 
-    const cardClass = metadata.isBluesky ? 'unfurl-card unfurl-card--bluesky link-u-exempt' : 'unfurl-card link-u-exempt';
+    const isCite = cite && !metadata.isBluesky;
+    const citeClass = isCite ? ' u-quotation-of h-cite' : '';
+    const cardClass = metadata.isBluesky
+        ? 'unfurl-card unfurl-card--bluesky link-u-exempt'
+        : `unfurl-card link-u-exempt${citeClass}`;
 
     if (metadata.isBluesky) {
         const avatarHtml = metadata.image
@@ -79,19 +92,21 @@ function renderUnfurlCard(metadata) {
         return `<a href="${metadata.url}" class="${cardClass}" target="_blank" rel="noopener noreferrer">${avatarHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}</span></a>`;
     }
 
-    const imageHtml = metadata.image 
-        ? `<img class="unfurl-card__image" src="${metadata.image}" alt="" loading="lazy" eleventy:ignore>`
+    const urlDataHtml = isCite ? `<data class="u-url" value="${metadata.url}"></data>` : '';
+
+    const imageHtml = metadata.image
+        ? `<img class="unfurl-card__image${isCite ? ' u-photo' : ''}" src="${metadata.image}" alt="" loading="lazy" eleventy:ignore>`
         : '';
 
     const faviconHtml = metadata.favicon
         ? `<img class="unfurl-card__favicon" src="${metadata.favicon}" alt="" width="16" height="16" eleventy:ignore>`
         : '';
 
-    const titleHtml = `<span class="unfurl-card__title">${faviconHtml} ${metadata.title}</span>`;
-    const descHtml = metadata.description ? `<span class="unfurl-card__description">${metadata.description}</span>` : '';
+    const titleHtml = `<span class="unfurl-card__title${isCite ? ' p-name' : ''}">${faviconHtml} ${metadata.title}</span>`;
+    const descHtml = metadata.description ? `<span class="unfurl-card__description${isCite ? ' p-summary' : ''}">${metadata.description}</span>` : '';
     const siteHtml = `<span class="unfurl-card__site">${metadata.siteName}</span>`;
-    
-    return `<a href="${metadata.url}" class="${cardClass}" target="_blank" rel="noopener noreferrer">${imageHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}${siteHtml}</span></a>`;
+
+    return `<a href="${metadata.url}" class="${cardClass}" target="_blank" rel="noopener noreferrer">${urlDataHtml}${imageHtml}<span class="unfurl-card__content">${titleHtml}${descHtml}${siteHtml}</span></a>`;
 }
 
 /**
@@ -125,13 +140,13 @@ function findAutoLinkedUrls(content) {
 /**
  * Core unfurl processing function
  */
-export async function processUnfurl(content) {
+export async function processUnfurl(content, { cite = false } = {}) {
     if (!content || typeof content !== 'string') {
         return content;
     }
 
     const autoLinkedUrls = findAutoLinkedUrls(content);
-    
+
     if (autoLinkedUrls.length === 0) {
         return content;
     }
@@ -147,7 +162,7 @@ export async function processUnfurl(content) {
         const metadata = metadataResults[i];
 
         if (metadata) {
-            const card = renderUnfurlCard(metadata);
+            const card = renderUnfurlCard(metadata, { cite });
             replacements.push({
                 start: index,
                 end: index + fullMatch.length,
@@ -245,7 +260,7 @@ export default function(eleventyConfig) {
      * Usage: {{ content | unfurlUrls }}
      */
     eleventyConfig.addAsyncFilter("unfurlUrls", async function(content) {
-        return processUnfurl(content);
+        return processUnfurl(content, { cite: true });
     });
 
     /**
