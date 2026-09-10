@@ -1,58 +1,61 @@
 {
-    "name": "michaelbishop",
-    "version": "0.4.1",
-    "description": "This will be my new blog & Internet home.",
-    "main": "index.js",
-    "type": "module",
-    "engines": {
-        "node": ">=26"
-    },
-    "scripts": {
-        "build": "node scripts/generate-og-images.js && npx @11ty/eleventy",
-        "note": "node scripts/new-note.js",
-        "post": "node scripts/post-note.js",
-        "og-images": "node scripts/generate-og-images.js",
-        "start": "npx @11ty/eleventy --serve --quiet",
-        "webmention": "node scripts/send-webmentions.js",
-        "dev:cf": "concurrently \"npx @11ty/eleventy --watch\" \"npx wrangler dev --live-reload\"",
-        "deploy:cf": "npm run build && npx wrangler deploy",
-        "preview:cf": "npm run build && npx wrangler versions upload"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/miklb/michaelbishop.git"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/miklb/michaelbishop/issues"
-    },
-    "homepage": "https://github.com/miklb/michaelbishop#readme",
-    "devDependencies": {
-        "@11ty/eleventy": "^3.1.2",
-        "@11ty/eleventy-fetch": "^5.1.0",
-        "@11ty/eleventy-img": "^7.0.0",
-        "@11ty/eleventy-navigation": "^1.0.4",
-        "@11ty/eleventy-plugin-rss": "^2.0.4",
-        "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
-        "@jgarber/eleventy-plugin-postcss": "^3.0.1",
-        "concurrently": "^9.2.1",
-        "cssnano": "^7.1.1",
-        "dotenv": "^17.2.2",
-        "eleventy-plugin-metagen": "^1.8.3",
-        "gray-matter": "^4.0.3",
-        "markdown-it-footnote": "^4.0.0",
-        "postcss": "^8.5.6",
-        "postcss-cli": "^11.0.1",
-        "postcss-preset-env": "^10.3.1",
-        "wrangler": "^4.82.2"
-    },
-    "dependencies": {
-        "@11ty/font-awesome": "^1.0.1",
-        "@benjifs/github-store": "^0.2.0",
-        "@benjifs/micropub": "^2.0.1",
-        "@napi-rs/canvas": "^1.0.1",
-        "unfurl.js": "^6.4.0"
-    }
+  "name": "michaelbishop",
+  "version": "0.4.1",
+  "description": "This will be my new blog & Internet home.",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "build": "node scripts/generate-og-images.js && npx @11ty/eleventy",
+    "note": "node scripts/new-note.js",
+    "post": "node scripts/post-note.js",
+    "og-images": "node scripts/generate-og-images.js",
+    "start": "npx @11ty/eleventy --serve --quiet",
+    "webmention": "node scripts/send-webmentions.js",
+    "dev:cf": "concurrently \"npx @11ty/eleventy --watch\" \"npx wrangler dev --live-reload\"",
+    "deploy:cf": "npm run build && npx wrangler deploy",
+    "preview:cf": "npm run build && npx wrangler versions upload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miklb/michaelbishop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miklb/michaelbishop/issues"
+  },
+  "homepage": "https://github.com/miklb/michaelbishop#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-fetch": "^5.1.0",
+    "@11ty/eleventy-img": "^7.0.0",
+    "@11ty/eleventy-navigation": "^1.0.4",
+    "@11ty/eleventy-plugin-rss": "^2.0.4",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
+    "@jgarber/eleventy-plugin-postcss": "^3.0.1",
+    "concurrently": "^9.2.1",
+    "cssnano": "^7.1.1",
+    "dotenv": "^17.2.2",
+    "eleventy-plugin-metagen": "^1.8.3",
+    "gray-matter": "^4.0.3",
+    "markdown-it-footnote": "^4.0.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-preset-env": "^10.3.1",
+    "wrangler": "^4.82.2"
+  },
+  "dependencies": {
+    "@11ty/font-awesome": "^1.0.1",
+    "@benjifs/github-store": "^0.2.0",
+    "@benjifs/micropub": "^2.0.1",
+    "@napi-rs/canvas": "^1.0.1",
+    "unfurl.js": "^6.4.0"
+  },
+  "overrides": {
+    "sharp": "^0.35.4"
+  }
 }
