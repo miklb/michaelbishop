@@ -56,6 +56,7 @@ struct ComposeView: View {
                     EmptyView()
                 }
                 Spacer()
+                charCount
                 Button("Quit") { NSApp.terminate(nil) }
                     .buttonStyle(.plain)
                     .foregroundStyle(.secondary)
@@ -67,5 +68,18 @@ struct ComposeView: View {
         .padding(12)
         .frame(width: 340)
         .onAppear { model.prefillFromClipboard() }
+    }
+
+    // Bluesky counts grapheme clusters with a 300 limit, which is what
+    // String.count measures. Soft indicator only — Bridgy truncates long
+    // posts and links back rather than rejecting them.
+    private var charCount: some View {
+        let count = model.text.trimmingCharacters(in: .whitespacesAndNewlines).count
+        return Text("\(count)")
+            .font(.caption.monospacedDigit())
+            .foregroundStyle(count > 300 ? AnyShapeStyle(.red)
+                : count > 260 ? AnyShapeStyle(.orange)
+                : AnyShapeStyle(.tertiary))
+            .help("Characters (Bluesky truncates past 300)")
     }
 }
