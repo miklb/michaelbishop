@@ -59,10 +59,14 @@ export default async function(eleventyConfig) {
     
     // Create a collection for RSS feed that only includes content posts (not pages/archives)
     eleventyConfig.addCollection("feedContent", function(collectionApi) {
-        return collectionApi.getAll().filter(item => {
-            // Exclude navigation pages and archives
-            return !item.data.eleventyNavigation && !item.inputPath.includes("/archives.html");
-        });
+        return collectionApi.getAll()
+            .filter(item => {
+                // Exclude navigation pages and archives
+                return !item.data.eleventyNavigation && !item.inputPath.includes("/archives.html");
+            })
+            // Oldest first: the feed plugin's template applies `| reverse`,
+            // so ascending here is what lands newest-first in feed.xml.
+            .sort((a, b) => a.date - b.date);
     });
     
     // Create a collection for archives page that excludes navigation pages and generated files
