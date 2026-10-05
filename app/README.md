@@ -23,12 +23,14 @@ Click the menu bar icon (a square-and-pencil) to get a small compose popover:
 - **⌘↩ to post.** On post it writes the file with the same frontmatter the
   `npm run note` scaffolder produces (explicit local-offset `date:`, Bridgy
   syndication links), then:
-  1. `git add` — only the new file
-  2. `git commit -m "Note: <slug>"`
-  3. `git pull --rebase --autostash origin main` — the syndication workflow
+  1. **Refuses to do anything unless the repo is on `main`** — see below
+  2. `git add` — only the new file
+  3. `git commit -m "Note: <slug>"`
+  4. `git pull --rebase --autostash origin main` — the syndication workflow
      commits captured URLs back to `main` with `[skip ci]`, so the local clone
      is routinely behind; autostash tolerates an otherwise-dirty tree
-  4. `git push origin main`
+  5. `git push origin HEAD:main`
+  6. Verifies `origin/main` actually moved to the new commit
 - Errors show inline with the draft intact; drafts survive clicking away.
 
 From there the normal pipeline takes over: Workers Builds deploys, the
@@ -84,6 +86,19 @@ templates and git flow without the GUI.
   pushing from a terminal also recovers it.
 - **Rebase failure** — the app aborts the rebase and reports it; the post is
   committed locally, resolve in a terminal and push.
+- **"Repo is on branch 'x', not main"** — publishing is main-only. The commit
+  would go to whichever branch is checked out while the push sends `main`, so
+  on a feature branch the post lands nowhere and git still exits 0. The app
+  now checks first and writes nothing. `git checkout main` in the repo and
+  post again.
+
+  This is the bug that produced a **green success with nothing published**
+  (2026-10-05): a note committed onto a checked-out feature branch, then
+  `git push origin main` pushed the local `main` ref, which had no new
+  commits, so git reported "Everything up-to-date" and exited 0. Hence both
+  the branch guard and the post-push check that `origin/main` really moved —
+  a push with nothing to send also exits 0, so the exit code alone cannot
+  tell "published" from "did nothing".
 
 ## Adapting it
 
