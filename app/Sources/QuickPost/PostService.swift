@@ -46,6 +46,24 @@ enum PostService {
         let repo = URL(fileURLWithPath: repoPath, isDirectory: true)
         let now = Date()
 
+        // Posting is main-only: the commit goes to whatever branch is checked
+        // out, but the push below sends the local `main` ref. On any other
+        // branch that combination is silent data loss — the note commits to
+        // the feature branch, `git push origin main` finds local main already
+        // up to date, exits 0, and the app reports success while nothing
+        // publishes. Refuse before writing the file.
+        if !skipPush {
+            let branch = try git(["rev-parse", "--abbrev-ref", "HEAD"], in: repo)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            guard branch == "main" else {
+                throw PostError(message: """
+                    Repo is on branch '\(branch)', not main — nothing written.
+                    QuickPost publishes from main only. Switch back with \
+                    `git checkout main` in \(repoPath), then post again.
+                    """)
+            }
+        }
+
         let slug: String
         if draft.kind == .note, !draft.slug.isEmpty {
             let s = slugify(draft.slug)
@@ -85,10 +103,27 @@ enum PostService {
             throw PostError(message: "Rebase onto origin/main failed — \(slug) is committed locally; resolve in a terminal and push.\n\(error.localizedDescription)")
         }
 
+        let head = try git(["rev-parse", "HEAD"], in: repo)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
         do {
-            try git(["push", "origin", "main"], in: repo)
+            // HEAD:main, not main — push what was just committed, so the
+            // refspec can't resolve to a stale local ref.
+            try git(["push", "origin", "HEAD:main"], in: repo)
         } catch {
             throw PostError(message: "Push failed — \(slug) is committed locally. If this is an SSH auth error, run `ssh-add --apple-use-keychain` and try again.\n\(error.localizedDescription)")
+        }
+
+        // A push that had nothing to send also exits 0, so confirm the commit
+        // actually reached origin/main rather than trusting the exit code.
+        let remote = try git(["rev-parse", "origin/main"], in: repo)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard remote == head else {
+            throw PostError(message: """
+                Push reported success but origin/main is not at \(slug)'s commit.
+                Committed locally as \(head.prefix(8)); origin/main is at \
+                \(remote.prefix(8)). Resolve in a terminal.
+                """)
         }
 
         return slug
