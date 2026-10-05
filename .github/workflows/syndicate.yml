@@ -23,8 +23,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # Diff against the previous commit to find changed posts.
-          fetch-depth: 2
+          # Full history. `github.event.before` is as far back as the push is
+          # long, so a shallow clone turns any multi-commit push into
+          # "fatal: bad object" — which used to be swallowed, leaving the run
+          # green with nothing syndicated.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -36,11 +39,23 @@ jobs:
       - name: Determine changed posts
         id: changed
         run: |
+          set -euo pipefail
           BEFORE="${{ github.event.before }}"
-          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            BEFORE="HEAD~1"
+          if [ -z "$BEFORE" ] \
+            || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+            || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "::notice::before-SHA unusable ($BEFORE) — diffing against HEAD~1"
+            BEFORE="$(git rev-parse HEAD~1)"
           fi
-          CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" -- 'content/notes' 'content/replies' | grep '\.md$' || true)
+          # git diff runs under `set -e` so a failure stops the run. Only the
+          # grep is allowed to come back empty: previously one `|| true`
+          # covered both, so a broken diff was indistinguishable from
+          # "no posts changed" and the whole job skipped silently.
+          DIFF="$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" \
+            -- 'content/notes' 'content/replies' 'content/prints' 'content/photos')"
+          CHANGED="$(printf '%s\n' "$DIFF" | grep '\.md$' || true)"
+          echo "Comparing $BEFORE..${{ github.sha }}"
+          echo "Changed posts: ${CHANGED:-(none)}"
           {
             echo "files<<EOF"
             echo "$CHANGED"
@@ -74,6 +89,15 @@ jobs:
           # send-webmentions.js additionally polls each post's own URL (covers
           # brand-new pages still propagating), then pings Bridgy.
           npm run webmention -- ${{ steps.changed.outputs.files }}
+
+      - name: Verify the posts actually syndicated
+        if: steps.changed.outputs.files != ''
+        run: |
+          # Check the outcome, not the steps. Every stage above can no-op
+          # quietly, and a green run has twice meant "published to the site,
+          # never reached Bluesky". Any changed post that wanted a
+          # syndication URL and has none fails the run.
+          node scripts/check-syndication.js ${{ steps.changed.outputs.files }}
 
       - name: Commit captured syndication URLs
         if: steps.changed.outputs.files != ''

@@ -243,4 +243,10 @@ async function main() {
   console.log('\n✓ Done!')
 }
 
-main().catch(console.error)
+main().catch(err => {
+  // Exit non-zero. `main().catch(console.error)` logged the error and still
+  // exited 0, so a thrown failure in here looked like success to CI — the
+  // same swallow-the-error pattern that hid two silent publish failures.
+  console.error(err)
+  process.exit(1)
+})

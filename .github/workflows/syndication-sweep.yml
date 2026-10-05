@@ -1,0 +1,36 @@
+name: Syndication sweep
+
+# A safety net, not a publisher. The push-triggered workflow is what
+# syndicates; this only notices when a post made it to the site and never
+# reached Bluesky, because that has twice happened behind a green check.
+#
+# It deliberately does NOT re-send anything. Auto-syndicating on a schedule
+# would mean a stale "random thought" showing up on Bluesky weeks late, which
+# is worse than a red check. Fix a flagged post with:
+#   npm run webmention -- <file>
+
+on:
+  schedule:
+    # 13:20 UTC daily — mid-morning Tampa, so a miss from the day before
+    # surfaces while it is still worth posting.
+    - cron: "20 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Check for posts that never syndicated
+        run: node scripts/check-syndication.js --since 30 --fail-within 7
