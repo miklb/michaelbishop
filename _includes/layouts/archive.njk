@@ -7,35 +7,13 @@
         <div class="site-container">
             <div class="site-grid">
                 {% include "header.njk" %}
-                <main class="content h-feed">
-                    <div class="archives inner-grid">
-                        <h1>Archives</h1>
+                <main class="content">
+                    <div class="archives h-feed">
+                        <h1 class="p-name">Archives</h1>
                         {%- for post in posts -%}
-                            <article class="archive-entry h-entry">
-                                <div class="archive-date">
-                                    <time class="dt-published" datetime="{{ post.date | htmlDateString }}">
-                                        {{ post.date | readableDate("MMM dd, yyyy") }}
-                                    </time>
-                                </div>
-
-                                <div class="archive-content">
-                                    {% if post.data.title %}
-                                        <h2 class="archive-title p-name">
-                                            <a class="u-url" href="{{ post.url }}">{{ post.data.title }}</a>
-                                        </h2>
-                                        {% if post.data.excerpt %}
-                                            <p class="archive-excerpt p-summary">{{ post.data.excerpt }}</p>
-                                        {% endif %}
-                                    {% else %}
-                                        <div class="archive-note e-content">
-                                            {{ post.content | unfurlUrls | safe }}
-                                            <a class="u-url" href="{{ post.url }}">
-                                                <i class="fa-solid fa-link"></i>
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </article>
+                            {% set item = post %}
+                            {% set itemBody = post.content | stripBridgyLinks | unfurlUrls %}
+                            {% include "entry.njk" %}
                         {%- endfor -%}
 
                         {% if pagination.href.previous or pagination.href.next %}

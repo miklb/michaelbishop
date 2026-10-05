@@ -11,6 +11,22 @@ import matter from 'gray-matter'
 
 const SITE_URL = 'https://michaelbishop.me'
 
+// Post directories under content/ that may syndicate, and the URL prefix each
+// one publishes under. Adding a post type means adding it here (and to the
+// pathspec in .github/workflows/syndicate.yml) — otherwise its posts carry
+// Bridgy anchors and silently never syndicate.
+const SYNDICATABLE = {
+  notes: 'notes',
+  replies: 'replies',
+  prints: 'prints',
+  photos: 'photos'
+}
+
+const contentDirFor = filePath => {
+  const match = filePath.match(/content\/([^/]+)\//)
+  return match && match[1] in SYNDICATABLE ? match[1] : null
+}
+
 // Bridgy endpoints
 const BRIDGY_FED_ENDPOINT = 'https://fed.brid.gy/webmention'
 const BRIDGY_PUBLISH_ENDPOINT = 'https://brid.gy/publish/webmention'
@@ -142,7 +158,7 @@ async function postsFromFiles(filePaths) {
   const posts = []
   for (const filePath of filePaths) {
     if (!filePath.endsWith('.md')) continue
-    if (!/content\/(notes|replies)\//.test(filePath)) continue
+    if (!contentDirFor(filePath)) continue
     try {
       const content = await readFile(filePath, 'utf-8')
       const { data, content: body } = matter(content)
@@ -173,8 +189,8 @@ async function main() {
       return
     }
   } else {
-    // Scan both notes and replies directories
-    const contentDirs = ['./content/notes', './content/replies']
+    // Scan every syndicatable post directory
+    const contentDirs = Object.keys(SYNDICATABLE).map(dir => `./content/${dir}`)
     const recentPosts = []
     for (const dir of contentDirs) {
       try {
@@ -198,13 +214,16 @@ async function main() {
       continue
     }
 
-    // Explicit permalink wins; otherwise the default /notes/<slug>/ scheme
+    // Explicit permalink wins; otherwise derive the prefix from the post's own
+    // directory. Note this reads *frontmatter* permalinks only — a permalink
+    // set in a directory data file (prints.json) is invisible here, which is
+    // why the fallback has to be directory-aware rather than assuming notes.
     let postUrl
     if (post.frontmatter.permalink) {
       postUrl = `${SITE_URL}${post.frontmatter.permalink.startsWith('/') ? '' : '/'}${post.frontmatter.permalink}`
     } else {
       const slug = post.file.replace('.md', '')
-      const contentType = post.filePath.includes('/replies/') ? 'replies' : 'notes'
+      const contentType = SYNDICATABLE[contentDirFor(post.filePath)] ?? 'notes'
       postUrl = `${SITE_URL}/${contentType}/${slug}/`
     }
 

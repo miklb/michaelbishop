@@ -1,73 +1,52 @@
+/* Design tokens — Ink & Ledger.
+   Paper and ink, hairline rules, one vermilion accent.
+
+   Two rules this palette exists to enforce, both of which the previous
+   single-hue HSL ramp broke:
+
+   1. The surface step goes the SAME direction in both modes. Panels are one
+      step toward the text colour from the page — darker on paper, lighter on
+      ink — so a card reads the same way at noon and at midnight. Before,
+      surface1 was lighter than the page in light mode and darker in dark,
+      so cards were raised by day and inset by night.
+   2. The accent is ONE hue in both modes, lightness-adjusted only for
+      contrast. Before, --links was blue in light and saturated gold in dark,
+      which made dark mode the only place the palette had two hue families
+      fighting each other. */
+
 :root {
-  /* Colors */
- /* https://web.dev/articles/building/a-color-scheme/ */
- --brand-hue: 215;
- --brand-saturation: 32%;
- --brand-lightness: 25%;
+  color-scheme: light;
 
- --secondary: hsl(47, 100%, 50%);
+  /* Paper */
+  --text1: #1C1D20;
+  --text2: #6B675E;
+  --surface1: #EBE5D7;
+  --surface2: #F4F0E6;
+  --surface3: #E2DBC9;
+  --surface4: #D3CBB5;
+  --brand: #AE3A18;
+  --links: var(--brand);
 
-  /* light */
---brand-light: hsl(var(--brand-hue) var(--brand-saturation) var(--brand-lightness));
---text1-light: hsl(var(--brand-hue) var(--brand-saturation) 10%);
---text2-light: hsl(var(--brand-hue) 30% 30%);
---surface1-light: hsl(var(--brand-hue) 25% 90%);
---surface2-light: hsl(var(--brand-hue) 20% 99%);
---surface3-light: hsl(var(--brand-hue) 20% 92%);
---surface4-light: hsl(var(--brand-hue) 20% 85%);
---surface-shadow-light: var(--brand-hue) 10% 20%;
---shadow-strength-light: .02;
+  /* Fluid type: 20px→24px base, ratios 1.2→1.25, 320px→1240px viewport.
+     @link https://utopia.fyi/type/calculator?c=320,20,1.2,1240,24,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+  --font-size--2: clamp(0.8681rem, 0.8361rem + 0.1599vi, 0.9600rem);
+  --font-size--1: clamp(1.0417rem, 0.9866rem + 0.2754vi, 1.2000rem);
+  --font-size-0: clamp(1.2500rem, 1.1630rem + 0.4348vi, 1.5000rem);
+  --font-size-1: clamp(1.5000rem, 1.3696rem + 0.6522vi, 1.8750rem);
+  --font-size-2: clamp(1.8000rem, 1.6109rem + 0.9457vi, 2.3438rem);
+  --font-size-3: clamp(2.1600rem, 1.8923rem + 1.3386vi, 2.9297rem);
+  --font-size-4: clamp(2.5920rem, 2.2198rem + 1.8611vi, 3.6621rem);
+  --font-size-5: clamp(3.1104rem, 2.6001rem + 2.5517vi, 4.5776rem);
 
-/* dark */
---brand-dark: hsl(
- var(--brand-hue) 
- calc(var(--brand-saturation) / 2)
- calc(var(--brand-lightness) / 1.5)
-);
---text1-dark: hsl(var(--brand-hue) 15% 85%);
---text2-dark: hsl(var(--brand-hue) 5% 65%);
---surface1-dark: hsl(var(--brand-hue) 10% 10%);
---surface2-dark: hsl(var(--brand-hue) 10% 15%);
---surface3-dark: hsl(var(--brand-hue) 5%  20%);
---surface4-dark: hsl(var(--brand-hue) 5% 25%);
---surface-shadow-dark: var(--brand-hue) 50% 3%;
---shadow-strength-dark: .2;
-
-color-scheme: light;
-
-/* set defaults */
---brand: var(--brand-light);
---text1: var(--text1-light);
---text2: var(--text2-light);
---surface1: var(--surface1-light);
---surface2: var(--surface2-light);
---surface3: var(--surface3-light);
---surface4: var(--surface4-light);
---surface-shadow: var(--surface-shadow-light);
---shadow-strength: var(--shadow-strength-light);
---links: var(--brand);
-
- /* @link https://utopia.fyi/type/calculator?c=320,20,1.2,1240,24,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
-  
-
- --font-size--2: clamp(0.7813rem, 0.7747rem + 0.0326vi, 0.8rem);
- --font-size--1: clamp(0.9375rem, 0.9158rem + 0.1087vi, 1rem);
- --font-size-0: clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem);
- --font-size-1: clamp(1.35rem, 1.2761rem + 0.3696vi, 1.5625rem);
- --font-size-2: clamp(1.62rem, 1.5041rem + 0.5793vi, 1.9531rem);
- --font-size-3: clamp(1.944rem, 1.771rem + 0.8651vi, 2.4414rem);
- --font-size-4: clamp(2.3328rem, 2.0827rem + 1.2504vi, 3.0518rem);
- --font-size-5: clamp(2.7994rem, 2.4462rem + 1.7658vi, 3.8147rem);
-
- --space-3xs: clamp(0.3125rem, 0.3125rem + 0vi, 0.3125rem);
- --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vi, 0.625rem);
- --space-xs: clamp(0.875rem, 0.8533rem + 0.1087vi, 0.9375rem);
- --space-s: clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem);
- --space-m: clamp(1.6875rem, 1.6223rem + 0.3261vi, 1.875rem);
- --space-l: clamp(2.25rem, 2.163rem + 0.4348vi, 2.5rem);
- --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vi, 3.75rem);
- --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vi, 5rem);
- --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vi, 7.5rem);
+  --space-3xs: clamp(0.3125rem, 0.3125rem + 0vi, 0.3125rem);
+  --space-2xs: clamp(0.5625rem, 0.5408rem + 0.1087vi, 0.625rem);
+  --space-xs: clamp(0.875rem, 0.8533rem + 0.1087vi, 0.9375rem);
+  --space-s: clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem);
+  --space-m: clamp(1.6875rem, 1.6223rem + 0.3261vi, 1.875rem);
+  --space-l: clamp(2.25rem, 2.163rem + 0.4348vi, 2.5rem);
+  --space-xl: clamp(3.375rem, 3.2446rem + 0.6522vi, 3.75rem);
+  --space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vi, 5rem);
+  --space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vi, 7.5rem);
 
   /* One-up pairs */
   --space-3xs-2xs: clamp(0.3125rem, 0.2038rem + 0.5435vi, 0.625rem);
@@ -83,13 +62,17 @@ color-scheme: light;
   --space-s-l: clamp(1.125rem, 0.6467rem + 2.3913vi, 2.5rem);
 
   --grid-max-width: 77.50rem;
-    --grid-gutter: var(--space-s-l, clamp(1.125rem, 0.6467rem + 2.3913vw, 2.5rem));
+  --grid-gutter: var(--space-s-l, clamp(1.125rem, 0.6467rem + 2.3913vw, 2.5rem));
   --grid-columns: 12;
 
+  /* The reading column. The stream is a column of dated entries, not a
+     full-width layout — this caps it everywhere at once. */
+  --measure: 52rem;
 
-  /* https://github.com/system-fonts/modern-font-stacks */
-  --site-font-family-body: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
-  --site-font-family-heading: 'Nimbus Mono PS', 'Courier New', monospace;
-  --site-line-height: 1.75;
-
+  /* Newsreader carries the body; IBM Plex Mono carries the structure
+     (dates, labels, nav). Both self-hosted — see fonts.css. */
+  --site-font-family-body: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --site-font-family-heading: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --site-font-family-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --site-line-height: 1.6;
 }

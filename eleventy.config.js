@@ -77,10 +77,13 @@ export default async function(eleventyConfig) {
                 // Exclude: navigation pages, generated files (feed.xml, robots.txt, manifest), archives.html itself
                 const isNavPage = item.data.eleventyNavigation;
                 const isArchivesPage = item.inputPath.includes("/archives.html");
-                const isGeneratedFile = item.inputPath.includes("/public/") || 
-                                       item.outputPath.endsWith(".xml") || 
-                                       item.outputPath.endsWith(".txt") ||
-                                       item.outputPath.endsWith(".webmanifest");
+                // outputPath is `false` for any item with `permalink: false`,
+                // so test it before calling string methods on it.
+                const outputPath = typeof item.outputPath === "string" ? item.outputPath : "";
+                const isGeneratedFile = item.inputPath.includes("/public/") ||
+                                       outputPath.endsWith(".xml") ||
+                                       outputPath.endsWith(".txt") ||
+                                       outputPath.endsWith(".webmanifest");
                 
                 return !isNavPage && !isArchivesPage && !isGeneratedFile;
             })
@@ -90,10 +93,31 @@ export default async function(eleventyConfig) {
             });
     });
 
+    // Room collections, scoped by directory rather than by tag. An implicit
+    // tag collection would be wrong here: `photo` is already a frontmatter tag
+    // on an older note, so collections.photo is not "the photos room".
+    for (const kind of ["prints", "photos", "articles"]) {
+        eleventyConfig.addCollection(kind, function(collectionApi) {
+            return collectionApi.getFilteredByGlob(`./content/${kind}/*.md`)
+                .sort((a, b) => b.date - a.date);
+        });
+    }
+
     // Copy the contents of the `public` folder to the output folder
     // For example, `./public/css/` ends up in `_site/css/`
     eleventyConfig .addPassthroughCopy({
             "./public/": "/"
+        })
+        // Print and photo masters are served as-is at /img/<kind>/ so that
+        // `meta.img` (the OG card) has a real URL to point at — the transform
+        // plugin only rewrites <img> tags in HTML, it can't give frontmatter a
+        // hashed derivative path. Scoped to these two directories on purpose:
+        // the rest of content/img/ holds older originals that still carry
+        // camera EXIF, and those are referenced via the transform (which
+        // strips metadata) rather than served directly.
+        .addPassthroughCopy({
+            "./content/img/prints/": "/img/prints/",
+            "./content/img/photos/": "/img/photos/"
         })
         .addPassthroughCopy("./content/feed/pretty-atom-feed.xsl");
 
@@ -143,7 +167,11 @@ export default async function(eleventyConfig) {
         formats: ["avif", "webp", "auto"],
         urlPath: "/assets/img/",
 
-        // widths: ["auto"],
+        // Explicit widths. Without this, eleventy-img falls back to ["auto"] —
+        // a single output per format at the original pixel width, so a phone
+        // photo ships a 4032px AVIF. No "auto" entry: these cap the largest
+        // derivative, and eleventy-img never upscales past the original.
+        widths: [400, 800, 1200, 1800],
 
         defaultAttributes: {
             // e.g. <img loading decoding> assigned on the HTML tag will override these values.

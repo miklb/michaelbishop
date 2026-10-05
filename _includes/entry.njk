@@ -1,0 +1,59 @@
+{#
+  One entry in the log. Used by the home stream and the archive so the two
+  can't drift apart. The caller sets `item` to the post, then includes this
+  file.
+
+  The caller also sets `itemBody` to the already-unfurled body HTML. That is
+  not an accident of style: `unfurlUrls` is an ASYNC filter, and Nunjucks
+  renders neither macros nor includes through its async code path, so calling
+  it in here silently produces an empty string — and empties the whole
+  template with it, with no build error. Async filters work in `{% set %}` at
+  the top level of a template, so that is where it runs.
+
+  An entry is a mono kicker (date · type), then either a title or the note body
+  inline. Notes are nameless by design in mf2 — no p-name — so the
+  titled/untitled split is the same test the archive has always used.
+
+  The permalink sits OUTSIDE e-content. In the old archive template it was
+  inside, which made the link glyph part of the entry content as far as mf2
+  parsers and Bridgy were concerned.
+#}
+<article class="entry h-entry">
+    <p class="entry__kicker eyebrow">
+        <time class="dt-published" datetime="{{ item.date | htmlDateString }}">{{ item.date | readableDate("dd LLL yyyy") }}</time>
+        <span class="entry__type">
+            {%- if "print" in item.data.tags -%}Print
+            {%- elif "photo" in item.data.tags -%}Photo
+            {%- elif "reply" in item.data.tags -%}Reply
+            {%- elif "article" in item.data.tags -%}Article
+            {%- else -%}Note
+            {%- endif -%}
+        </span>
+    </p>
+
+    {# Author on every entry: an h-feed whose entries carry no p-author makes
+       consumers fall back to the page, which the old feed relied on. #}
+    <a class="p-author h-card" href="{{ site.url }}" hidden="hidden">{{ site.author.name }}</a>
+
+    {% if item.data.title %}
+        <h2 class="entry__title p-name">
+            <a class="u-url" href="{{ item.url }}">{{ item.data.title }}</a>
+        </h2>
+        {% if item.data.photo %}
+            <div class="entry__media e-content">
+                <img class="u-photo" src="{{ item.data.photo }}" alt="{{ item.data.title }}">
+            </div>
+        {% elif item.data.excerpt %}
+            <p class="entry__summary p-summary">{{ item.data.excerpt }}</p>
+        {% elif item.data.meta.desc %}
+            <p class="entry__summary p-summary">{{ item.data.meta.desc }}</p>
+        {% endif %}
+    {% else %}
+        <div class="entry__body e-content">
+            {{ itemBody | safe }}
+        </div>
+        <p class="entry__permalink">
+            <a class="u-url" href="{{ item.url }}">Permalink<span aria-hidden="true"> &rarr;</span></a>
+        </p>
+    {% endif %}
+</article>

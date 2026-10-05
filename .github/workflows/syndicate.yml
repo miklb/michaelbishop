@@ -40,7 +40,7 @@ jobs:
           if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
             BEFORE="HEAD~1"
           fi
-          CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" -- 'content/notes' 'content/replies' | grep '\.md$' || true)
+          CHANGED=$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" -- 'content/notes' 'content/replies' 'content/prints' 'content/photos' | grep '\.md$' || true)
           {
             echo "files<<EOF"
             echo "$CHANGED"

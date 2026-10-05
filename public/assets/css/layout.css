@@ -1,8 +1,8 @@
-body {
-}
-
+/* The site is one centred column — masthead, nav, log, rooms and footer all
+   share the same measure. The gallery grid goes 2-up inside it rather than
+   getting its own wider container. */
 .site-container {
-  max-width: var(--grid-max-width);
+  max-width: calc(var(--measure) + 2 * var(--grid-gutter));
   padding-inline: var(--grid-gutter);
   margin-inline: auto;
 }
@@ -11,11 +11,6 @@ body {
   display: grid;
   gap: var(--grid-gutter);
   grid-template-columns: repeat(var(--grid-columns), [col-start] 1fr);
-  max-width: calc(1px * var(--live-container));
-}
-
-.site-header {
-  padding-block-start: var(--space-s);
 }
 
 h1 {
@@ -35,66 +30,7 @@ h1 {
   justify-content: space-between;
 }
 
-/* Mobile-first h-card layout */
-.home-primary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-m);
-  padding: var(--space-m);
-  margin-block-end: var(--space-l);
-}
-
-.home-primary .card-avatar {
-  text-align: center;
-}
-
-.home-primary .card-avatar img {
-  max-width: 180px;
-}
-
-.home-primary .card-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-s);
-}
-
-.home-primary .profiles {
-  margin-block-start: var(--space-s);
-  padding-block-start: var(--space-s);
-  border-block-start: 1px solid var(--surface4);
-}
-
-.home-primary .profiles p {
-  margin: 0 0 var(--space-2xs) 0;
-  font-size: var(--font-size--1);
-  color: var(--text2);
-}
-
-.home-primary .profiles ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-s);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.home-primary .profiles a {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3xs);
-}
-
-.home-primary .profiles svg {
-  width: 1.5em;
-  height: 1.5em;
-}
-
 @media (min-width: 500px) {
-  .ad {
-    grid-column: col-start / span 3;
-    grid-row: 4;
-  }
   .content,
   .colophon {
     grid-column: col-start 1 / span 12;
@@ -128,68 +64,6 @@ h1 {
     }
   }
 
-  .home-primary {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-gap: var(--grid-gutter);
-    padding: var(--space-m);
-    margin-block-end: var(--space-l);
-
-    .card-avatar {
-      grid-column: 1 / span 4;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .card-content {
-      grid-column: 5 / span 8;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-s);
-    }
-
-    .profiles {
-      margin-block-start: var(--space-s);
-      padding-block-start: var(--space-s);
-      border-block-start: 1px solid var(--surface4);
-    }
-
-    .profiles p {
-      margin: 0 0 var(--space-2xs) 0;
-      font-size: var(--font-size--1);
-      color: var(--text2);
-    }
-
-    .profiles ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-s);
-      padding: 0;
-      margin: 0;
-    }
-
-    .profiles .profile {
-      list-style: none;
-    }
-
-    .profiles a {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3xs);
-    }
-
-    .profiles svg {
-      width: 1.5em;
-      height: 1.5em;
-    }
-  }
-  .pinned {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-gap: var(--grid-gutter);
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
   .colophon {
     grid-column: col-start 1 / span 12;
   }
@@ -205,59 +79,11 @@ article h2 {
   flex-flow: row wrap;
 }
 
-.pinned article {
-  padding: var(--space-s);
-  margin-block: var(--space-l);
-}
-
-/* Archives layout */
-.archives .archive-entry {
-  display: grid;
-  grid-template-columns: minmax(120px, 150px) 1fr;
-  gap: var(--space-m, 1.5rem);
-  padding-block: var(--space-s, 1rem);
-  border-bottom: 1px solid var(--color-border, #e0e0e0);
-}
-
-.archives .archive-date {
-  font-size: var(--step--1, 0.875rem);
-  color: var(--text2, #666);
-}
-
-.archives .archive-content {
-  min-width: 0;
-}
-
-.archives .archive-title {
-  margin: 0;
-  font-size: var(--step-1, 1.25rem);
-  line-height: 1.3;
-}
-
-.archives .archive-title a {
-  text-decoration: none;
-  color: var(--text1, inherit);
-}
-
-.archives .archive-title a:hover {
-  text-decoration: underline;
-}
-
-.archives .archive-excerpt,
-.archives .archive-note {
-  margin-block-start: var(--space-2xs, 0.5rem);
-  color: var(--text1, #444);
-}
-
-.archives .archive-note p {
-  margin: 0;
-}
-
 /* Pagination */
 .pagination {
   margin-block-start: var(--space-l, 2rem);
   padding-block-start: var(--space-m, 1.5rem);
-  border-top: 1px solid var(--color-border, #e0e0e0);
+  border-top: 1px solid var(--surface4);
 }
 
 .pagination ul {
@@ -271,31 +97,24 @@ article h2 {
 }
 
 .pagination__info {
-  font-size: var(--step--1, 0.875rem);
-  color: var(--text2, #666);
+  font-size: var(--font-size--1);
+  color: var(--text2);
 }
 
 .pagination a {
   padding: var(--space-2xs, 0.5rem) var(--space-s, 1rem);
   text-decoration: none;
-  color: var(--text1, #333);
-  background-color: var(--surface2, #f5f5f5);
-  border: 1px solid var(--text2, #666);
+  color: var(--text1);
+  background-color: var(--surface1);
+  border: 1px solid var(--text2);
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
 .pagination a:hover {
-  background-color: var(--surface3, #e5e5e5);
+  background-color: var(--surface3);
 }
 
 @media (max-width: 600px) {
-  .archives .archive-entry {
-    grid-template-columns: 1fr;
-    gap: var(--space-2xs, 0.5rem);
-  }
 
-  .archives .archive-date {
-    font-size: var(--step--2, 0.75rem);
-  }
 }

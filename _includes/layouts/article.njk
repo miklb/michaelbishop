@@ -10,15 +10,26 @@
                 <main class="content">
                     <article class="h-entry single-post">
 
-                        <h1 class="p-name">{{ title }}</h1>
+                        {# Notes and replies are nameless by design in mf2 — an empty
+                           p-name is still a name to a parser, and an empty h1 is a
+                           visible gap now that headings are set large. #}
+                        {% if title %}
+                            <h1 class="p-name">{{ title }}</h1>
+                        {% endif %}
 
                         {# Only add backlink if post is too long for Bluesky #}
                         <data class="p-bridgy-omit-link" value="maybe"></data>
 
                         <div class="meta">
-                            <time class="postlist-date" datetime="{{ page.date | htmlDateString }}">
+                            {# dt-published, u-url and p-author were all absent here: the
+                               feed carried them but a post's own page did not, so a
+                               consumer parsing a single entry got no date, no permalink
+                               and no author. #}
+                            <time class="dt-published postlist-date" datetime="{{ page.date | htmlDateString }}">
                                 {{ page.date | readableDate("LLLL dd yyyy") }}
                             </time>
+                            <a class="u-url" href="{{ page.url }}" hidden="hidden">{{ site.url }}{{ page.url }}</a>
+                            <a class="p-author h-card" href="{{ site.url }}" hidden="hidden">{{ site.author.name }}</a>
                         </div>
 
                         <div class="content-wrap e-content">
@@ -34,7 +45,11 @@
                             {% if lede %}
                                 <p class="h3 lede p-summary e-bridgy-mastodon-content">{{ lede }}</p>
                             {% endif %}
-                            {% if "note" in tags %}
+                            {# Notes, prints and photos get link-unfurl cards and a cleaned
+                               copy for Bridgy. Prints/photos carry an entry-level u-photo,
+                               which granary turns into a native image post rather than a
+                               link card — the behaviour we want for artwork. #}
+                            {% if "note" in tags or "print" in tags or "photo" in tags %}
                                 {{ content | unfurlUrls | safe }}
                                 <div class="e-bridgy-bluesky-content" style="display:none">{{ content | stripBridgyLinks | safe }}</div>
                             {% else %}
