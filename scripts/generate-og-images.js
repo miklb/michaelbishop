@@ -16,41 +16,44 @@ import matter from 'gray-matter';
 
 // Configuration
 const CONFIG = {
-    baseImage: 'public/assets/img/og-image.png',
+    // The card is drawn from scratch — no baked base image — so it tracks the
+    // site's design rather than an exported PNG. Dark in both colour schemes
+    // by choice: social feeds are mostly dark, and it keeps the halftone
+    // portrait reading as ink on paper inverted.
+    portrait: 'public/assets/img/favicon.png',
     outputDir: 'public/assets/img/og',
     articlesDir: 'content/articles',
-    // Fingerprints of what each card was drawn from. Kept out of public/,
-    // which is passthrough-copied to the site root.
     manifest: 'scripts/.og-manifest.json',
     siteUrl: 'https://michaelbishop.me',
-    
-    // Text styling
-    textColor: '#F5F2E8',
-    fontSizes: {
-        short: 60,      // < 20 chars
-        medium: 52,     // 20-35 chars
-        long: 45,       // 35-50 chars
-        veryLong: 38    // > 50 chars
-    },
-    // The site's own faces, registered below from public/assets/fonts/ —
-    // Newsreader carries the title, IBM Plex Mono the excerpt, same pairing
-    // as the pages themselves.
+
+    width: 1200,
+    height: 630,
+
+    // Ink palette, matching public/assets/css/darkmode.css
+    ground: '#16171A',
+    textColor: '#EDE8DE',
+    mutedColor: '#8F8A80',
+    accentColor: '#E0663F',
+    ruleColor: '#3A3D42',
+
+    fontSizes: { short: 60, medium: 54, long: 46, veryLong: 40 },
     fontFamily: 'Newsreader',
     excerptFontFamily: 'IBM Plex Mono',
 
-    // Excerpt, drawn under the title
-    excerptColor: 'rgba(245, 242, 232, 0.72)',
-    excerptFontSize: 26,
+    mastheadSize: 44,
+    taglineSize: 20,
+    taglineTracking: 5,
+
+    excerptColor: 'rgba(237, 232, 222, 0.72)',
+    excerptFontSize: 24,
     excerptLineHeight: 34,
-    excerptGap: 24,
+    excerptGap: 22,
     excerptMaxLines: 3,
-    
-    // Text position (from left edge, from bottom)
-    textX: 450,
-    textFromBottom: 150,
-    
-    // Max text width for wrapping
-    maxTextWidth: 700,
+
+    portraitSize: 420,
+    textX: 520,
+    textFromBottom: 120,
+    maxTextWidth: 620,
     lineHeight: 70,
 };
 
@@ -107,31 +110,62 @@ function wrapText(ctx, text, maxWidth) {
 /**
  * Generate OG image for a single article
  */
-async function generateOgImage(title, excerpt, outputPath, baseImageBuffer) {
-    // Load base image
-    const baseImage = await loadImage(baseImageBuffer);
-    
-    // Create canvas matching image dimensions
-    const canvas = createCanvas(baseImage.width, baseImage.height);
+/** Draw text with manual letter spacing — canvas has no tracking control. */
+function fillTracked(ctx, text, x, y, tracking) {
+    let cursor = x;
+    for (const ch of text) {
+        ctx.fillText(ch, cursor, y);
+        cursor += ctx.measureText(ch).width + tracking;
+    }
+    return cursor - tracking - x;
+}
+
+function measureTracked(ctx, text, tracking) {
+    let w = 0;
+    for (const ch of text) w += ctx.measureText(ch).width + tracking;
+    return w - tracking;
+}
+
+async function generateOgImage(title, excerpt, outputPath, portraitImage) {
+    const canvas = createCanvas(CONFIG.width, CONFIG.height);
     const ctx = canvas.getContext('2d');
-    
-    // Draw base image
-    ctx.drawImage(baseImage, 0, 0);
-    
-    // Calculate dynamic font size based on title length
+
+    // Ground
+    ctx.fillStyle = CONFIG.ground;
+    ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+
+    // Masthead, centred across the top
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = CONFIG.textColor;
+    ctx.font = `${CONFIG.mastheadSize}px "${CONFIG.fontFamily}"`;
+    const name = 'Bytes of Michael Bishop';
+    ctx.fillText(name, (CONFIG.width - ctx.measureText(name).width) / 2, 92);
+
+    ctx.fillStyle = CONFIG.mutedColor;
+    ctx.font = `${CONFIG.taglineSize}px "${CONFIG.excerptFontFamily}"`;
+    const tagline = 'a personal web log'.toUpperCase();
+    const taglineW = measureTracked(ctx, tagline, CONFIG.taglineTracking);
+    fillTracked(ctx, tagline, (CONFIG.width - taglineW) / 2, 132, CONFIG.taglineTracking);
+
+    // Portrait, bleeding off the bottom-left
+    if (portraitImage) {
+        ctx.drawImage(
+            portraitImage,
+            60,
+            CONFIG.height - CONFIG.portraitSize,
+            CONFIG.portraitSize,
+            CONFIG.portraitSize
+        );
+    }
+
+    // Title
     const fontSize = calculateFontSize(title);
     const lineHeight = fontSize + 10;
-    
-    // Configure text
     ctx.fillStyle = CONFIG.textColor;
     ctx.font = `${fontSize}px "${CONFIG.fontFamily}"`;
     ctx.textBaseline = 'bottom';
-    
-    // Wrap text if needed
     const lines = wrapText(ctx, title, CONFIG.maxTextWidth);
 
-    // Measure the excerpt in its own font before laying anything out, so the
-    // title and excerpt can be bottom-anchored as one block.
     let excerptLines = [];
     if (excerpt) {
         ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.excerptFontFamily}"`;
@@ -147,31 +181,28 @@ async function generateOgImage(title, excerpt, outputPath, baseImageBuffer) {
     const excerptBlock = excerptLines.length
         ? CONFIG.excerptGap + excerptLines.length * CONFIG.excerptLineHeight
         : 0;
+    const blockBottom = CONFIG.height - CONFIG.textFromBottom;
+    const textY = blockBottom - excerptBlock - (lines.length - 1) * lineHeight;
 
-    // Bottom-anchor the whole block: the last line sits textFromBottom up
-    // from the bottom edge, and the title rises to make room for the excerpt.
-    const blockBottom = baseImage.height - CONFIG.textFromBottom;
-    let textY = blockBottom - excerptBlock - (lines.length - 1) * lineHeight;
+    // Vermilion kicker rule above the title — the site's one accent
+    ctx.fillStyle = CONFIG.accentColor;
+    ctx.fillRect(CONFIG.textX, textY - fontSize - 26, 48, 3);
 
-    // Draw the title
+    ctx.fillStyle = CONFIG.textColor;
     for (let i = 0; i < lines.length; i++) {
         ctx.fillText(lines[i], CONFIG.textX, textY + (i * lineHeight));
     }
 
-    // Draw the excerpt
     if (excerptLines.length) {
         ctx.fillStyle = CONFIG.excerptColor;
         ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.excerptFontFamily}"`;
-        const excerptTop = textY + (lines.length - 1) * lineHeight + CONFIG.excerptGap;
+        const top = textY + (lines.length - 1) * lineHeight + CONFIG.excerptGap;
         for (let i = 0; i < excerptLines.length; i++) {
-            ctx.fillText(excerptLines[i], CONFIG.textX, excerptTop + ((i + 1) * CONFIG.excerptLineHeight));
+            ctx.fillText(excerptLines[i], CONFIG.textX, top + ((i + 1) * CONFIG.excerptLineHeight));
         }
     }
-    
-    // Save image
-    const buffer = canvas.toBuffer('image/png');
-    await writeFile(outputPath, buffer);
-    
+
+    await writeFile(outputPath, canvas.toBuffer('image/png'));
     console.log(`✓ Generated: ${outputPath}`);
 }
 
@@ -202,14 +233,13 @@ export async function generateOgImages({ force = forceFlag } = {}) {
         await mkdir(CONFIG.outputDir, { recursive: true });
     }
     
-    // Load base image once
-    if (!existsSync(CONFIG.baseImage)) {
-        console.error(`❌ Base image not found: ${CONFIG.baseImage}`);
-        console.error('   Please add your 1200x630 base image.');
-        process.exit(1);
+    // The portrait is the only external asset; everything else is drawn.
+    let portraitImage = null;
+    if (existsSync(CONFIG.portrait)) {
+        portraitImage = await loadImage(await readFile(CONFIG.portrait));
+    } else {
+        console.log(`⚠ Portrait not found (${CONFIG.portrait}); cards will be type only.`);
     }
-    
-    const baseImageBuffer = await readFile(CONFIG.baseImage);
 
     // Previously drawn fingerprints, slug → hash of (title, excerpt).
     let manifest = {};
@@ -270,7 +300,7 @@ export async function generateOgImages({ force = forceFlag } = {}) {
         }
 
         try {
-            await generateOgImage(frontmatter.title, excerpt, outputPath, baseImageBuffer);
+            await generateOgImage(frontmatter.title, excerpt, outputPath, portraitImage);
             manifest[slug] = fingerprint;
             generated++;
         } catch (error) {
