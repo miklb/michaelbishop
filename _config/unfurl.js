@@ -174,7 +174,105 @@ async function getBlueskyPost(url) {
 }
 
 /**
+ * Rich text: Bluesky stores links, mentions and hashtags as "facets" with
+ * byte offsets into the UTF-8 text, NOT JS string indices. Slicing the
+ * string directly corrupts any post containing an emoji or an accent, so
+ * this walks a Buffer and decodes each span.
+ */
+function renderPostText(record) {
+    const text = record.text || '';
+    const facets = (record.facets ?? [])
+        .filter(f => f?.index && Number.isInteger(f.index.byteStart))
+        .sort((a, b) => a.index.byteStart - b.index.byteStart);
+
+    const bytes = Buffer.from(text, 'utf8');
+    let cursor = 0;
+    let out = '';
+
+    for (const facet of facets) {
+        const { byteStart, byteEnd } = facet.index;
+        if (byteStart < cursor || byteEnd > bytes.length) continue;
+
+        out += escapeHtml(bytes.subarray(cursor, byteStart).toString('utf8'));
+        const label = escapeHtml(bytes.subarray(byteStart, byteEnd).toString('utf8'));
+        const feature = facet.features?.[0];
+        const type = feature?.$type ?? '';
+
+        let href = null;
+        if (type.endsWith('#link')) href = feature.uri;
+        else if (type.endsWith('#mention')) href = `https://bsky.app/profile/${feature.did}`;
+        else if (type.endsWith('#tag')) href = `https://bsky.app/hashtag/${encodeURIComponent(feature.tag)}`;
+
+        out += href ? `<a href="${escapeHtml(href)}">${label}</a>` : label;
+        cursor = byteEnd;
+    }
+
+    out += escapeHtml(bytes.subarray(cursor).toString('utf8'));
+    return out;
+}
+
+const bskyImg = (src, alt, cls) =>
+    `<img class="${cls}" src="${escapeHtml(src)}" alt="${escapeHtml(alt || '')}" loading="lazy" decoding="async" eleventy:ignore>`;
+
+/**
+ * Render whatever the post carries: photos, a link card (which is what the
+ * Latest Earworm posts produce), a video thumbnail, or a quoted post.
+ * Unknown embed types render nothing rather than breaking the page.
+ */
+function renderPostEmbed(embed) {
+    if (!embed) return '';
+    const type = embed.$type ?? '';
+
+    if (type.startsWith('app.bsky.embed.images')) {
+        const imgs = (embed.images ?? [])
+            .map(i => bskyImg(i.thumb, i.alt, 'bsky-post__image'))
+            .join('');
+        return imgs ? `<div class="bsky-post__media">${imgs}</div>` : '';
+    }
+
+    if (type.startsWith('app.bsky.embed.external')) {
+        const e = embed.external ?? {};
+        const thumb = e.thumb ? bskyImg(e.thumb, '', 'bsky-card__thumb') : '';
+        const desc = e.description
+            ? `<span class="bsky-card__desc">${escapeHtml(e.description)}</span>`
+            : '';
+        let host = '';
+        try { host = new URL(e.uri).hostname.replace(/^www\./, ''); } catch {}
+        return `<a class="bsky-card" href="${escapeHtml(e.uri || '#')}">${thumb}` +
+            `<span class="bsky-card__body">` +
+            `<span class="bsky-card__title">${escapeHtml(e.title || e.uri || '')}</span>` +
+            desc +
+            (host ? `<span class="bsky-card__host">${escapeHtml(host)}</span>` : '') +
+            `</span></a>`;
+    }
+
+    if (type.startsWith('app.bsky.embed.video')) {
+        return embed.thumbnail
+            ? `<div class="bsky-post__media">${bskyImg(embed.thumbnail, embed.alt, 'bsky-post__image')}</div>`
+            : '';
+    }
+
+    if (type.startsWith('app.bsky.embed.recordWithMedia')) {
+        return renderPostEmbed(embed.media) + renderPostEmbed(embed.record);
+    }
+
+    if (type.startsWith('app.bsky.embed.record')) {
+        const rec = embed.record ?? {};
+        const who = rec.author?.handle;
+        const txt = rec.value?.text;
+        if (!who || !txt) return '';
+        return `<blockquote class="bsky-post__quote">` +
+            `<cite>@${escapeHtml(who)}</cite>` +
+            `<span>${escapeHtml(txt)}</span>` +
+            `</blockquote>`;
+    }
+
+    return '';
+}
+
+/**
  * Render a real post embed.
+
  *
  * No `h-cite` / `u-quotation-of`, for the same reason renderUnfurlCard
  * excludes them for Bluesky URLs: citing a bsky.app post makes granary
@@ -189,18 +287,13 @@ function renderBlueskyPost(post, url) {
     const author = post.author ?? {};
     const name = escapeHtml(author.displayName || author.handle || 'Unknown');
     const handle = escapeHtml(author.handle || '');
-    const text = escapeHtml(post.record.text || '');
+    const text = renderPostText(post.record);
 
     const avatar = author.avatar
         ? `<img class="bsky-post__avatar" src="${escapeHtml(author.avatar)}" alt="" width="40" height="40" loading="lazy" decoding="async" eleventy:ignore>`
         : '';
 
-    const images = (post.embed?.images ?? [])
-        .map(img =>
-            `<img class="bsky-post__image" src="${escapeHtml(img.thumb)}" alt="${escapeHtml(img.alt || '')}" loading="lazy" decoding="async" eleventy:ignore>`
-        )
-        .join('');
-    const figure = images ? `<div class="bsky-post__media">${images}</div>` : '';
+    const figure = renderPostEmbed(post.embed);
 
     const created = post.record.createdAt;
     const stamp = created

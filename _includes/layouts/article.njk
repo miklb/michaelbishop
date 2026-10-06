@@ -34,7 +34,13 @@
                             {% if lede %}
                                 <p class="h3 lede p-summary e-bridgy-mastodon-content">{{ lede }}</p>
                             {% endif %}
-                            {% if "note" in tags %}
+                            {# Unfurl cards and Bluesky post embeds for every post type
+                               that can contain a bare link. The hidden div has to come
+                               with it: Bridgy reads e-content, so without the override
+                               the syndicated copy would carry the rendered card markup
+                               (author name, quoted text) inline instead of the bare URL
+                               that Bluesky turns into its own embed. #}
+                            {% if "note" in tags or "article" in tags or "print" in tags or "photo" in tags %}
                                 {{ content | unfurlUrls | safe }}
                                 <div class="e-bridgy-bluesky-content" style="display:none">{{ content | stripBridgyLinks | safe }}</div>
                             {% else %}
