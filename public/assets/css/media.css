@@ -152,3 +152,68 @@ p:has(.unfurl-card) {
   flex-shrink: 0;
   margin: 0;
 }
+
+/* Bluesky post embed — a bare bsky.app post link becomes the real post,
+   fetched at build time through the AT Protocol. No third-party script. */
+.bsky-post {
+  margin-block: var(--space-s);
+  padding: var(--space-s);
+  border: 1px solid var(--surface4);
+  border-radius: var(--space-2xs);
+  background-color: var(--surface1);
+  max-inline-size: 34rem;
+}
+
+.bsky-post__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  text-decoration: none;
+  color: var(--text1);
+}
+
+.bsky-post__avatar {
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.bsky-post__name {
+  font-weight: 600;
+}
+
+.bsky-post__handle {
+  color: var(--text2);
+  font-size: var(--font-size--1);
+}
+
+.bsky-post__text {
+  margin-block-start: var(--space-2xs);
+  /* Posts carry their own line breaks; keep them. */
+  white-space: pre-wrap;
+}
+
+.bsky-post__media {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-3xs);
+  margin-block-start: var(--space-2xs);
+}
+
+.bsky-post__image {
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--space-3xs);
+  display: block;
+}
+
+.bsky-post__meta {
+  margin-block-start: var(--space-2xs);
+  font-size: var(--font-size--1);
+  color: var(--text2);
+}
+
+.bsky-post__meta a {
+  color: var(--text2);
+}

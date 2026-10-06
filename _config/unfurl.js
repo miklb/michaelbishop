@@ -114,6 +114,115 @@ function renderUnfurlCard(metadata, { cite = false } = {}) {
  * markdown-it with linkify:true creates: <a href="https://...">https://...</a>
  * We want to replace these with unfurl cards
  */
+const BSKY_API = 'https://public.api.bsky.app/xrpc';
+const bskyCache = new Map();
+
+const escapeHtml = s =>
+    String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+/** https://bsky.app/profile/<handle-or-did>/post/<rkey> → its parts, or null. */
+function parseBlueskyPostUrl(url) {
+    const m = String(url).match(
+        /^https:\/\/bsky\.app\/profile\/([^/?#]+)\/post\/([A-Za-z0-9]+)/
+    );
+    return m ? { actor: decodeURIComponent(m[1]), rkey: m[2] } : null;
+}
+
+/**
+ * Fetch a post through the public AT Protocol API so a bare Bluesky link can
+ * render as the actual post — author, text, images, timestamp — rather than
+ * an OG scrape of bsky.app. Build-time only: no third-party script, nothing
+ * for the reader to load.
+ *
+ * Returns null on any failure so the caller falls back to the OG card.
+ */
+async function getBlueskyPost(url) {
+    if (bskyCache.has(url)) return bskyCache.get(url);
+
+    const parts = parseBlueskyPostUrl(url);
+    if (!parts) return null;
+
+    try {
+        let did = parts.actor;
+        if (!did.startsWith('did:')) {
+            const res = await fetch(
+                `${BSKY_API}/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(did)}`
+            );
+            if (!res.ok) throw new Error(`resolveHandle ${res.status}`);
+            did = (await res.json()).did;
+        }
+
+        const uri = `at://${did}/app.bsky.feed.post/${parts.rkey}`;
+        const res = await fetch(`${BSKY_API}/app.bsky.feed.getPosts?uris=${encodeURIComponent(uri)}`);
+        if (!res.ok) throw new Error(`getPosts ${res.status}`);
+
+        const post = (await res.json()).posts?.[0];
+        if (!post?.record) throw new Error('post not found');
+
+        console.log(`[bsky] Embedded: ${url}`);
+        bskyCache.set(url, post);
+        return post;
+    } catch (error) {
+        console.warn(`[bsky] Could not embed ${url}: ${error.message}`);
+        bskyCache.set(url, null);
+        return null;
+    }
+}
+
+/**
+ * Render a real post embed.
+ *
+ * No `h-cite` / `u-quotation-of`, for the same reason renderUnfurlCard
+ * excludes them for Bluesky URLs: citing a bsky.app post makes granary
+ * syndicate it as a quote post (embed.record), which notifies the quoted
+ * author. Enable that deliberately someday, not as a side effect of
+ * embedding.
+ *
+ * Images carry `eleventy:ignore` so the image transform leaves the Bluesky
+ * CDN alone at build time.
+ */
+function renderBlueskyPost(post, url) {
+    const author = post.author ?? {};
+    const name = escapeHtml(author.displayName || author.handle || 'Unknown');
+    const handle = escapeHtml(author.handle || '');
+    const text = escapeHtml(post.record.text || '');
+
+    const avatar = author.avatar
+        ? `<img class="bsky-post__avatar" src="${escapeHtml(author.avatar)}" alt="" width="40" height="40" loading="lazy" decoding="async" eleventy:ignore>`
+        : '';
+
+    const images = (post.embed?.images ?? [])
+        .map(img =>
+            `<img class="bsky-post__image" src="${escapeHtml(img.thumb)}" alt="${escapeHtml(img.alt || '')}" loading="lazy" decoding="async" eleventy:ignore>`
+        )
+        .join('');
+    const figure = images ? `<div class="bsky-post__media">${images}</div>` : '';
+
+    const created = post.record.createdAt;
+    const stamp = created
+        ? `<time class="bsky-post__date" datetime="${escapeHtml(created)}">${new Date(created).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>`
+        : '';
+
+    return [
+        `<figure class="bsky-post link-u-exempt">`,
+        `<a class="bsky-post__author" href="https://bsky.app/profile/${handle}">`,
+        avatar,
+        `<span class="bsky-post__name">${name}</span>`,
+        `<span class="bsky-post__handle">@${handle}</span>`,
+        `</a>`,
+        `<div class="bsky-post__text">${text}</div>`,
+        figure,
+        `<figcaption class="bsky-post__meta">`,
+        `<a href="${escapeHtml(url)}">${stamp || 'View on Bluesky'}</a>`,
+        `</figcaption>`,
+        `</figure>`
+    ].join('');
+}
+
 function findAutoLinkedUrls(content) {
     // Match <a> tags where the href equals the text content (auto-linked bare URLs)
     const pattern = /<a href="(https?:\/\/[^"]+)">(https?:\/\/[^<]+)<\/a>/g;
@@ -126,10 +235,17 @@ function findAutoLinkedUrls(content) {
         
         // Only match if href and text are the same (or text is href with trailing punctuation stripped)
         if (href === text || href === text.replace(/[.,;:!?]+$/, '')) {
+            // A link alone in its own paragraph can be replaced by block
+            // content; one mid-sentence cannot.
+            const before = content.slice(0, match.index).match(/<p>\s*$/);
+            const after = content.slice(match.index + match[0].length).match(/^\s*<\/p>/);
             matches.push({
                 fullMatch: match[0],
                 url: href,
-                index: match.index
+                index: match.index,
+                alone: Boolean(before && after),
+                openLen: before ? before[0].length : 0,
+                closeLen: after ? after[0].length : 0
             });
         }
     }
@@ -151,23 +267,48 @@ export async function processUnfurl(content, { cite = false } = {}) {
         return content;
     }
 
-    // Fetch metadata for all URLs in parallel
-    const metadataPromises = autoLinkedUrls.map(({ url }) => getUrlMetadata(url));
-    const metadataResults = await Promise.all(metadataPromises);
+    // Resolve every URL in parallel. A Bluesky post URL becomes a real post
+    // embed via the AT Protocol; anything else (including a Bluesky profile
+    // or feed URL) falls back to the OG unfurl card, as does a post whose
+    // API lookup fails.
+    const resolved = await Promise.all(
+        autoLinkedUrls.map(async ({ url, alone }) => {
+            // Embed only a link that stands alone in its paragraph — the
+            // usual convention, and the only place block content is valid.
+            // A Bluesky link mid-sentence stays an inline unfurl card.
+            if (alone && parseBlueskyPostUrl(url)) {
+                const post = await getBlueskyPost(url);
+                if (post) return { kind: 'bsky', post, url };
+            }
+            return { kind: 'card', metadata: await getUrlMetadata(url) };
+        })
+    );
 
     // Build replacement array with positions
     const replacements = [];
     for (let i = 0; i < autoLinkedUrls.length; i++) {
         const { fullMatch, index } = autoLinkedUrls[i];
-        const metadata = metadataResults[i];
+        const item = resolved[i];
 
-        if (metadata) {
-            const card = renderUnfurlCard(metadata, { cite });
-            replacements.push({
-                start: index,
-                end: index + fullMatch.length,
-                replacement: card
-            });
+        const markup = item.kind === 'bsky'
+            ? renderBlueskyPost(item.post, item.url)
+            : item.metadata && renderUnfurlCard(item.metadata, { cite });
+
+        if (markup) {
+            let start = index;
+            let end = index + fullMatch.length;
+
+            // The embed is a <figure>; markdown-it wrapped the bare URL in a
+            // <p>. Block content inside a paragraph is invalid — the browser
+            // closes the <p> early and strands a </p> — so swallow the
+            // paragraph the link had to itself. Unfurl cards are anchors and
+            // stay exactly where they are.
+            if (item.kind === 'bsky') {
+                start -= autoLinkedUrls[i].openLen;
+                end += autoLinkedUrls[i].closeLen;
+            }
+
+            replacements.push({ start, end, replacement: markup });
         }
     }
 

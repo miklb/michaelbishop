@@ -52,6 +52,13 @@ Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
   Microformats2 (`h-entry`) + Bridgy Fed / Bridgy Bluesky. Reply context and
   Bridgy content-separation live in `_includes/layouts/article.njk`
   (see `PORTING-GUIDE.md`).
+- **Embeds**: a bare URL alone in its own paragraph is replaced at build time
+  by `_config/unfurl.js`. A **bsky.app post link becomes a real post embed**
+  (author, text, images, timestamp) fetched through the public AT Protocol
+  API — no third-party script. Anything else becomes an OG unfurl card, as
+  does a Bluesky link mid-sentence (block content can't sit inside a `<p>`).
+  Neither carries `h-cite` for bsky.app URLs: that would make granary
+  syndicate the post as a quote post and notify the quoted author.
 - **Syndication**: `scripts/send-webmentions.js` (`npm run webmention`) sends
   webmentions to Bridgy and writes captured syndication URLs back to frontmatter.
   CI passes **changed files as args** to scope it to new posts; run with no args
