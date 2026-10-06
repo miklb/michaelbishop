@@ -221,12 +221,28 @@ function slugify(text) {
  */
 const forceFlag = process.argv.includes('--force');
 
+// Cards are committed assets. On CI we ship exactly what is in git and only
+// draw one that is missing — never redraw an existing card.
+//
+// Canvas rasterises text differently on Linux than on macOS, so regenerating
+// on the builder produces a byte-different PNG from the committed one even
+// when it looks identical. That changes the etag on every deploy, which is
+// how the live cards drifted away from every committed version and got stuck
+// behind a stale cache. Generating only what is missing keeps a forgotten
+// commit from shipping a broken og:image without reintroducing the drift.
+// Workers Builds sets WORKERS_CI; GitHub Actions sets CI and GITHUB_ACTIONS.
+const isCI = Boolean(
+    process.env.CI || process.env.WORKERS_CI || process.env.GITHUB_ACTIONS
+);
+
 /**
  * Also called from eleventy.config.js on `eleventy.before`, so cards refresh
  * during `npm start` too — not only on a full `npm run build`.
  */
 export async function generateOgImages({ force = forceFlag } = {}) {
-    console.log('🖼️  Generating OG images for articles...\n');
+    console.log(isCI
+        ? '🖼️  CI: shipping committed social cards; drawing only missing ones.\n'
+        : '🖼️  Generating OG images for articles...\n');
     
     // Ensure output directory exists
     if (!existsSync(CONFIG.outputDir)) {
@@ -293,10 +309,20 @@ export async function generateOgImages({ force = forceFlag } = {}) {
             .digest('hex')
             .slice(0, 16);
 
+        if (isCI && existsSync(outputPath)) {
+            // Shipping the committed card as-is.
+            skipped++;
+            continue;
+        }
+
         if (!force && existsSync(outputPath) && manifest[slug] === fingerprint) {
             console.log(`⏭ Up to date: ${outputFilename}`);
             skipped++;
             continue;
+        }
+
+        if (isCI) {
+            console.log(`::warning file=${filePath}::No social card committed for this post; drawing one on the builder. Run \`npm run og-images\` locally and commit the PNG.`);
         }
 
         try {
@@ -308,7 +334,9 @@ export async function generateOgImages({ force = forceFlag } = {}) {
         }
     }
     
-    await writeFile(CONFIG.manifest, JSON.stringify(manifest, null, 2) + '\n');
+    if (!isCI) {
+        await writeFile(CONFIG.manifest, JSON.stringify(manifest, null, 2) + '\n');
+    }
 
     console.log(`\n✅ Done! Generated: ${generated}, Skipped: ${skipped}`);
 }

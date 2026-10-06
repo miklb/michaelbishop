@@ -18,6 +18,19 @@ Monitor conventions there do **not** apply here).
 - CSS via PostCSS (`postcss-preset-env`, `cssnano`). OG card images generated at
   build time.
 
+### Social cards are committed assets
+
+`scripts/generate-og-images.js` draws each article's card from its title and
+excerpt and writes `public/assets/img/og/og-<slug>.png`. It runs from an
+`eleventy.before` hook, so `npm start` and `npm run build` both refresh them,
+keyed on a fingerprint of (title, excerpt) in `scripts/.og-manifest.json`.
+
+**On CI it ships what is in git** and only draws a card that is missing.
+Canvas rasterises text differently on Linux, so regenerating on the builder
+produces a byte-different PNG from the committed one even when it looks
+identical — which churns the etag on every deploy and leaves the live cards
+drifting from every committed version. Commit the PNG with the post.
+
 ### Don't reintroduce `node-canvas`
 
 OG images (`scripts/generate-og-images.js`) use **`@napi-rs/canvas`**, not the
