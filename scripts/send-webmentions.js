@@ -43,42 +43,69 @@ const contentDirFor = filePath => {
 const BRIDGY_FED_ENDPOINT = 'https://fed.brid.gy/webmention'
 const BRIDGY_PUBLISH_ENDPOINT = 'https://brid.gy/publish/webmention'
 
+// Bridgy fetches the source URL itself, from its own servers, which can lag a
+// just-finished deploy by seconds — our HEAD poll says 200 while Bridgy still
+// gets nothing. That returns a 400 "Could not fetch source URL", which is
+// transient and worth retrying; a malformed post is not.
+const RETRY_DELAYS_MS = [15000, 30000, 60000]
+
+const isTransient = (status, body) =>
+  status >= 500 ||
+  status === 429 ||
+  (status === 400 && /could not fetch source url/i.test(body))
+
 async function sendWebmention(source, target, endpoint) {
   const formData = new URLSearchParams()
   formData.append('source', source)
   formData.append('target', target)
-  
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData
-    })
-    
-    const responseText = await response.text()
-    
-    if (response.ok) {
-      const location = response.headers.get('Location')
-      console.log(`✓ Sent webmention: ${source} → ${target}`)
-      if (location) {
-        console.log(`  Syndication URL: ${location}`)
-        return location
+
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+      })
+
+      const responseText = await response.text()
+
+      if (response.ok) {
+        const location = response.headers.get('Location')
+        console.log(`✓ Sent webmention: ${source} → ${target}`)
+        if (location) {
+          console.log(`  Syndication URL: ${location}`)
+          return location
+        }
+        return null
       }
-    } else if (response.status === 400 && responseText.includes('already published')) {
-      // Post was already syndicated in a previous run
-      console.log(`⚠ Already published: ${source} → ${target}`)
-      // Try to extract the syndication URL from the error if available
-      // Note: You can manually add syndication URLs to frontmatter for these posts
-      return null
-    } else {
+
+      if (response.status === 400 && responseText.includes('already published')) {
+        // Post was already syndicated in a previous run
+        console.log(`⚠ Already published: ${source} → ${target}`)
+        return null
+      }
+
+      if (isTransient(response.status, responseText) && attempt < RETRY_DELAYS_MS.length) {
+        const wait = RETRY_DELAYS_MS[attempt]
+        console.log(`… Bridgy could not fetch it yet (${response.status}); retrying in ${wait / 1000}s`)
+        await new Promise(r => setTimeout(r, wait))
+        continue
+      }
+
       console.log(`✗ Failed: ${source} → ${target} (${response.status})`)
       console.log(`  Response: ${responseText.substring(0, 200)}`)
+      return null
+    } catch (error) {
+      if (attempt < RETRY_DELAYS_MS.length) {
+        const wait = RETRY_DELAYS_MS[attempt]
+        console.log(`… Network error (${error.message}); retrying in ${wait / 1000}s`)
+        await new Promise(r => setTimeout(r, wait))
+        continue
+      }
+      console.log(`✗ Error: ${error.message}`)
+      return null
     }
-  } catch (error) {
-    console.log(`✗ Error: ${error.message}`)
   }
-  
-  return null
 }
 
 async function updatePostWithSyndicationUrls(filePath, urls) {
