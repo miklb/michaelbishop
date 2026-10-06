@@ -14,6 +14,28 @@ Two earlier attempts are dead ends worth not repeating: the 2026-06-30 washi/
 hanko re-skin (simulated paper texture in the chrome; never committed) and
 anything that puts the drop shadows back.
 
+## Held back from the reskin merge (2026-10-06)
+
+The design shipped to `main` without the Prints and Photos rooms, which had
+no content to put in them. The machinery is merged and dormant — turning them
+back on is:
+
+1. Re-add `"prints", "photos"` to the collections loop in `eleventy.config.js`.
+2. Restore `content/pages/prints.md` and `content/pages/photos.md`
+   (`git show redesign/ink-and-ledger:content/pages/prints.md`), which also
+   restores their nav entries via `eleventyNavigation`.
+3. Point the home-page bio's "gyotaku" link back at `/prints/` — it currently
+   goes to the Lasting Impressions article, since `/prints/` would 404.
+
+Still in place and needing nothing: `scripts/new-print.js` (`npm run print`),
+`content/prints/prints.json`, `content/photos/photos.json`,
+`_includes/layouts/gallery.njk`, `public/assets/css/gallery.css`, and
+prints/photos in `SYNDICATABLE` plus the syndicate workflow pathspec.
+
+The backfilled sheepshead print and its image were removed with the rooms;
+`git show redesign/ink-and-ledger:content/prints/sheepshead-december.md`
+brings it back.
+
 ## Open
 
 ### Decide
