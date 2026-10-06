@@ -4,6 +4,7 @@ html {
 
 body {
   font-family: var(--site-font-family-body);
+  font-size: var(--font-size-0);
   line-height: var(--site-line-height);
 }
 
@@ -15,69 +16,89 @@ svg {
 }
 
 h1,
+h2,
+h3,
+h4,
+.h1,
+.h2,
+.h3,
+.h4 {
+  font-family: var(--site-font-family-heading);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+h1,
 .h1 {
-  --font-size: var(--font-size-5);
-  font-size: var(--font-size);
+  font-size: var(--font-size-4);
 }
 
 h2,
 .h2 {
-  --font-size: var(--font-size-3);
-  font-size: var(--font-size);
+  font-size: var(--font-size-3);
 }
 
 h3,
 .h3 {
-  --font-size: var(--font-size-2);
-  font-size: var(--font-size);
+  font-size: var(--font-size-2);
 }
 
 h4,
 .h4 {
-  --font-size: var(--font-size-1);
-  font-size: var(--font-size);
-}
-
-.mainheader {
-  font-family: var(--site-font-family-heading);
-  font-style: normal;
-  h1 {
-    font-size: var(--font-size-4);
-    vertical-align: middle;
-    font-weight: 700;
-  }
-  .mainnav {
-    line-height: var(--site-line-height);
-  }
-}
-
-.tagline {
-  vertical-align: middle;
-  font-weight: 300;
   font-size: var(--font-size-1);
 }
 
-.home-primary h2 {
-  font-size: var(--font-size-4);
-  font-family: var(--site-font-family-body);
-  margin-block-start: 0;
+/* Masthead: the site name set like a printed page, the tagline as a
+   letterspaced mono kicker under it. */
+.mainheader {
+  font-style: normal;
+}
+
+.mainheader h1 {
+  font-size: var(--font-size-3);
+  margin-block: 0;
+}
+
+.mainheader h1 a {
+  color: var(--text1);
+  text-decoration: none;
+}
+
+.tagline {
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--text2);
+}
+
+/* Structure is mono: nav, dates, labels, kickers. */
+.main-nav,
+.postlist-date,
+.archive-date,
+.eyebrow {
+  font-family: var(--site-font-family-mono);
 }
 
 .lede {
-  line-height: 1.3;
-}
-
-h1,
-h2,
-h3 {
-  line-height: 1.2;
-  font-family: var(--site-font-family-heading);
+  font-size: var(--font-size-1);
+  line-height: 1.35;
   font-weight: 300;
+  color: var(--text2);
 }
 
 article {
   font-size: var(--font-size-0);
-  line-height: 1.6;
+  line-height: var(--site-line-height);
+}
+
+/* A readable measure for prose, independent of the 12-column grid. */
+.content-wrap,
+.e-content {
+  max-inline-size: var(--measure);
 }
 
 sup {

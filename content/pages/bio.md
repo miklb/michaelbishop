@@ -5,7 +5,7 @@ permalink: "bio.html"
 date: 2022-10-13T23:49:30-04:00
 eleventyNavigation:
   key: Bio
-  order: 3
+  order: 6
 meta:
   title: Bio
   desc: Short version. You'll have to read the entire site to get the long version. Mostly.

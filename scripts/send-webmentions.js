@@ -18,7 +18,9 @@ const SITE_URL = 'https://michaelbishop.me'
 const SYNDICATABLE = {
   notes: 'notes',
   replies: 'replies',
-  articles: 'articles'
+  articles: 'articles',
+  prints: 'prints',
+  photos: 'photos'
 }
 
 // Posts older than this are never syndicated — see the guard in main().

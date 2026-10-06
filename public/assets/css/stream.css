@@ -1,0 +1,157 @@
+/* The log — a column of dated entries, used by the home stream and the archive.
+   No cards: a hairline between entries and the date doing the work of a label. */
+
+.stream,
+.archives {
+  max-inline-size: var(--measure);
+}
+
+.stream__heading,
+.entry__kicker,
+.eyebrow {
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+.stream__heading {
+  margin-block: var(--space-l) 0;
+  padding-block-end: var(--space-2xs);
+  border-block-end: 1px solid var(--surface4);
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-block: var(--space-m);
+  border-block-end: 1px solid var(--surface4);
+}
+
+.entry__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-2xs);
+  margin: 0;
+}
+
+/* The type sits quietly next to the date — it's a label, not a badge. */
+.entry__type::before {
+  content: "·";
+  margin-inline-end: var(--space-2xs);
+}
+
+.entry__title {
+  margin: 0;
+  font-size: var(--font-size-2);
+}
+
+.entry__title a {
+  color: var(--links);
+}
+
+.entry__body > :first-child,
+.entry__summary {
+  margin-block-start: 0;
+}
+
+.entry__body > :last-child {
+  margin-block-end: 0;
+}
+
+.entry__summary {
+  font-size: var(--font-size-1);
+  line-height: 1.35;
+  color: var(--text2);
+}
+
+.entry__media {
+  margin-block-start: var(--space-2xs);
+}
+
+.entry__media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.entry__permalink {
+  margin: 0;
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  letter-spacing: 0.04em;
+}
+
+.stream__more {
+  margin-block: var(--space-m);
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  letter-spacing: 0.06em;
+  text-align: right;
+}
+
+/* Masthead h-card */
+.home-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  align-items: flex-start;
+  padding: 0 0 var(--space-m);
+  margin-block-end: 0;
+}
+
+.home-primary__avatar {
+  flex: 0 0 auto;
+  inline-size: 72px;
+  block-size: 72px;
+  border-radius: 50%;
+}
+
+.home-primary__text {
+  flex: 999 1 20rem;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.home-primary__name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-2xs);
+  align-items: baseline;
+  margin: 0;
+  font-size: var(--font-size-1);
+}
+
+.home-primary__name a {
+  color: var(--text1);
+  text-decoration: none;
+}
+
+.home-primary__meta {
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  letter-spacing: 0.06em;
+  color: var(--text2);
+}
+
+.home-primary__note p {
+  margin-block: 0 var(--space-2xs);
+  max-inline-size: var(--measure);
+}
+
+.home-primary .profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-s);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-family: var(--site-font-family-mono);
+  font-size: var(--font-size--1);
+  letter-spacing: 0.04em;
+}

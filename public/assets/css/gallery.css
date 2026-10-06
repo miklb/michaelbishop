@@ -1,0 +1,65 @@
+/* Gallery rooms — /prints and /photos.
+   The work supplies the colour here, so the frame stays out of the way:
+   no cards, no shadows, no borders on the media. */
+
+.gallery-intro {
+  max-inline-size: 42rem;
+  margin-block-end: var(--space-l);
+}
+
+.gallery-intro h1 {
+  margin-block-end: var(--space-2xs);
+}
+
+.gallery-intro__note p {
+  margin-block: 0;
+  color: var(--text2);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-m) var(--space-s);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.gallery__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  color: inherit;
+  text-decoration: none;
+}
+
+.gallery__media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.gallery__title {
+  margin: var(--space-2xs) 0 0;
+  font-family: var(--site-font-family-heading);
+  line-height: 1.2;
+}
+
+.gallery__link:hover .gallery__title {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3ex;
+}
+
+.gallery__date {
+  font-family: var(--site-font-family-heading);
+  font-size: var(--font-size--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text2);
+}
+
+.gallery__empty {
+  color: var(--text2);
+  font-style: italic;
+}

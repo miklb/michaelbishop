@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="{{ lang or site.lang or 'en' }}">
+
+    {% include "head.njk" %}
+
+    <body class="gallery-page">
+        <div class="site-container">
+            <div class="site-grid">
+                {% include "header.njk" %}
+                <main class="content">
+                    <header class="gallery-intro">
+                        <h1>{{ title }}</h1>
+                        <div class="gallery-intro__note">
+                            {{ content | safe }}
+                        </div>
+                    </header>
+
+                    {# `collection` in frontmatter names a directory-scoped collection
+                       defined in eleventy.config.js (prints, photos), already
+                       sorted newest-first. #}
+                    {% set items = collections[collection] %}
+
+                    {% if items | length %}
+                        <ul class="gallery h-feed">
+                            <li class="visually-hidden p-name">{{ title }}</li>
+                            {%- for post in items -%}
+                                <li class="gallery__item h-entry">
+                                    <a class="p-author h-card" href="{{ site.url }}" hidden="hidden">{{ site.author.name }}</a>
+                                    <a class="gallery__link u-url" href="{{ post.url }}">
+                                        <div class="gallery__media">
+                                            {# post.data.photo is the input-dir-absolute web path
+                                               (/img/prints/x.jpg). The shortcode wants a path from
+                                               the project root, hence the "content" prefix. #}
+                                            {% image "content" + post.data.photo, post.data.title, "(min-width: 60em) 360px, (min-width: 40em) 45vw, 92vw" %}
+                                        </div>
+                                        <p class="gallery__title p-name">{{ post.data.title }}</p>
+                                        <time class="gallery__date dt-published" datetime="{{ post.date | htmlDateString }}">
+                                            {{ post.date | readableDate("LLLL yyyy") }}
+                                        </time>
+                                    </a>
+                                </li>
+                            {%- endfor -%}
+                        </ul>
+                    {% else %}
+                        <p class="gallery__empty">Nothing here yet.</p>
+                    {% endif %}
+                </main>
+
+                {% include "footer.njk" %}
+            </div>
+        </div>
+        {% getBundle "fontawesome" %}
+    </body>
+</html>

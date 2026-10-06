@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="{{ lang or site.lang or 'en' }}">
+
+    {% include "head.njk" %}
+
+    <body class="list-page">
+        <div class="site-container">
+            <div class="site-grid">
+                {% include "header.njk" %}
+                <main class="content">
+                    <header class="list-intro">
+                        <h1>{{ title }}</h1>
+                        <div class="list-intro__note">
+                            {{ content | safe }}
+                        </div>
+                    </header>
+
+                    {% set items = collections[collection] %}
+                    {% if items | length %}
+                        <ul class="postlist h-feed">
+                            <li class="visually-hidden p-name">{{ title }}</li>
+                            {%- for post in items -%}
+                                <li class="postlist__item h-entry">
+                                    <time class="postlist__date dt-published" datetime="{{ post.date | htmlDateString }}">
+                                        {{ post.date | readableDate("dd LLL yyyy") }}
+                                    </time>
+                                    <a class="postlist__title p-name u-url" href="{{ post.url }}">{{ post.data.title }}</a>
+                                    {% if post.data.excerpt %}
+                                        <p class="postlist__summary p-summary">{{ post.data.excerpt }}</p>
+                                    {% endif %}
+                                </li>
+                            {%- endfor -%}
+                        </ul>
+                    {% else %}
+                        <p class="gallery__empty">Nothing here yet.</p>
+                    {% endif %}
+                </main>
+
+                {% include "footer.njk" %}
+            </div>
+        </div>
+        {% getBundle "fontawesome" %}
+    </body>
+</html>

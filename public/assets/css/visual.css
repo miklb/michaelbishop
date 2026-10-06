@@ -37,34 +37,14 @@ a {
     border-bottom: 2px solid var(--surface3);
   } 
 
+  /* No card, no gradient, no shadow — a hairline under the masthead. */
   .home-primary {
-    background: linear-gradient(in hsl to top, var(--surface2), var(--surface3));
-    border-radius: var(--space-2xs);
+    border-block-end: 1px solid var(--surface4);
   }
-
-.home article {
-  border-radius: var(--space-2xs);
-  background-color: var(--surface1);
-}
    article h2 {
     color: var(--text2);
    }
 
    .profiles ul {
     list-style: none;
-  }
-
-  .track__media img {
-    border: 3px;
-  }
-
-  .rad-shadow {
-    box-shadow:
-      0 2.8px 2.2px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .03)),
-      0 6.7px 5.3px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .01)),
-      0 12.5px 10px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .02)),
-      0 22.3px 17.9px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .02)),
-      0 41.8px 33.4px hsl(var(--surface-shadow) / calc(var(--shadow-strength) + .03)),
-      0 100px 80px hsl(var(--surface-shadow) / var(--shadow-strength))
-    ;
   }

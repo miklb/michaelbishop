@@ -5,7 +5,7 @@ permalink: "listening.html"
 date: 2022-10-10T16:29:17-04:00
 eleventyNavigation:
   key: Listening
-  order: 4
+  order: 5
 meta:
   title: Listening
   desc: What I'm listening to and tales of shows of the past.

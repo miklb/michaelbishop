@@ -1,0 +1,125 @@
+/* Latest Earworm web component — https://latestearworm.com/embed
+   Sits as the first cell of the .pinned grid. The component exposes CSS custom
+   properties and ::part() hooks; both are mapped onto the site tokens so the
+   card reads as a sibling of the pinned post cards rather than as an embed.
+   Colour discipline: surfaces and text come from the greyscale ramp, and
+   --links (gold in dark mode) is spent only on real links — one accent per
+   card, the same budget the pinned cards spend on their title link. */
+
+.earworm {
+  display: flex;
+  margin-block: var(--space-l);
+  border-radius: var(--space-2xs);
+
+  /* `article` sets this for the sibling cards; this wrapper is a div, so it
+     would otherwise inherit the browser default and read a size too small. */
+  font-size: var(--font-size-0);
+  line-height: 1.6;
+
+  --earworm-accent: var(--links);
+  --earworm-background: var(--surface1);
+  --earworm-color: var(--text1);
+  --earworm-border: 0;
+  --earworm-radius: var(--space-2xs);
+  --earworm-padding: var(--space-s);
+  --earworm-gap: var(--space-s);
+  --earworm-art-size: 6rem;
+}
+
+.earworm latest-earworm {
+  flex: 1;
+}
+
+/* Grid cells stretch to the tallest card in the row; fill the cell so the
+   shadow and the card surface share one box, with content held at the top. */
+.earworm latest-earworm::part(card) {
+  box-sizing: border-box;
+  min-height: 100%;
+  align-content: start;
+}
+
+.earworm latest-earworm::part(art) {
+  border-radius: var(--space-3xs);
+}
+
+/* Own the vertical rhythm: the component's default is a flat 0.5rem after
+   every block, which reads as a list rather than a hierarchy. */
+.earworm latest-earworm::part(body) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+/* "Latest earworm · Oct 4, 2026" — a kicker, not fine print. */
+.earworm latest-earworm::part(label) {
+  margin: 0;
+  font-family: var(--site-font-family-heading);
+  font-size: var(--font-size--1);
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text2);
+  opacity: 1;
+}
+
+/* The track is this card's title: same face, scale and weight as a pinned
+   post title, but in --text1 — it isn't a link, so it doesn't take the
+   link colour. */
+.earworm latest-earworm::part(track) {
+  margin: 0;
+  font-family: var(--site-font-family-heading);
+  font-size: var(--font-size-2);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text1);
+}
+
+.earworm latest-earworm::part(artist) {
+  margin: 0;
+  font-size: var(--font-size-1);
+  line-height: 1.3;
+  color: var(--text2);
+}
+
+.earworm latest-earworm::part(note) {
+  margin: 0;
+}
+
+.earworm latest-earworm::part(links) {
+  margin: 0;
+  padding-block-start: var(--space-3xs);
+}
+
+/* The service link is the card's one accent; the credit line underneath is
+   housekeeping, so it borrows the muted colour by re-pointing the
+   component's own accent property for that subtree. */
+.earworm latest-earworm::part(credit) {
+  margin: 0;
+  font-size: var(--font-size--1);
+  line-height: 1.3;
+  color: var(--text2);
+  opacity: 1;
+
+  --earworm-accent: var(--text2);
+}
+
+/* Play button — matches the pagination button treatment */
+.earworm latest-earworm::part(button) {
+  color: var(--text1);
+  background-color: var(--surface2);
+  border: 1px solid var(--text2);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.earworm latest-earworm::part(button):hover {
+  background-color: var(--surface3);
+}
+
+/* Light-DOM fallback: shown when there is no current earworm, the lookup
+   fails, or scripting is unavailable. */
+.earworm__fallback {
+  margin: 0;
+  font-size: var(--font-size--1);
+  color: var(--text2);
+}
