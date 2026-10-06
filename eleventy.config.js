@@ -53,6 +53,16 @@ async function safeImageShortcode(src, alt = "", sizes = "100vw", options = {}) 
 
 export default async function(eleventyConfig) {
 
+    // Social cards are generated from post frontmatter, so run them as part of
+    // every build — including `--serve`, where only Eleventy used to run and an
+    // edited title or excerpt silently left a stale card behind. The manifest
+    // in scripts/ makes this a no-op when nothing changed.
+    eleventyConfig.on("eleventy.before", async () => {
+        const { generateOgImages } = await import("./scripts/generate-og-images.js");
+        await generateOgImages();
+    });
+
+
 
     // Set markdown library
     eleventyConfig.setLibrary("md", markdownLib);

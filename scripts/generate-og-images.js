@@ -10,7 +10,8 @@ import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
 import { createHash } from 'crypto';
 import { existsSync } from 'fs';
-import { join, basename } from 'path';
+import { join, basename, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import matter from 'gray-matter';
 
 // Configuration
@@ -172,9 +173,13 @@ function slugify(text) {
 /**
  * Main function
  */
-const force = process.argv.includes('--force');
+const forceFlag = process.argv.includes('--force');
 
-async function main() {
+/**
+ * Also called from eleventy.config.js on `eleventy.before`, so cards refresh
+ * during `npm start` too — not only on a full `npm run build`.
+ */
+export async function generateOgImages({ force = forceFlag } = {}) {
     console.log('🖼️  Generating OG images for articles...\n');
     
     // Ensure output directory exists
@@ -263,9 +268,10 @@ async function main() {
     console.log(`\n✅ Done! Generated: ${generated}, Skipped: ${skipped}`);
 }
 
-main().catch(err => {
-    // Exit non-zero: this runs as the first half of `npm run build`, and a
-    // logged-but-swallowed error would let a broken build continue.
-    console.error(err);
-    process.exit(1);
-});
+// Only self-run when invoked directly; importing it must not start a build.
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+    generateOgImages().catch(err => {
+        console.error(err);
+        process.exit(1);
+    });
+}

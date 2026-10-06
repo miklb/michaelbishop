@@ -8,7 +8,7 @@
     "node": ">=26"
   },
   "scripts": {
-    "build": "node scripts/generate-og-images.js && npx @11ty/eleventy",
+    "build": "npx @11ty/eleventy",
     "note": "node scripts/new-note.js",
     "post": "node scripts/post-note.js",
     "og-images": "node scripts/generate-og-images.js",
