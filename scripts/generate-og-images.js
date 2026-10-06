@@ -6,7 +6,7 @@
  * Run before Eleventy build: npm run og-images
  */
 
-import { createCanvas, loadImage } from '@napi-rs/canvas';
+import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas';
 import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
 import { createHash } from 'crypto';
 import { existsSync } from 'fs';
@@ -32,7 +32,11 @@ const CONFIG = {
         long: 45,       // 35-50 chars
         veryLong: 38    // > 50 chars
     },
-    fontFamily: 'Courier New, Courier, monospace',
+    // The site's own faces, registered below from public/assets/fonts/ —
+    // Newsreader carries the title, IBM Plex Mono the excerpt, same pairing
+    // as the pages themselves.
+    fontFamily: 'Newsreader',
+    excerptFontFamily: 'IBM Plex Mono',
 
     // Excerpt, drawn under the title
     excerptColor: 'rgba(245, 242, 232, 0.72)',
@@ -49,6 +53,17 @@ const CONFIG = {
     maxTextWidth: 700,
     lineHeight: 70,
 };
+
+// Register the self-hosted fonts so the card is set in the same faces as the
+// site. Without this the canvas falls back to Courier New, which is what the
+// cards used before the reskin.
+for (const file of [
+    'newsreader-latin-wght-normal.woff2',
+    'ibm-plex-mono-latin-400-normal.woff2',
+]) {
+    const path = join('public/assets/fonts', file);
+    if (existsSync(path)) GlobalFonts.registerFromPath(path);
+}
 
 /**
  * Calculate font size based on title length
@@ -119,7 +134,7 @@ async function generateOgImage(title, excerpt, outputPath, baseImageBuffer) {
     // title and excerpt can be bottom-anchored as one block.
     let excerptLines = [];
     if (excerpt) {
-        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.fontFamily}"`;
+        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.excerptFontFamily}"`;
         excerptLines = wrapText(ctx, excerpt, CONFIG.maxTextWidth);
         if (excerptLines.length > CONFIG.excerptMaxLines) {
             excerptLines = excerptLines.slice(0, CONFIG.excerptMaxLines);
@@ -146,7 +161,7 @@ async function generateOgImage(title, excerpt, outputPath, baseImageBuffer) {
     // Draw the excerpt
     if (excerptLines.length) {
         ctx.fillStyle = CONFIG.excerptColor;
-        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.fontFamily}"`;
+        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.excerptFontFamily}"`;
         const excerptTop = textY + (lines.length - 1) * lineHeight + CONFIG.excerptGap;
         for (let i = 0; i < excerptLines.length; i++) {
             ctx.fillText(excerptLines[i], CONFIG.textX, excerptTop + ((i + 1) * CONFIG.excerptLineHeight));
