@@ -7,7 +7,7 @@
  */
 
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
+import { readdir, readFile, writeFile, mkdir, stat } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, basename } from 'path';
 import matter from 'gray-matter';
@@ -28,6 +28,13 @@ const CONFIG = {
         veryLong: 38    // > 50 chars
     },
     fontFamily: 'Courier New, Courier, monospace',
+
+    // Excerpt, drawn under the title
+    excerptColor: 'rgba(245, 242, 232, 0.72)',
+    excerptFontSize: 26,
+    excerptLineHeight: 34,
+    excerptGap: 24,
+    excerptMaxLines: 3,
     
     // Text position (from left edge, from bottom)
     textX: 450,
@@ -80,7 +87,7 @@ function wrapText(ctx, text, maxWidth) {
 /**
  * Generate OG image for a single article
  */
-async function generateOgImage(title, outputPath, baseImageBuffer) {
+async function generateOgImage(title, excerpt, outputPath, baseImageBuffer) {
     // Load base image
     const baseImage = await loadImage(baseImageBuffer);
     
@@ -102,18 +109,43 @@ async function generateOgImage(title, outputPath, baseImageBuffer) {
     
     // Wrap text if needed
     const lines = wrapText(ctx, title, CONFIG.maxTextWidth);
-    
-    // Calculate starting Y position (from bottom, accounting for multiple lines)
-    let textY = baseImage.height - CONFIG.textFromBottom;
-    
-    // If multiple lines, adjust starting position so text ends at the right spot
-    if (lines.length > 1) {
-        textY = baseImage.height - CONFIG.textFromBottom - (lines.length - 1) * lineHeight;
+
+    // Measure the excerpt in its own font before laying anything out, so the
+    // title and excerpt can be bottom-anchored as one block.
+    let excerptLines = [];
+    if (excerpt) {
+        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.fontFamily}"`;
+        excerptLines = wrapText(ctx, excerpt, CONFIG.maxTextWidth);
+        if (excerptLines.length > CONFIG.excerptMaxLines) {
+            excerptLines = excerptLines.slice(0, CONFIG.excerptMaxLines);
+            excerptLines[excerptLines.length - 1] =
+                excerptLines[excerptLines.length - 1].replace(/[\s.,;:]+$/, '') + '…';
+        }
+        ctx.font = `${fontSize}px "${CONFIG.fontFamily}"`;
     }
-    
-    // Draw each line
+
+    const excerptBlock = excerptLines.length
+        ? CONFIG.excerptGap + excerptLines.length * CONFIG.excerptLineHeight
+        : 0;
+
+    // Bottom-anchor the whole block: the last line sits textFromBottom up
+    // from the bottom edge, and the title rises to make room for the excerpt.
+    const blockBottom = baseImage.height - CONFIG.textFromBottom;
+    let textY = blockBottom - excerptBlock - (lines.length - 1) * lineHeight;
+
+    // Draw the title
     for (let i = 0; i < lines.length; i++) {
         ctx.fillText(lines[i], CONFIG.textX, textY + (i * lineHeight));
+    }
+
+    // Draw the excerpt
+    if (excerptLines.length) {
+        ctx.fillStyle = CONFIG.excerptColor;
+        ctx.font = `${CONFIG.excerptFontSize}px "${CONFIG.fontFamily}"`;
+        const excerptTop = textY + (lines.length - 1) * lineHeight + CONFIG.excerptGap;
+        for (let i = 0; i < excerptLines.length; i++) {
+            ctx.fillText(excerptLines[i], CONFIG.textX, excerptTop + ((i + 1) * CONFIG.excerptLineHeight));
+        }
     }
     
     // Save image
@@ -136,6 +168,8 @@ function slugify(text) {
 /**
  * Main function
  */
+const force = process.argv.includes('--force');
+
 async function main() {
     console.log('🖼️  Generating OG images for articles...\n');
     
@@ -184,15 +218,20 @@ async function main() {
         const outputFilename = `og-${slug}.png`;
         const outputPath = join(CONFIG.outputDir, outputFilename);
         
-        // Skip if already generated (for faster rebuilds)
-        if (existsSync(outputPath)) {
-            console.log(`⏭ Already exists: ${outputFilename}`);
-            skipped++;
-            continue;
+        // Regenerate when the post is newer than its card, so editing a
+        // title or excerpt refreshes it. --force rebuilds everything.
+        if (!force && existsSync(outputPath)) {
+            const [post, card] = await Promise.all([stat(filePath), stat(outputPath)]);
+            if (card.mtimeMs >= post.mtimeMs) {
+                console.log(`⏭ Up to date: ${outputFilename}`);
+                skipped++;
+                continue;
+            }
         }
-        
+
         try {
-            await generateOgImage(frontmatter.title, outputPath, baseImageBuffer);
+            const excerpt = frontmatter.excerpt || frontmatter.meta?.desc || '';
+            await generateOgImage(frontmatter.title, excerpt, outputPath, baseImageBuffer);
             generated++;
         } catch (error) {
             console.error(`❌ Error generating ${file}:`, error.message);
@@ -202,4 +241,9 @@ async function main() {
     console.log(`\n✅ Done! Generated: ${generated}, Skipped: ${skipped}`);
 }
 
-main().catch(console.error);
+main().catch(err => {
+    // Exit non-zero: this runs as the first half of `npm run build`, and a
+    // logged-but-swallowed error would let a broken build continue.
+    console.error(err);
+    process.exit(1);
+});
