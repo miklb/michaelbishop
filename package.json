@@ -17,7 +17,8 @@
     "dev:cf": "concurrently \"npx @11ty/eleventy --watch\" \"npx wrangler dev --live-reload\"",
     "deploy:cf": "npm run build && npx wrangler deploy",
     "preview:cf": "npm run build && npx wrangler versions upload",
-    "check-syndication": "node scripts/check-syndication.js"
+    "check-syndication": "node scripts/check-syndication.js",
+    "article": "node scripts/new-article.js"
   },
   "repository": {
     "type": "git",

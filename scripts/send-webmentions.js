@@ -11,6 +11,32 @@ import matter from 'gray-matter'
 
 const SITE_URL = 'https://michaelbishop.me'
 
+// Post directories that may syndicate, and the URL prefix each publishes
+// under. Adding a post type means adding it here AND to the pathspec in
+// .github/workflows/syndicate.yml — otherwise its posts carry Bridgy anchors
+// and silently never syndicate.
+const SYNDICATABLE = {
+  notes: 'notes',
+  replies: 'replies',
+  articles: 'articles'
+}
+
+// Posts older than this are never syndicated — see the guard in main().
+const MAX_AGE_DAYS = Number(process.env.WEBMENTION_MAX_AGE_DAYS ?? 30)
+const force = process.argv.includes('--force')
+
+const postAgeDays = frontmatter => {
+  if (!frontmatter.date) return null
+  const when = new Date(frontmatter.date)
+  if (Number.isNaN(when.valueOf())) return null
+  return Math.floor((Date.now() - when.valueOf()) / (24 * 60 * 60 * 1000))
+}
+
+const contentDirFor = filePath => {
+  const match = filePath.match(/content\/([^/]+)\//)
+  return match && match[1] in SYNDICATABLE ? match[1] : null
+}
+
 // Bridgy endpoints
 const BRIDGY_FED_ENDPOINT = 'https://fed.brid.gy/webmention'
 const BRIDGY_PUBLISH_ENDPOINT = 'https://brid.gy/publish/webmention'
@@ -142,7 +168,7 @@ async function postsFromFiles(filePaths) {
   const posts = []
   for (const filePath of filePaths) {
     if (!filePath.endsWith('.md')) continue
-    if (!/content\/(notes|replies)\//.test(filePath)) continue
+    if (!contentDirFor(filePath)) continue
     try {
       const content = await readFile(filePath, 'utf-8')
       const { data, content: body } = matter(content)
@@ -162,7 +188,7 @@ async function main() {
 
   // If file paths are passed as args, only process those (CI: changed files).
   // Otherwise fall back to scanning recent posts (manual / backfill runs).
-  const fileArgs = process.argv.slice(2)
+  const fileArgs = process.argv.slice(2).filter(a => !a.startsWith('--'))
   let postsToProcess
 
   if (fileArgs.length > 0) {
@@ -174,7 +200,7 @@ async function main() {
     }
   } else {
     // Scan both notes and replies directories
-    const contentDirs = ['./content/notes', './content/replies']
+    const contentDirs = Object.keys(SYNDICATABLE).map(d => `./content/${d}`)
     const recentPosts = []
     for (const dir of contentDirs) {
       try {
@@ -198,13 +224,28 @@ async function main() {
       continue
     }
 
+    // Never syndicate old posts. Several posts from 2023-24 still carry
+    // Bridgy anchors and no syndication URL, so without this, editing one and
+    // pushing would announce a years-old post as new. Override with --force
+    // or WEBMENTION_MAX_AGE_DAYS when deliberately backfilling.
+    const ageDays = postAgeDays(post.frontmatter)
+    if (!force && ageDays !== null && ageDays > MAX_AGE_DAYS) {
+      console.log(`\nSkipping (${ageDays}d old, older than ${MAX_AGE_DAYS}d): ${post.file}`)
+      console.log('  Use --force to syndicate it anyway.')
+      continue
+    }
+
     // Explicit permalink wins; otherwise the default /notes/<slug>/ scheme
     let postUrl
     if (post.frontmatter.permalink) {
       postUrl = `${SITE_URL}${post.frontmatter.permalink.startsWith('/') ? '' : '/'}${post.frontmatter.permalink}`
     } else {
+      // Directory-aware: this previously assumed anything not under
+      // /replies/ was a note, which would announce an article at a 404.
+      // Note it reads *frontmatter* permalinks only — one set in a directory
+      // data file is invisible here.
       const slug = post.file.replace('.md', '')
-      const contentType = post.filePath.includes('/replies/') ? 'replies' : 'notes'
+      const contentType = SYNDICATABLE[contentDirFor(post.filePath)] ?? 'notes'
       postUrl = `${SITE_URL}/${contentType}/${slug}/`
     }
 

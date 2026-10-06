@@ -52,7 +52,7 @@ jobs:
           # covered both, so a broken diff was indistinguishable from
           # "no posts changed" and the whole job skipped silently.
           DIFF="$(git diff --name-only --diff-filter=AM "$BEFORE" "${{ github.sha }}" \
-            -- 'content/notes' 'content/replies' 'content/prints' 'content/photos')"
+            -- 'content/notes' 'content/replies' 'content/articles' 'content/prints' 'content/photos')"
           CHANGED="$(printf '%s\n' "$DIFF" | grep '\.md$' || true)"
           echo "Comparing $BEFORE..${{ github.sha }}"
           echo "Changed posts: ${CHANGED:-(none)}"
