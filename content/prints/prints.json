@@ -1,8 +1,5 @@
 {
     "layout": "layouts/article.njk",
     "tags": "print",
-    "permalink": "/prints/{{ page.fileSlug }}/",
-    "meta": {
-        "url": "{{ page.url }}"
-    }
+    "permalink": "/prints/{{ page.fileSlug }}/"
 }

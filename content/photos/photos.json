@@ -1,8 +1,5 @@
 {
     "layout": "layouts/article.njk",
     "tags": "photo",
-    "permalink": "/photos/{{ page.fileSlug }}/",
-    "meta": {
-        "url": "{{ page.url }}"
-    }
+    "permalink": "/photos/{{ page.fileSlug }}/"
 }

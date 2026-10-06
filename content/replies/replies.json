@@ -1,8 +1,5 @@
 {
     "layout": "layouts/article.njk",
     "date": "git Created",
-    "tags": "reply",
-    "meta": {
-        "url": "{{ page.url }}"
-    }
+    "tags": "reply"
 }
