@@ -7,7 +7,8 @@
  */
 
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import { readdir, readFile, writeFile, mkdir, stat } from 'fs/promises';
+import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
+import { createHash } from 'crypto';
 import { existsSync } from 'fs';
 import { join, basename } from 'path';
 import matter from 'gray-matter';
@@ -17,6 +18,9 @@ const CONFIG = {
     baseImage: 'public/assets/img/og-image.png',
     outputDir: 'public/assets/img/og',
     articlesDir: 'content/articles',
+    // Fingerprints of what each card was drawn from. Kept out of public/,
+    // which is passthrough-copied to the site root.
+    manifest: 'scripts/.og-manifest.json',
     siteUrl: 'https://michaelbishop.me',
     
     // Text styling
@@ -186,6 +190,16 @@ async function main() {
     }
     
     const baseImageBuffer = await readFile(CONFIG.baseImage);
+
+    // Previously drawn fingerprints, slug → hash of (title, excerpt).
+    let manifest = {};
+    if (existsSync(CONFIG.manifest)) {
+        try {
+            manifest = JSON.parse(await readFile(CONFIG.manifest, 'utf-8'));
+        } catch {
+            console.log('⚠ Unreadable manifest, regenerating everything.');
+        }
+    }
     
     // Read all article files
     const files = await readdir(CONFIG.articlesDir);
@@ -218,26 +232,34 @@ async function main() {
         const outputFilename = `og-${slug}.png`;
         const outputPath = join(CONFIG.outputDir, outputFilename);
         
-        // Regenerate when the post is newer than its card, so editing a
-        // title or excerpt refreshes it. --force rebuilds everything.
-        if (!force && existsSync(outputPath)) {
-            const [post, card] = await Promise.all([stat(filePath), stat(outputPath)]);
-            if (card.mtimeMs >= post.mtimeMs) {
-                console.log(`⏭ Up to date: ${outputFilename}`);
-                skipped++;
-                continue;
-            }
+        const excerpt = frontmatter.excerpt || frontmatter.meta?.desc || '';
+
+        // Regenerate only when what the card is DRAWN FROM changes. mtime is
+        // the wrong signal twice over: fixing a typo in the body would rewrite
+        // a 300KB binary for no visual change, and a fresh CI clone stamps
+        // every file with checkout time, making the comparison a coin flip.
+        const fingerprint = createHash('sha256')
+            .update(`${frontmatter.title}\u0000${excerpt}`)
+            .digest('hex')
+            .slice(0, 16);
+
+        if (!force && existsSync(outputPath) && manifest[slug] === fingerprint) {
+            console.log(`⏭ Up to date: ${outputFilename}`);
+            skipped++;
+            continue;
         }
 
         try {
-            const excerpt = frontmatter.excerpt || frontmatter.meta?.desc || '';
             await generateOgImage(frontmatter.title, excerpt, outputPath, baseImageBuffer);
+            manifest[slug] = fingerprint;
             generated++;
         } catch (error) {
             console.error(`❌ Error generating ${file}:`, error.message);
         }
     }
     
+    await writeFile(CONFIG.manifest, JSON.stringify(manifest, null, 2) + '\n');
+
     console.log(`\n✅ Done! Generated: ${generated}, Skipped: ${skipped}`);
 }
 
