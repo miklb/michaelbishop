@@ -1,13 +1,15 @@
 ---
-title: Announcing Latest Earworm 
+title: Announcing Latest Earworm
 excerpt: An atproto ode to This Is My Jam
-date: 2026-10-06T11:56:06-04:00
-permalink: "/articles/announcing-latest-earworm/"
+date: 2026-10-06T15:56:06.000Z
+permalink: /articles/announcing-latest-earworm/
 tags:
   - article
 meta:
   title: Announcing Latest Earworm
   desc: An atproto ode to This Is My Jam
+syndication:
+  - 'https://bsky.app/profile/michaelbishop.me/post/3mx7yn5pxew2t'
 ---
 
 One of the things I miss from “early Twitter” was “This Is My Jam”. A [fun little website](https://web.archive.org/web/20210926084455/https://www.thisismyjam.com/) you could post a song, “your jam.” The one stuck in your head or the hot new track from your favorite band. Or a song to tell the world you’re really feeling heartbroken.
