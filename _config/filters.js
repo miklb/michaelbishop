@@ -5,8 +5,11 @@ export default function(eleventyConfig) {
         return DateTime.fromJSDate(dateObj, { zone }).toFormat(format);
     });
 
+    // Full timestamp, not just the date. This feeds every dt-published, and
+    // Bridgy passes it through as the Bluesky post's createdAt: a date-only
+    // value became midnight UTC, i.e. the previous evening in US time.
     eleventyConfig.addFilter("htmlDateString", (dateObj) => {
-        return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat('yyyy-LL-dd');
+        return DateTime.fromJSDate(dateObj, { zone: "utc" }).toISO({ suppressMilliseconds: true });
     });
 
 	// Get the first `n` elements of a collection.

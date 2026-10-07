@@ -26,6 +26,9 @@ const CONFIG = {
     manifest: 'scripts/.og-manifest.json',
     siteUrl: 'https://michaelbishop.me',
 
+    // The site-wide card, used wherever a page has no card of its own.
+    defaultCard: { slug: 'default', title: 'michaelbishop.me' },
+
     width: 1200,
     height: 630,
 
@@ -267,73 +270,83 @@ export async function generateOgImages({ force = forceFlag } = {}) {
         }
     }
     
-    // Read all article files
-    const files = await readdir(CONFIG.articlesDir);
-    const markdownFiles = files.filter(f => f.endsWith('.md'));
-    
     let generated = 0;
     let skipped = 0;
-    
-    for (const file of markdownFiles) {
-        const filePath = join(CONFIG.articlesDir, file);
-        const content = await readFile(filePath, 'utf-8');
-        const { data: frontmatter } = matter(content);
-        
-        // Skip if no title
-        if (!frontmatter.title) {
-            console.log(`⚠ Skipped (no title): ${file}`);
-            skipped++;
-            continue;
-        }
-        
-        // Skip if custom og image already set
-        if (frontmatter.meta?.img) {
-            console.log(`⏭ Skipped (has custom img): ${file}`);
-            skipped++;
-            continue;
-        }
-        
-        // Generate filename from article slug
-        const slug = basename(file, '.md');
+
+    /**
+     * Draw `og-<slug>.png` from (title, excerpt) unless the committed card is
+     * already current. `source` is the file a CI warning should point at.
+     */
+    async function drawCard(slug, title, excerpt, source) {
         const outputFilename = `og-${slug}.png`;
         const outputPath = join(CONFIG.outputDir, outputFilename);
-        
-        const excerpt = frontmatter.excerpt || frontmatter.meta?.desc || '';
 
         // Regenerate only when what the card is DRAWN FROM changes. mtime is
         // the wrong signal twice over: fixing a typo in the body would rewrite
         // a 300KB binary for no visual change, and a fresh CI clone stamps
         // every file with checkout time, making the comparison a coin flip.
         const fingerprint = createHash('sha256')
-            .update(`${frontmatter.title}\u0000${excerpt}`)
+            .update(`${title}\u0000${excerpt}`)
             .digest('hex')
             .slice(0, 16);
 
         if (isCI && existsSync(outputPath)) {
             // Shipping the committed card as-is.
             skipped++;
-            continue;
+            return;
         }
 
         if (!force && existsSync(outputPath) && manifest[slug] === fingerprint) {
             console.log(`⏭ Up to date: ${outputFilename}`);
             skipped++;
-            continue;
+            return;
         }
 
         if (isCI) {
-            console.log(`::warning file=${filePath}::No social card committed for this post; drawing one on the builder. Run \`npm run og-images\` locally and commit the PNG.`);
+            console.log(`::warning file=${source}::No social card committed for this post; drawing one on the builder. Run \`npm run og-images\` locally and commit the PNG.`);
         }
 
         try {
-            await generateOgImage(frontmatter.title, excerpt, outputPath, portraitImage);
+            await generateOgImage(title, excerpt, outputPath, portraitImage);
             manifest[slug] = fingerprint;
             generated++;
         } catch (error) {
-            console.error(`❌ Error generating ${file}:`, error.message);
+            console.error(`❌ Error generating ${outputFilename}:`, error.message);
         }
     }
-    
+
+    // The site card: og:image for everything without a card of its own —
+    // notes, replies, pages, the home page. Set as the default in
+    // _data/meta.json.
+    await drawCard(CONFIG.defaultCard.slug, CONFIG.defaultCard.title, '', '_data/meta.json');
+
+    // Read all article files
+    const files = await readdir(CONFIG.articlesDir);
+    const markdownFiles = files.filter(f => f.endsWith('.md'));
+
+    for (const file of markdownFiles) {
+        const filePath = join(CONFIG.articlesDir, file);
+        const content = await readFile(filePath, 'utf-8');
+        const { data: frontmatter } = matter(content);
+
+        // Skip if no title
+        if (!frontmatter.title) {
+            console.log(`⚠ Skipped (no title): ${file}`);
+            skipped++;
+            continue;
+        }
+
+        // Skip if custom og image already set
+        if (frontmatter.meta?.img) {
+            console.log(`⏭ Skipped (has custom img): ${file}`);
+            skipped++;
+            continue;
+        }
+
+        const excerpt = frontmatter.excerpt || frontmatter.meta?.desc || '';
+        await drawCard(basename(file, '.md'), frontmatter.title, excerpt, filePath);
+    }
+
     if (!isCI) {
         await writeFile(CONFIG.manifest, JSON.stringify(manifest, null, 2) + '\n');
     }

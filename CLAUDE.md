@@ -21,7 +21,10 @@ Monitor conventions there do **not** apply here).
 ### Social cards are committed assets
 
 `scripts/generate-og-images.js` draws each article's card from its title and
-excerpt and writes `public/assets/img/og/og-<slug>.png`. It runs from an
+excerpt and writes `public/assets/img/og/og-<slug>.png`, plus `og-default.png`,
+the site card that `_data/meta.json` points everything else at (notes, replies,
+pages). Notes get their `<title>`/`og:title`/description from their own text in
+`content/content.11tydata.js`, not a drawn card. It runs from an
 `eleventy.before` hook, so `npm start` and `npm run build` both refresh them,
 keyed on a fingerprint of (title, excerpt) in `scripts/.og-manifest.json`.
 
