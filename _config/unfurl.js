@@ -4,6 +4,35 @@ import EleventyFetch from "@11ty/eleventy-fetch";
 // Cache for unfurled URLs to avoid re-fetching during build
 const unfurlCache = new Map();
 
+const IMAGE_UA = 'Mozilla/5.0 (compatible; michaelbishop.me unfurl)';
+
+/**
+ * Does the page's declared preview image actually exist and decode as an
+ * image? Sites advertise og:image URLs that 404 (a share card that was never
+ * uploaded, say). Taking them on faith rendered a broken image in the card
+ * here and cited a dead URL to Bridgy, which then couldn't give the Bluesky
+ * post a thumbnail. HEAD first; some servers refuse HEAD, so fall back to a
+ * GET whose body is discarded.
+ */
+async function imageExists(url) {
+    const opts = (method) => ({
+        method,
+        redirect: 'follow',
+        headers: { 'User-Agent': IMAGE_UA },
+        signal: AbortSignal.timeout(10000),
+    });
+    try {
+        let res = await fetch(url, opts('HEAD'));
+        if (!res.ok) {
+            res = await fetch(url, opts('GET'));
+            await res.body?.cancel();
+        }
+        return res.ok && (res.headers.get('content-type') || '').startsWith('image/');
+    } catch {
+        return false;
+    }
+}
+
 /**
  * Fetch and cache URL metadata
  * Uses EleventyFetch for persistent caching across builds
@@ -43,6 +72,11 @@ async function getUrlMetadata(url) {
             siteName: result?.open_graph?.site_name || new URL(url).hostname,
             isBluesky
         };
+
+        if (processed.image && !(await imageExists(processed.image))) {
+            console.log(`[unfurl] Dropping preview image that doesn't load: ${processed.image}`);
+            processed.image = null;
+        }
 
         // Only return if we have at least a title
         if (processed.title) {
