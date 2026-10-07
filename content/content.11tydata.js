@@ -24,6 +24,17 @@ function clip(text, max) {
     return cut.replace(/[\s.,;:]+$/, "") + "…";
 }
 
+// metagen writes meta.title/desc straight into content="…" attributes with no
+// escaping. A note containing a double quote produced malformed HTML that
+// crashed 11ty's HTML transformer and took the whole build down.
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
 export default {
     eleventyComputed: {
         in_reply_to: (data) => data["in-reply-to"] || null,
@@ -66,10 +77,10 @@ export default {
             if (isNote) {
                 const text = plainText(data.page.rawInput);
                 if (data.title || text) {
-                    meta.title = data.title || clip(text, 70);
+                    meta.title = escapeHtml(data.title || clip(text, 70));
                 }
                 if (text) {
-                    meta.desc = clip(text, 200);
+                    meta.desc = escapeHtml(clip(text, 200));
                 }
             }
 
