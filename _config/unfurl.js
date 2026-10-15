@@ -37,6 +37,61 @@ async function imageExists(url) {
  * Fetch and cache URL metadata
  * Uses EleventyFetch for persistent caching across builds
  */
+const UNFURL_RETRY_DELAYS_MS = [1500, 4000];
+
+async function fetchUrlMetadata(url) {
+    for (let attempt = 0; ; attempt++) {
+        try {
+            console.log(`[unfurl] Fetching: ${url}`);
+            const result = await unfurl(url, {
+                timeout: 10000,
+                follow: 3
+            });
+
+            const isBluesky = url.includes('bsky.app');
+
+            const processed = {
+                url,
+                title: result?.title || result?.open_graph?.title || null,
+                description: result?.description || result?.open_graph?.description || null,
+                image: result?.open_graph?.images?.[0]?.url || result?.twitter_card?.images?.[0]?.url || null,
+                favicon: result?.favicon || null,
+                siteName: result?.open_graph?.site_name || new URL(url).hostname,
+                isBluesky
+            };
+
+            if (processed.image && !(await imageExists(processed.image))) {
+                console.log(`[unfurl] Dropping preview image that doesn't load: ${processed.image}`);
+                processed.image = null;
+            }
+
+            // Only return if we have at least a title
+            if (processed.title) {
+                console.log(`[unfurl] Success: ${url}`);
+                return processed;
+            }
+
+            // A served page with no title is a real answer, not a blip.
+            console.log(`[unfurl] No title found for: ${url}`);
+            return null;
+        } catch (error) {
+            // A failed fetch silently downgrades the post to a bare link, and
+            // it stays that way until something else triggers a rebuild — so
+            // a single blip on the builder costs a card. Retry before giving
+            // up. (This is how the nextcity.org link on 2026-10-14 shipped
+            // unfurled: it fetches fine in 0.7s from here.)
+            if (attempt < UNFURL_RETRY_DELAYS_MS.length) {
+                const wait = UNFURL_RETRY_DELAYS_MS[attempt];
+                console.warn(`[unfurl] ${url} failed (${error.message}); retrying in ${wait / 1000}s`);
+                await new Promise(r => setTimeout(r, wait));
+                continue;
+            }
+            console.warn(`[unfurl] Failed to unfurl ${url}:`, error.message);
+            return null;
+        }
+    }
+}
+
 async function getUrlMetadata(url) {
     // Skip internal links, anchors, and common non-content URLs
     if (
@@ -49,50 +104,16 @@ async function getUrlMetadata(url) {
         return null;
     }
 
-    // Check in-memory cache first
-    if (unfurlCache.has(url)) {
-        return unfurlCache.get(url);
+    // Cache the in-flight PROMISE, not just the result. The same URL is
+    // unfurled by the home stream, the archive and the post's own page, which
+    // render concurrently — checking a result-only cache before the await
+    // meant all three missed and all three fetched. One link, three requests
+    // to someone else's server on every build, and three chances to trip a
+    // rate limit or a timeout.
+    if (!unfurlCache.has(url)) {
+        unfurlCache.set(url, fetchUrlMetadata(url));
     }
-
-    try {
-        console.log(`[unfurl] Fetching: ${url}`);
-        const result = await unfurl(url, {
-            timeout: 10000,
-            follow: 3
-        });
-
-        const isBluesky = url.includes('bsky.app');
-
-        const processed = {
-            url,
-            title: result?.title || result?.open_graph?.title || null,
-            description: result?.description || result?.open_graph?.description || null,
-            image: result?.open_graph?.images?.[0]?.url || result?.twitter_card?.images?.[0]?.url || null,
-            favicon: result?.favicon || null,
-            siteName: result?.open_graph?.site_name || new URL(url).hostname,
-            isBluesky
-        };
-
-        if (processed.image && !(await imageExists(processed.image))) {
-            console.log(`[unfurl] Dropping preview image that doesn't load: ${processed.image}`);
-            processed.image = null;
-        }
-
-        // Only return if we have at least a title
-        if (processed.title) {
-            console.log(`[unfurl] Success: ${url}`);
-            unfurlCache.set(url, processed);
-            return processed;
-        }
-        
-        console.log(`[unfurl] No title found for: ${url}`);
-        unfurlCache.set(url, null);
-        return null;
-    } catch (error) {
-        console.warn(`[unfurl] Failed to unfurl ${url}:`, error.message);
-        unfurlCache.set(url, null);
-        return null;
-    }
+    return unfurlCache.get(url);
 }
 
 /**
