@@ -1,0 +1,139 @@
+# michaelbishop.me — project guidance
+
+Personal blog and IndieWeb home. 11ty v3 static site served on **Cloudflare
+Workers Static Assets** (not Pages, not Netlify). This file is canonical for this
+repo and overrides any global agent instructions (`~/.agents/AGENTS.md`,
+`~/.claude/CLAUDE.md`; the Tampa Monitor conventions there do **not** apply here).
+
+## Stack
+
+- **11ty v3**, ESM, **Nunjucks** templates. Input `content/`, output `_site/`,
+  includes/layouts in `_includes/`. Config in `eleventy.config.js` + `_config/`.
+- **Cloudflare Workers** via `wrangler` (`wrangler.jsonc`). Currently
+  **assets-only** (no Worker entry point) — `not_found_handling: "404-page"`
+  serves `_site/404.html`.
+- **Node is pinned to 26** (`.nvmrc`, `engines`). Track **bleeding-edge 11ty** —
+  upgrading 11ty is welcome; if a dep blocks a Node/11ty bump, replace the dep,
+  don't pin back.
+- CSS via PostCSS (`postcss-preset-env`, `cssnano`). OG card images generated at
+  build time.
+
+### Social cards are committed assets
+
+`scripts/generate-og-images.js` draws each article's card from its title and
+excerpt and writes `public/assets/img/og/og-<slug>.png`, plus `og-default.png`,
+the site card that `_data/meta.json` points everything else at (notes, replies,
+pages). Notes get their `<title>`/`og:title`/description from their own text in
+`content/content.11tydata.js`, not a drawn card. It runs from an
+`eleventy.before` hook, so `npm start` and `npm run build` both refresh them,
+keyed on a fingerprint of (title, excerpt) in `scripts/.og-manifest.json`.
+
+**On CI it ships what is in git** and only draws a card that is missing.
+Canvas rasterises text differently on Linux, so regenerating on the builder
+produces a byte-different PNG from the committed one even when it looks
+identical — which churns the etag on every deploy and leaves the live cards
+drifting from every committed version. Commit the PNG with the post.
+
+### Don't reintroduce `node-canvas`
+
+OG images (`scripts/generate-og-images.js`) use **`@napi-rs/canvas`**, not the
+`canvas` package. `node-canvas` ships native binaries tied to the Node ABI and
+breaks on new Node releases (`ERR_DLOPEN_FAILED` on Node 26). `@napi-rs/canvas`
+ships N-API prebuilds that are ABI-stable across Node versions — that's what lets
+us pin Node 26 and stay current. Same API surface (`createCanvas`, `loadImage`,
+`ctx.*`, `toBuffer`). If you ever need richer text/SVG, prefer `satori`+`resvg`
+over going back to `node-canvas`.
+
+## Posting model (how content goes live)
+
+Git-based: write markdown → commit to `main` → **Cloudflare Workers Builds**
+(native Git integration) runs `npm run build` and `wrangler deploy` →
+`.github/workflows/syndicate.yml` syndicates to Bridgy.
+
+- **Local posting**: `npm run note -- "slug"` scaffolds a note and opens it in
+  VS Code; `npm run post` commits everything under `content/` and pushes. Both
+  are also VS Code tasks ("New note", "Publish post").
+- **QuickPost** (`app/`): native SwiftUI menu bar app for notes + replies —
+  writes the file, commits just it, rebase-pushes to `main`. Its templates in
+  `app/Sources/QuickPost/PostService.swift` must stay in sync with
+  `scripts/new-note.js` and the Bridgy link conventions; build with
+  `app/build.sh` (CLT only, no Xcode). See `app/README.md`.
+- **Dates must be explicit in frontmatter.** Workers Builds uses a shallow
+  clone, so 11ty's `"git Created"` / `"git Last Modified"` silently resolve to
+  build time in production (every post dated "today"). The `"git Created"`
+  defaults in `content/*/*.json` are a local-only fallback — every committed
+  post carries a real `date:`, the note scaffolder and snippets stamp one, and
+  never rely on git dates for anything user-visible.
+- **Post types**: `content/notes/`, `content/replies/`, `content/articles/`.
+  Microformats2 (`h-entry`) + Bridgy Fed / Bridgy Bluesky. Reply context and
+  Bridgy content-separation live in `_includes/layouts/article.njk`
+  (see `PORTING-GUIDE.md`).
+- **Embeds**: a bare URL alone in its own paragraph is replaced at build time
+  by `_config/unfurl.js`. A **bsky.app post link becomes a real post embed**
+  (author, text, images, timestamp) fetched through the public AT Protocol
+  API — no third-party script. Anything else becomes an OG unfurl card, as
+  does a Bluesky link mid-sentence (block content can't sit inside a `<p>`).
+  Neither carries `h-cite` for bsky.app URLs: that would make granary
+  syndicate the post as a quote post and notify the quoted author.
+- **Syndication**: `scripts/send-webmentions.js` (`npm run webmention`) sends
+  webmentions to Bridgy and writes captured syndication URLs back to frontmatter.
+  CI passes **changed files as args** to scope it to new posts; run with no args
+  for a recent-posts scan (handy for backfill).
+- Captured syndication URLs are committed back with `[skip ci]` to avoid a
+  rebuild loop.
+
+## Deploy / preview
+
+Deploys run on **Cloudflare Workers Builds** (dashboard → the `michaelbishop`
+Worker → Builds), triggered by pushes to `main`. Build command **must** be
+`npm run build` (the `_site/` output is gitignored, so it doesn't exist until the
+build runs); deploy command is `npx wrangler deploy`, reading `wrangler.jsonc`;
+version command `npx wrangler versions upload` (branch/PR previews).
+**No GitHub `CF_*` secrets** — the GitHub App connection authenticates builds.
+
+### Build-time secrets (Workers Builds)
+
+These are consumed by Node during `npm run build` (11ty `_data/` fetches), **not**
+by the runtime Worker — set them as **Build variables and secrets** in Workers
+Builds, not as Worker runtime secrets. Locally they live in the gitignored `.env`.
+
+| Name | Used by | Purpose |
+| --- | --- | --- |
+| `LFM_API_KEY` | `_data/lastfm.js` | LastFM listening data on `/listening.html` |
+| `WEBMENTION_IO_TOKEN` | `_data/webmentions.js` | webmention.io counts/data on posts |
+
+If a Workers Build runs **without** these, the build still succeeds but that data
+comes back empty/unauthorized and silently disappears from the live site —
+re-trigger a build after the secrets are set.
+
+This site is **Workers, not Pages**. For local checks:
+
+```bash
+npm run build && npx wrangler deploy           # manual production deploy
+npm run build && npx wrangler versions upload  # preview URL (no traffic)
+npm run dev:cf                                  # 11ty watch + wrangler dev
+```
+
+## Deferred / future direction
+
+- **`/admin` posting UI on a Worker** — scaffolding exists (`src/worker.js`,
+  `src/handlers/*`, `content/pages/admin/`) but is **not** wired into the
+  static deploy. Desktop quick posting is solved by QuickPost, so what's left
+  of this phase is **phone posting + photo upload** (R2). Full plan:
+  `CLOUDFLARE-WORKERS-PORT.md` (Phases 2–5: Worker entry, R2 uploads, CF Access,
+  cron webmentions). `functions/api/` is dead code copy-pasted from
+  `poynor-agenda-review` (a Pages Functions pattern this Workers site won't
+  use) — reference only, don't build on it.
+- **Bluesky link-card thumbnails** — note-body unfurl cards carry
+  `u-quotation-of h-cite` microformats that Bridgy turns into
+  `app.bsky.embed.external` (title + description work). Thumbnails are blocked
+  upstream: granary doesn't upload images nested in cited attachments
+  (snarfed/granary#1195). No site-side fix — an entry-level `u-photo` would
+  *replace* the card with an image post (embed precedence in granary's
+  `from_as1`). When #1195 lands, thumbnails start working with no changes here.
+- **Content backfill** — importing/normalizing older posts.
+- **Photo galleries from Apple Photos** — publishing image sets from the user's
+  Apple Photos library. Will land on a future branch; likely wants R2 for
+  originals + `eleventy-img` responsive variants. Keep an eye on EXIF/GPS
+  stripping when this lands.
+
